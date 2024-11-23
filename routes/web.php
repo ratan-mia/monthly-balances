@@ -5,6 +5,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\BalanceController;
 use Inertia\Inertia;
 
 Route::get('/', function () {
@@ -29,5 +30,7 @@ Route::middleware('auth')->group(function () {
 
 
 Route::resource('companies', CompanyController::class);
+Route::resource('balances', BalanceController::class);
+
 
 require __DIR__ . '/auth.php';
