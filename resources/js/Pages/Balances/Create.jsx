@@ -24,18 +24,65 @@ export default function Create() {
                         type="text"
                         value={data.fund_name}
                         onChange={(e) => setData('fund_name', e.target.value)}
-                        className="w-full border border-gray-300 rounded px-3 py-2"
+                        className="w-full border border-gray-300 rounded px-3 py-2 focus:ring focus:ring-blue-200"
                     />
                     {errors.fund_name && (
                         <span className="text-red-500 text-sm">{errors.fund_name}</span>
                     )}
                 </div>
-                {/* Repeat similar blocks for other fields */}
+                <div>
+                    <label className="block text-gray-700 font-medium mb-1">Opening Balance</label>
+                    <input
+                        type="number"
+                        value={data.opening_balance}
+                        onChange={(e) => setData('opening_balance', e.target.value)}
+                        className="w-full border border-gray-300 rounded px-3 py-2 focus:ring focus:ring-blue-200"
+                    />
+                    {errors.opening_balance && (
+                        <span className="text-red-500 text-sm">{errors.opening_balance}</span>
+                    )}
+                </div>
+                <div>
+                    <label className="block text-gray-700 font-medium mb-1">Current Balance</label>
+                    <input
+                        type="number"
+                        value={data.current_balance}
+                        onChange={(e) => setData('current_balance', e.target.value)}
+                        className="w-full border border-gray-300 rounded px-3 py-2 focus:ring focus:ring-blue-200"
+                    />
+                    {errors.current_balance && (
+                        <span className="text-red-500 text-sm">{errors.current_balance}</span>
+                    )}
+                </div>
+                <div>
+                    <label className="block text-gray-700 font-medium mb-1">Fund Utilized</label>
+                    <input
+                        type="number"
+                        value={data.fund_utilized}
+                        onChange={(e) => setData('fund_utilized', e.target.value)}
+                        className="w-full border border-gray-300 rounded px-3 py-2 focus:ring focus:ring-blue-200"
+                    />
+                    {errors.fund_utilized && (
+                        <span className="text-red-500 text-sm">{errors.fund_utilized}</span>
+                    )}
+                </div>
+                <div>
+                    <label className="block text-gray-700 font-medium mb-1">Remaining Balance</label>
+                    <input
+                        type="number"
+                        value={data.remaining_balance}
+                        onChange={(e) => setData('remaining_balance', e.target.value)}
+                        className="w-full border border-gray-300 rounded px-3 py-2 focus:ring focus:ring-blue-200"
+                    />
+                    {errors.remaining_balance && (
+                        <span className="text-red-500 text-sm">{errors.remaining_balance}</span>
+                    )}
+                </div>
                 <button
                     type="submit"
                     className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
                 >
-                    Save
+                    Add Balance
                 </button>
             </form>
         </div>

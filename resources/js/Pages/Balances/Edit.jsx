@@ -62,6 +62,9 @@ export default function Edit({ balance }) {
                         onChange={(e) => setData('fund_utilized', e.target.value)}
                         className="w-full border border-gray-300 rounded px-3 py-2 focus:ring focus:ring-blue-200"
                     />
+                    {errors.fund_utilized && (
+                        <span className="text-red-500 text-sm">{errors.fund_utilized}</span>
+                    )}
                 </div>
                 <div>
                     <label className="block text-gray-700 font-medium mb-1">Remaining Balance</label>
@@ -71,12 +74,15 @@ export default function Edit({ balance }) {
                         onChange={(e) => setData('remaining_balance', e.target.value)}
                         className="w-full border border-gray-300 rounded px-3 py-2 focus:ring focus:ring-blue-200"
                     />
+                    {errors.remaining_balance && (
+                        <span className="text-red-500 text-sm">{errors.remaining_balance}</span>
+                    )}
                 </div>
                 <button
                     type="submit"
                     className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
                 >
-                    Update
+                    Update Balance
                 </button>
             </form>
         </div>

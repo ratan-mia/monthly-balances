@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('balances', function (Blueprint $table) {
             $table->id();
+            $table->string('fund_name'); //
+            $table->decimal('opening_balance', 15, 2); //
+            $table->decimal('current_balance', 15, 2); //
+            $table->decimal('fund_utilized', 15, 2)->nullable(); //
+            $table->decimal('remaining_balance', 15, 2)->nullable(); //
             $table->timestamps();
         });
     }
