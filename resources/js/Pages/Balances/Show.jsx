@@ -27,6 +27,15 @@ export default function Show({ balance }) {
                             <td className="px-4 py-2 font-semibold border border-gray-200">Remaining Balance</td>
                             <td className="px-4 py-2 border border-gray-200">{balance.remaining_balance}</td>
                         </tr>
+                        <tr>
+                            <td className="px-4 py-2 border">Bank Name</td>
+                            <td className="px-4 py-2 border">{balance.bank_name}</td>
+                        </tr>
+                        <tr>
+                            <td className="px-4 py-2 border">Responsible Person</td>
+                            <td className="px-4 py-2 border">{balance.responsible_person}</td>
+                        </tr>
+
                     </tbody>
                 </table>
             </div>

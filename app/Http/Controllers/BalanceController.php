@@ -33,7 +33,15 @@ class BalanceController extends Controller
             'current_balance' => 'required|numeric',
             'fund_utilized' => 'nullable|numeric',
             'remaining_balance' => 'nullable|numeric',
+            'company' => 'nullable|string|max:255',
+            'bank_name' => 'nullable|string|max:255',
+            'responsible_person' => 'nullable|string|max:255',
+            'account_type' => 'nullable|string|max:50',
+            'account_number' => 'nullable|string|max:50',
+            'inflows' => 'nullable|numeric',
+            'outflows' => 'nullable|numeric',
         ]);
+
 
         Balance::create([
             'company_id' => auth()->user()->company_id,
@@ -42,6 +50,13 @@ class BalanceController extends Controller
             'current_balance' => $request->current_balance,
             'fund_utilized' => $request->fund_utilized,
             'remaining_balance' => $request->remaining_balance,
+            'company' => $request->company,
+            'bank_name' => $request->bank_name,
+            'responsible_person' => $request->responsible_person,
+            'account_type' => $request->account_type,
+            'account_number' => $request->account_number,
+            'inflows' => $request->inflows,
+            'outflows' => $request->outflows,
         ]);
 
         return redirect()->route('balances.index')->with('success', 'Balance added successfully.');
