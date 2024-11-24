@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Balance;
+use App\Models\Company;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -21,8 +22,15 @@ class BalanceController extends Controller
 
     public function create()
     {
+
+        $companies = Company::all(); // Fetch all companies
         // Render the create page
-        return Inertia::render('Balances/Create');
+        return Inertia::render(
+            'Balances/Create',
+            [
+                'companies' => $companies
+            ]
+        );
     }
 
     public function store(Request $request)

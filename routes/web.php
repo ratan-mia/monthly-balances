@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BankController;
 
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\BalanceController;
@@ -31,6 +32,8 @@ Route::middleware('auth')->group(function () {
 
 Route::resource('companies', CompanyController::class);
 Route::resource('balances', BalanceController::class);
+Route::resource('banks', BankController::class);
+
 
 
 require __DIR__ . '/auth.php';

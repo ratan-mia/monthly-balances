@@ -1,12 +1,14 @@
 import { useForm } from '@inertiajs/react';
 
-export default function Create() {
+export default function Create({ companies }) {
     const { data, setData, post, errors } = useForm({
         fund_name: '',
         opening_balance: '',
         current_balance: '',
         fund_utilized: '',
         remaining_balance: '',
+        bank_name: '',
+        company: '',
     });
 
     const submit = (e) => {
@@ -24,7 +26,7 @@ export default function Create() {
                         type="text"
                         value={data.fund_name}
                         onChange={(e) => setData('fund_name', e.target.value)}
-                        className="w-full border border-gray-300 rounded px-3 py-2 focus:ring focus:ring-blue-200"
+                        className="w-full border border-gray-300 rounded px-3 py-1 focus:ring focus:ring-blue-200"
                     />
                     {errors.fund_name && (
                         <span className="text-red-500 text-sm">{errors.fund_name}</span>
@@ -36,7 +38,7 @@ export default function Create() {
                         type="number"
                         value={data.opening_balance}
                         onChange={(e) => setData('opening_balance', e.target.value)}
-                        className="w-full border border-gray-300 rounded px-3 py-2 focus:ring focus:ring-blue-200"
+                        className="w-full border border-gray-300 rounded px-3 py-1 focus:ring focus:ring-blue-200"
                     />
                     {errors.opening_balance && (
                         <span className="text-red-500 text-sm">{errors.opening_balance}</span>
@@ -48,7 +50,7 @@ export default function Create() {
                         type="number"
                         value={data.current_balance}
                         onChange={(e) => setData('current_balance', e.target.value)}
-                        className="w-full border border-gray-300 rounded px-3 py-2 focus:ring focus:ring-blue-200"
+                        className="w-full border border-gray-300 rounded px-3 py-1 focus:ring focus:ring-blue-200"
                     />
                     {errors.current_balance && (
                         <span className="text-red-500 text-sm">{errors.current_balance}</span>
@@ -60,7 +62,7 @@ export default function Create() {
                         type="number"
                         value={data.fund_utilized}
                         onChange={(e) => setData('fund_utilized', e.target.value)}
-                        className="w-full border border-gray-300 rounded px-3 py-2 focus:ring focus:ring-blue-200"
+                        className="w-full border border-gray-300 rounded px-3 py-1 focus:ring focus:ring-blue-200"
                     />
                     {errors.fund_utilized && (
                         <span className="text-red-500 text-sm">{errors.fund_utilized}</span>
@@ -72,23 +74,44 @@ export default function Create() {
                         type="number"
                         value={data.remaining_balance}
                         onChange={(e) => setData('remaining_balance', e.target.value)}
-                        className="w-full border border-gray-300 rounded px-3 py-2 focus:ring focus:ring-blue-200"
+                        className="w-full border border-gray-300 rounded px-3 py-1 focus:ring focus:ring-blue-200"
                     />
                     {errors.remaining_balance && (
                         <span className="text-red-500 text-sm">{errors.remaining_balance}</span>
                     )}
                 </div>
                 <div>
-                <label className="block text-gray-700 font-medium mb-1">Company</label>
-                <input
-                    type="text"
-                    value={data.company}
-                    onChange={(e) => setData('company', e.target.value)}
-                    className="w-full border border-gray-300 rounded px-3 py-2 focus:ring focus:ring-blue-200"
-                />
-                {errors.company && <span className="text-red-500 text-sm">{errors.company}</span>}
-            </div>
-
+                    <label className="block text-gray-700 font-medium mb-1">Bank Name</label>
+                    <input
+                        type="text"
+                        value={data.bank_name}
+                        onChange={(e) => setData('bank_name', e.target.value)}
+                        className="w-full border border-gray-300 rounded px-3 py-1 focus:ring focus:ring-blue-200"
+                    />
+                    {errors.bank_name && (
+                        <span className="text-red-500 text-sm">{errors.bank_name}</span>
+                    )}
+                </div>
+                <div>
+                    <label className="block text-gray-700 font-medium mb-1">Company</label>
+                    <select
+                        value={data.company}
+                        onChange={(e) => setData('company', e.target.value)}
+                        className="w-full border border-gray-300 rounded px-3 py-1 focus:ring focus:ring-blue-200"
+                    >
+                        <option value="" disabled>
+                            Select a company
+                        </option>
+                        {companies.map((company) => (
+                            <option key={company.id} value={company.name}>
+                                {company.name}
+                            </option>
+                        ))}
+                    </select>
+                    {errors.company && (
+                        <span className="text-red-500 text-sm">{errors.company}</span>
+                    )}
+                </div>
                 <button
                     type="submit"
                     className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
