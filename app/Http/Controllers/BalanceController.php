@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Balance;
 use App\Models\Company;
+use App\Models\Bank;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -24,11 +26,15 @@ class BalanceController extends Controller
     {
 
         $companies = Company::all(); // Fetch all companies
+        $banks = Bank::all(); // Fetch all banks
+        $users = User::all(); // Fetch all users
         // Render the create page
         return Inertia::render(
             'Balances/Create',
             [
-                'companies' => $companies
+                'companies' => $companies,
+                'banks' => $banks,
+                'users' => $users
             ]
         );
     }
@@ -60,7 +66,8 @@ class BalanceController extends Controller
             'remaining_balance' => $request->remaining_balance,
             'company' => $request->company,
             'bank_name' => $request->bank_name,
-            'responsible_person' => $request->responsible_person,
+            // 'responsible_person' => $request->responsible_person,
+            'responsible_person' => auth()->user()->name,
             'account_type' => $request->account_type,
             'account_number' => $request->account_number,
             'inflows' => $request->inflows,

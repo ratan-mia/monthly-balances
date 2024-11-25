@@ -5,6 +5,8 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BankController;
 
+use App\Http\Controllers\AccountTypeController;
+
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\BalanceController;
 use Inertia\Inertia;
@@ -33,6 +35,18 @@ Route::middleware('auth')->group(function () {
 Route::resource('companies', CompanyController::class);
 Route::resource('balances', BalanceController::class);
 Route::resource('banks', BankController::class);
+
+
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/account-types', [AccountTypeController::class, 'index'])->name('account-types.index');
+    Route::get('/account-types/create', [AccountTypeController::class, 'create'])->name('account-types.create');
+    Route::post('/account-types', [AccountTypeController::class, 'store'])->name('account-types.store');
+    Route::get('/account-types/{id}/edit', [AccountTypeController::class, 'edit'])->name('account-types.edit');
+    Route::put('/account-types/{id}', [AccountTypeController::class, 'update'])->name('account-types.update');
+    Route::delete('/account-types/{id}', [AccountTypeController::class, 'destroy'])->name('account-types.destroy');
+});
 
 
 

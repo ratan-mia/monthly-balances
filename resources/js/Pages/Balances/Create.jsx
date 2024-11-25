@@ -1,6 +1,6 @@
 import { useForm } from '@inertiajs/react';
 
-export default function Create({ companies }) {
+export default function Create({ companies,banks }) {
     const { data, setData, post, errors } = useForm({
         fund_name: '',
         opening_balance: '',
@@ -112,6 +112,27 @@ export default function Create({ companies }) {
                         <span className="text-red-500 text-sm">{errors.company}</span>
                     )}
                 </div>
+                <div>
+                    <label className="block text-gray-700 font-medium mb-1">Bank</label>
+                    <select
+                        value={data.bank}
+                        onChange={(e) => setData('bnak', e.target.value)}
+                        className="w-full border border-gray-300 rounded px-3 py-1 focus:ring focus:ring-blue-200"
+                    >
+                        <option value="" disabled>
+                            Select a bank
+                        </option>
+                        {banks.map((bank) => (
+                            <option key={bank.id} value={bank.name}>
+                                {bank.name}
+                            </option>
+                        ))}
+                    </select>
+                    {errors.bank && (
+                        <span className="text-red-500 text-sm">{errors.bank}</span>
+                    )}
+                </div>
+
                 <button
                     type="submit"
                     className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
