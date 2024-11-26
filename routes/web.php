@@ -40,12 +40,7 @@ Route::resource('banks', BankController::class);
 
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/account-types', [AccountTypeController::class, 'index'])->name('account-types.index');
-    Route::get('/account-types/create', [AccountTypeController::class, 'create'])->name('account-types.create');
-    Route::post('/account-types', [AccountTypeController::class, 'store'])->name('account-types.store');
-    Route::get('/account-types/{id}/edit', [AccountTypeController::class, 'edit'])->name('account-types.edit');
-    Route::put('/account-types/{id}', [AccountTypeController::class, 'update'])->name('account-types.update');
-    Route::delete('/account-types/{id}', [AccountTypeController::class, 'destroy'])->name('account-types.destroy');
+    Route::resource('account-types', AccountTypeController::class);
 });
 
 

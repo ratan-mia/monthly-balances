@@ -1,20 +1,28 @@
 import { Inertia } from '@inertiajs/inertia';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-export default function Create() {
+export default function Edit({ accountType }) {
     const [form, setForm] = useState({
-        name: '',
-        description: '',
+        name: accountType.name || '',
+        description: accountType.description || '',
     });
+
+    useEffect(() => {
+        // Update form data if accountType props change
+        setForm({
+            name: accountType.name || '',
+            description: accountType.description || '',
+        });
+    }, [accountType]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        Inertia.post('/account-types', form);
+        Inertia.put(`/account-types/${accountType.id}`, form);  // PUT request for updating
     };
 
     return (
         <div className="container mx-auto px-4 py-8">
-            <h1 className="text-2xl font-bold mb-4">Add New Account Type</h1>
+            <h1 className="text-2xl font-bold mb-4">Edit Account Type</h1>
             <form onSubmit={handleSubmit} className="space-y-4">
                 {/* Account Type Name Field */}
                 <div>
@@ -51,7 +59,7 @@ export default function Create() {
                         type="submit"
                         className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 transition"
                     >
-                        Save
+                        Save Changes
                     </button>
                 </div>
             </form>

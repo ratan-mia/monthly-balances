@@ -9,7 +9,7 @@ export default function Create() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        Inertia.post('/account-types', form);
+        Inertia.post('/account-types', form); // POST request to create a new AccountType
     };
 
     return (
