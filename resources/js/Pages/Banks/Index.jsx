@@ -1,5 +1,6 @@
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Inertia } from '@inertiajs/inertia';
-import { Link } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 
 export default function Index({ banks }) {
     const deleteBank = (id) => {
@@ -10,7 +11,16 @@ export default function Index({ banks }) {
 
 
     return (
-        <div className="container mx-auto px-4 py-8">
+        <AuthenticatedLayout
+        header={
+            <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+                Profile
+            </h2>
+        }
+    >
+        <Head title="Profile" />
+
+        <div className="container mx-auto max-w-7xl px-4 py-8">
             <h1 className="text-2xl font-bold mb-4">Banks</h1>
             <a
                 href="/banks/create"
@@ -60,5 +70,7 @@ export default function Index({ banks }) {
                 </tbody>
             </table>
         </div>
+    </AuthenticatedLayout>
+
     );
 }

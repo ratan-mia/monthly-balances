@@ -32,11 +32,18 @@ export default function AuthenticatedLayout({ header, children }) {
                                     Dashboard
                                 </NavLink>
                                 <NavLink
+                                    href={route('banks.index')}
+                                    active={route().current('banks.index')}
+                                >
+                                   Banks
+                                </NavLink>
+                                <NavLink
                                     href={route('account-types.index')}
                                     active={route().current('account-types.index')}
                                 >
                                     Account Types
                                 </NavLink>
+
 
 
 
