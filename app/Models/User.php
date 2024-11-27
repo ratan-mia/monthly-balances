@@ -55,6 +55,18 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class);
     }
 
+    // Define the relationship to the Balance model
+    public function balances()
+    {
+        return $this->hasMany(Balance::class);
+    }
+
+    // Define the relationship to the Company model
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
 
     protected static function boot()
     {

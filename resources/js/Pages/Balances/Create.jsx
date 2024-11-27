@@ -31,7 +31,7 @@ export default function Create({ companies,banks,users,accountTypes }) {
                             Select a company
                         </option>
                         {companies.map((company) => (
-                            <option key={company.id} value={company.name}>
+                            <option key={company.id} value={company.id}>
                                 {company.name}
                             </option>
                         ))}

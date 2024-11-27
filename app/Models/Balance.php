@@ -19,6 +19,8 @@ class Balance extends Model
         'remaining_balance', // existing field
         'company',
         'bank_name',
+        'bank_id', // new field
+        'user_id', // new field
         'responsible_person',
         'account_type',
         'account_number',
@@ -31,5 +33,18 @@ class Balance extends Model
     public function company()
     {
         return $this->belongsTo(Company::class);
+    }
+    // Define the relationship to the Bank model
+    public function bank()
+    {
+        return $this->belongsTo(Bank::class);
+    }
+
+
+
+    // Define the relationship to the User model
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

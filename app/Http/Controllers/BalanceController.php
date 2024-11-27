@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
+
 use App\Models\AccountType;
 use App\Models\Balance;
 use App\Models\Company;
@@ -44,15 +46,27 @@ class BalanceController extends Controller
 
     public function store(Request $request)
     {
+
+        // Step 1: Get the logged-in user (user_id)
+        $userId = Auth::id(); // This will give you the authenticated user's ID
+
+        if (!$userId) {
+            // Handle case when the user is not authenticated
+            return response()->json(['error' => 'User is not authenticated'], 401);
+        }
+
+
         $request->validate([
-            'fund_name' => 'required|string|max:255',
+            // 'fund_name' => 'required|string|max:255',
             'opening_balance' => 'required|numeric',
-            'current_balance' => 'required|numeric',
-            'fund_utilized' => 'nullable|numeric',
-            'remaining_balance' => 'nullable|numeric',
-            'company' => 'nullable|string|max:255',
-            'bank_name' => 'nullable|string|max:255',
-            'responsible_person' => 'nullable|string|max:255',
+            // 'current_balance' => 'required|numeric',
+            // 'fund_utilized' => 'nullable|numeric',
+            // 'remaining_balance' => 'nullable|numeric',
+            // 'company_id' => 'nullable|max:255',
+            'company_id' => 'required|exists:companies,id',  // Validate Companies exists
+            // 'bank_name' => 'nullable|max:255',
+            'bank_id' => 'required|exists:banks,id',  // Validate bank exists
+            // 'responsible_person' => 'nullable|string|max:255',
             'account_type' => 'nullable|string|max:50',
             'account_number' => 'nullable|string|max:50',
             'inflows' => 'nullable|numeric',
@@ -66,7 +80,8 @@ class BalanceController extends Controller
             // 'current_balance' => $request->current_balance,
             // 'fund_utilized' => $request->fund_utilized,
             // 'remaining_balance' => $request->remaining_balance,
-            'company' => $request->company,
+            'user_id' => $userId, // Use the user_id from the logged-in user
+            'company_id' => $request->company,
             'bank_name' => $request->bank_name,
             'responsible_person' => $request->responsible_person,
             // 'responsible_person' => auth()->user()->name,
