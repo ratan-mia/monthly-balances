@@ -150,7 +150,7 @@ export default function Create({ companies,banks,users,accountTypes }) {
                     )}
                 </div>
 
-                <div>
+                {/* <div>
                     <label className="block text-gray-700 font-medium mb-1">Fund Name</label>
                     <input
                         type="text"
@@ -161,9 +161,9 @@ export default function Create({ companies,banks,users,accountTypes }) {
                     {errors.fund_name && (
                         <span className="text-red-500 text-sm">{errors.fund_name}</span>
                     )}
-                </div>
+                </div> */}
 
-                <div>
+                {/* <div>
                     <label className="block text-gray-700 font-medium mb-1">Current Balance</label>
                     <input
                         type="number"
@@ -174,8 +174,8 @@ export default function Create({ companies,banks,users,accountTypes }) {
                     {errors.current_balance && (
                         <span className="text-red-500 text-sm">{errors.current_balance}</span>
                     )}
-                </div>
-                <div>
+                </div> */}
+                {/* <div>
                     <label className="block text-gray-700 font-medium mb-1">Fund Utilized</label>
                     <input
                         type="number"
@@ -186,8 +186,8 @@ export default function Create({ companies,banks,users,accountTypes }) {
                     {errors.fund_utilized && (
                         <span className="text-red-500 text-sm">{errors.fund_utilized}</span>
                     )}
-                </div>
-                <div>
+                </div> */}
+                {/* <div>
                     <label className="block text-gray-700 font-medium mb-1">Remaining Balance</label>
                     <input
                         type="number"
@@ -198,8 +198,8 @@ export default function Create({ companies,banks,users,accountTypes }) {
                     {errors.remaining_balance && (
                         <span className="text-red-500 text-sm">{errors.remaining_balance}</span>
                     )}
-                </div>
-                <div>
+                </div> */}
+                {/* <div>
                     <label className="block text-gray-700 font-medium mb-1">Bank Name</label>
                     <input
                         type="text"
@@ -210,7 +210,7 @@ export default function Create({ companies,banks,users,accountTypes }) {
                     {errors.bank_name && (
                         <span className="text-red-500 text-sm">{errors.bank_name}</span>
                     )}
-                </div>
+                </div> */}
 
 
 
