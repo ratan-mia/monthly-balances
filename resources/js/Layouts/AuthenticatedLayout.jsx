@@ -49,6 +49,12 @@ export default function AuthenticatedLayout({ header, children }) {
                                 >
                                     Account Types
                                 </NavLink>
+                                <NavLink
+                                    href={route('balances.index')}
+                                    active={route().current('balances.index')}
+                                >
+                                    Balances
+                                </NavLink>
 
 
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AccountType;
 use App\Models\Balance;
 use App\Models\Company;
 use App\Models\Bank;
@@ -28,13 +29,15 @@ class BalanceController extends Controller
         $companies = Company::all(); // Fetch all companies
         $banks = Bank::all(); // Fetch all banks
         $users = User::all(); // Fetch all users
+        $accountTypes = AccountType::all(); // Fetch all account types
         // Render the create page
         return Inertia::render(
             'Balances/Create',
             [
                 'companies' => $companies,
                 'banks' => $banks,
-                'users' => $users
+                'users' => $users,
+                'accountTypes' => $accountTypes,
             ]
         );
     }
@@ -56,7 +59,7 @@ class BalanceController extends Controller
             'outflows' => 'nullable|numeric',
         ]);
 
-
+        $closingBalance = $request->opening_balance + $request->inflows - $request->outflows;
         Balance::create([
             'company_id' => auth()->user()->company_id,
             'fund_name' => $request->fund_name,
@@ -66,12 +69,13 @@ class BalanceController extends Controller
             'remaining_balance' => $request->remaining_balance,
             'company' => $request->company,
             'bank_name' => $request->bank_name,
-            // 'responsible_person' => $request->responsible_person,
-            'responsible_person' => auth()->user()->name,
+            'responsible_person' => $request->responsible_person,
+            // 'responsible_person' => auth()->user()->name,
             'account_type' => $request->account_type,
             'account_number' => $request->account_number,
             'inflows' => $request->inflows,
             'outflows' => $request->outflows,
+            'closing_balance' => $closingBalance,
         ]);
 
         return redirect()->route('balances.index')->with('success', 'Balance added successfully.');

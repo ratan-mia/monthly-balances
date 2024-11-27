@@ -24,6 +24,7 @@ class Balance extends Model
         'account_number',
         'inflows',
         'outflows',
+        'closing_balance', // new field
     ];
 
 
