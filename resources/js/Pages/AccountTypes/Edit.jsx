@@ -1,4 +1,6 @@
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Inertia } from '@inertiajs/inertia';
+import { Head } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 
 export default function Edit({ accountType }) {
@@ -21,7 +23,17 @@ export default function Edit({ accountType }) {
     };
 
     return (
-        <div className="container mx-auto px-4 py-8">
+
+        <AuthenticatedLayout
+        header={
+            <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+               Edit Account Types
+            </h2>
+        }
+    >
+        <Head title="Edit Account Types" />
+
+        <div className="container mx-auto max-w-7xl px-4 py-8">
             <h1 className="text-2xl font-bold mb-4">Edit Account Type</h1>
             <form onSubmit={handleSubmit} className="space-y-4">
                 {/* Account Type Name Field */}
@@ -64,5 +76,10 @@ export default function Edit({ accountType }) {
                 </div>
             </form>
         </div>
+    </AuthenticatedLayout>
+
+
+
+
     );
 }

@@ -1,5 +1,6 @@
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Inertia } from '@inertiajs/inertia';
-import { Link } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 
 export default function Index({ accountTypes }) {
 
@@ -10,7 +11,18 @@ export default function Index({ accountTypes }) {
     };
 
     return (
-        <div className="container mx-auto py-6 px-4">
+
+        <AuthenticatedLayout
+        header={
+            <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+                Account Types
+            </h2>
+        }
+    >
+        <Head title="Account Types" />
+
+
+        <div className="container mx-auto max-w-7xl py-6 px-4">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-3xl font-semibold text-gray-800">Account Types</h1>
                 <Link
@@ -55,5 +67,12 @@ export default function Index({ accountTypes }) {
                 </table>
             </div>
         </div>
+    </AuthenticatedLayout>
+
+
+
+
     );
 }
+
+

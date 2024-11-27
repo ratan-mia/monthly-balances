@@ -1,4 +1,6 @@
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Inertia } from '@inertiajs/inertia';
+import { Head } from '@inertiajs/react';
 import { useState } from 'react';
 
 export default function Create() {
@@ -13,7 +15,17 @@ export default function Create() {
     };
 
     return (
-        <div className="container mx-auto px-4 py-8">
+
+        <AuthenticatedLayout
+        header={
+            <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+                Profile
+            </h2>
+        }
+    >
+        <Head title="Profile" />
+
+        <div className="container mx-auto max-w-7xl px-4 py-8">
             <h1 className="text-2xl font-bold mb-4">Add New Account Type</h1>
             <form onSubmit={handleSubmit} className="space-y-4">
                 {/* Account Type Name Field */}
@@ -56,5 +68,7 @@ export default function Create() {
                 </div>
             </form>
         </div>
+    </AuthenticatedLayout>
+
     );
 }
