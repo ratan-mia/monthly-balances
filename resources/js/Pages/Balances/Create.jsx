@@ -63,21 +63,21 @@ export default function Create({ companies,banks,users,accountTypes }) {
                 <div>
                     <label className="block text-gray-700 font-medium mb-1">Bank</label>
                     <select
-                        value={data.bank}
-                        onChange={(e) => setData('bnak', e.target.value)}
+                        value={data.bank_id}
+                        onChange={(e) => setData('bnak_id', e.target.value)}
                         className="w-full border border-gray-300 rounded px-3 py-1 focus:ring focus:ring-blue-200"
                     >
                         <option value="" disabled>
                             Select a bank
                         </option>
                         {banks.map((bank) => (
-                            <option key={bank.id} value={bank.name}>
+                            <option key={bank.id} value={bank.id}>
                                 {bank.name}
                             </option>
                         ))}
                     </select>
-                    {errors.bank && (
-                        <span className="text-red-500 text-sm">{errors.bank}</span>
+                    {errors.bank_id && (
+                        <span className="text-red-500 text-sm">{errors.bank_id}</span>
                     )}
                 </div>
 
