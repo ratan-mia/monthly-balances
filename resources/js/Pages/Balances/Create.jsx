@@ -1,6 +1,6 @@
 import { useForm } from '@inertiajs/react';
 
-export default function Create({ companies,banks }) {
+export default function Create({ companies,banks,users }) {
     const { data, setData, post, errors } = useForm({
         fund_name: '',
         opening_balance: '',

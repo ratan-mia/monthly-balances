@@ -1,8 +1,19 @@
-import { Link } from '@inertiajs/react';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { Head, Link } from '@inertiajs/react';
 
 export default function Index({ companies }) {
     return (
-        <div className="container mx-auto p-4">
+
+        <AuthenticatedLayout
+        header={
+            <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+                Companies
+            </h2>
+        }
+    >
+        <Head title="Profile" />
+
+        <div className="container mx-auto max-w-7xl p-4">
             <h1 className="text-2xl font-bold mb-4">Companies</h1>
             <Link
                 href="/companies/create"
@@ -22,7 +33,7 @@ export default function Index({ companies }) {
                 </thead>
                 <tbody>
                     {companies.map((company) => (
-                        <tr key={company.id} className="hover:bg-gray-50">
+                        <tr key={company.id} className="hover:bg-gray-50 odd:bg-gray-50">
                             <td className="px-4 py-2 border">{company.name}</td>
                             <td className="px-4 py-2 border">{company.email}</td>
                             <td className="px-4 py-2 border">{company.address}</td>
@@ -52,5 +63,7 @@ export default function Index({ companies }) {
                 </tbody>
             </table>
         </div>
+    </AuthenticatedLayout>
+
     );
 }

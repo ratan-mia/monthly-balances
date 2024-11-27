@@ -38,6 +38,12 @@ export default function AuthenticatedLayout({ header, children }) {
                                    Banks
                                 </NavLink>
                                 <NavLink
+                                    href={route('companies.index')}
+                                    active={route().current('companies.index')}
+                                >
+                                    Companies
+                                </NavLink>
+                                <NavLink
                                     href={route('account-types.index')}
                                     active={route().current('account-types.index')}
                                 >

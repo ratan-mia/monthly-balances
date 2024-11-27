@@ -1,8 +1,19 @@
-import { Link } from '@inertiajs/react';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { Head, Link } from '@inertiajs/react';
 
 export default function Show({ company }) {
     return (
-        <div className="container mx-auto px-4 py-8">
+
+        <AuthenticatedLayout
+        header={
+            <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+                Profile
+            </h2>
+        }
+    >
+        <Head title="Profile" />
+
+        <div className="container mx-auto max-w-7xl px-4 py-8">
             <h1 className="text-2xl font-bold mb-6">Company Details</h1>
             <div className="overflow-x-auto">
                 <table className="min-w-full border-collapse border border-gray-200">
@@ -33,5 +44,7 @@ export default function Show({ company }) {
                 Back to List
             </Link>
         </div>
+    </AuthenticatedLayout>
+
     );
 }
