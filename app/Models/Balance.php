@@ -21,6 +21,7 @@ class Balance extends Model
         'bank_name',
         'bank_id', // new field
         'user_id', // new field
+        'account_type_id', // new field
         'responsible_person',
         'account_type',
         'account_number',
@@ -29,6 +30,11 @@ class Balance extends Model
         'closing_balance', // new field
     ];
 
+    // Relationship: A Balance belongs to an AccountType
+    public function accountType()
+    {
+        return $this->belongsTo(AccountType::class);
+    }
 
     public function company()
     {

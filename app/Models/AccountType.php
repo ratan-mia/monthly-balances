@@ -10,4 +10,10 @@ class AccountType extends Model
     use HasFactory;
 
     protected $fillable = ['name', 'description'];
+
+    // Relationship: An AccountType can have many balances
+    public function balances()
+    {
+        return $this->hasMany(Balance::class);
+    }
 }

@@ -47,13 +47,35 @@ class BalanceController extends Controller
     public function store(Request $request)
     {
 
-        // Step 1: Get the logged-in user (user_id)
-        $userId = Auth::id(); // This will give you the authenticated user's ID
+        // Get the logged-in user
+        $userId = Auth::id();
 
         if (!$userId) {
-            // Handle case when the user is not authenticated
             return response()->json(['error' => 'User is not authenticated'], 401);
         }
+
+        // Find the company by name
+        $company = Company::where('name', 'Asian Imports Limited')->first();
+
+        if (!$company) {
+            return response()->json(['error' => 'Company not found'], 404);
+        }
+
+        // Find the bank by its ID
+        $bank = Bank::find($request->bank_id);
+
+        if (!$bank) {
+            return response()->json(['error' => 'Bank not found'], 404);
+        }
+
+        // Find the account type by its name
+        $accountType = AccountType::where('name', $request->account_type)->first();
+
+        if (!$accountType) {
+            return response()->json(['error' => 'Account type not found'], 404);
+        }
+
+
 
 
         $request->validate([
@@ -67,7 +89,8 @@ class BalanceController extends Controller
             // 'bank_name' => 'nullable|max:255',
             'bank_id' => 'required|exists:banks,id',  // Validate bank exists
             // 'responsible_person' => 'nullable|string|max:255',
-            'account_type' => 'nullable|string|max:50',
+            // 'account_type' => 'nullable|string|max:50',
+            'account_type' => 'required|exists:account_types,id',  // Validate bank exists
             'account_number' => 'nullable|string|max:50',
             'inflows' => 'nullable|numeric',
             'outflows' => 'nullable|numeric',
@@ -80,12 +103,16 @@ class BalanceController extends Controller
             // 'current_balance' => $request->current_balance,
             // 'fund_utilized' => $request->fund_utilized,
             // 'remaining_balance' => $request->remaining_balance,
-            'user_id' => $userId, // Use the user_id from the logged-in user
-            'company_id' => $request->company,
-            'bank_name' => $request->bank_name,
-            'responsible_person' => $request->responsible_person,
+            // 'user_id' => $userId, // Use the user_id from the logged-in user
+            // 'company_id' => $request->company,
+            // 'bank_name' => $request->bank_name,
+            'user_id' => $userId,
+            'company_id' => $company->id,
+            'bank_id' => $bank->id,
+            'account_type_id' => $accountType->id,  // Use account_type_id here
+            // 'responsible_person' => $request->responsible_person,
             // 'responsible_person' => auth()->user()->name,
-            'account_type' => $request->account_type,
+            // 'account_type' => $request->account_type,
             'account_number' => $request->account_number,
             'opening_balance' => $request->opening_balance,
             'inflows' => $request->inflows,
