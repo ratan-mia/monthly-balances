@@ -19,19 +19,33 @@ class BalanceController extends Controller
         // Get the logged-in user's ID
         $userId = auth()->id();
 
+
+
         // Retrieve balances for the logged-in user, eager loading relevant fields
-        $balances = Balance::with([
-            'company:id,name',        // Only get the 'id' and 'name' fields for company
-            'bank:id,name',           // Only get the 'id' and 'name' fields for bank
-            'user:id,name',           // Only get the 'id' and 'name' fields for user
-            'accountType:id,name'     // Only get the 'id' and 'name' fields for accountType
-        ])
+        // $balances = Balance::with([
+        //     'company:id,name',
+        //     'bank:id,name',
+        //     'user:id,name',
+        //     'accountType:id,name'
+        // ])
+        //     ->where('user_id', $userId)
+        //     ->get();
+
+        $balances = Balance::with(['company', 'bank', 'user', 'accountType'])
             ->where('user_id', $userId)
             ->get();
+
+        // Calculate totals
+        $total_inflows = $balances->sum('inflows');
+        $total_outflows = $balances->sum('outflows');
+        $total_closing_balance = $balances->sum('closing_balance');
 
         // Return the Inertia response with only the relevant balance and related model data
         return Inertia::render('Balances/Index', [
             'balances' => $balances,
+            'total_inflows' => $total_inflows,
+            'total_outflows' => $total_outflows,
+            'total_closing_balance' => $total_closing_balance,
             'userId' => $userId,
         ]);
     }
@@ -241,17 +255,24 @@ class BalanceController extends Controller
             'user_id' => 'nullable|exists:users,id',  // Optional, if you want to associate a user with the balance
         ]);
 
+        $closingBalance = $request->opening_balance + $request->inflows - $request->outflows;
         // Update the balance
         $balance->company_id = $request->company_id;
         $balance->bank_id = $request->bank_id;
         $balance->account_type_id = $request->account_type_id;
         $balance->account_number = $request->account_number ?? $balance->account_number; // Preserve the current account number if not provided
         $balance->opening_balance = $request->opening_balance;
+        $balance->inflows = $request->inflows;
+        $balance->outflows = $request->outflows;
+        $balance->closing_balance = $closingBalance;
+
 
         // Optionally update the user_id if provided
         if ($request->user_id) {
             $balance->user_id = $request->user_id;
         }
+
+
 
         // Save the updated balance
         $balance->save();
@@ -264,9 +285,24 @@ class BalanceController extends Controller
 
     public function destroy(Balance $balance)
     {
-        $this->authorize('delete', $balance);
-        $balance->delete();
+        // Check if the balance exists
+        if (!$balance) {
+            return redirect()->route('balances.index')->with('error', 'Balance not found.');
+        }
 
-        return redirect()->route('balances.index')->with('success', 'Balance deleted successfully.');
+        // Optionally, check if the user is authorized to delete
+        // if (!Auth::user()->can('delete', $balance)) {
+        //     return redirect()->route('balances.index')->with('error', 'Unauthorized.');
+        // }
+
+        try {
+            // Attempt to delete the balance
+            $balance->delete();
+
+            return redirect()->route('balances.index')->with('success', 'Balance deleted successfully.');
+        } catch (\Exception $e) {
+            // If an error occurs during deletion
+            return redirect()->route('balances.index')->with('error', 'Failed to delete balance.');
+        }
     }
 }

@@ -1,7 +1,13 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link } from '@inertiajs/react';
 
-export default function Index({ balances }) {
+export default function Index({ balances, total_inflows, total_outflows, total_closing_balance }) {
+
+    const deleteBalance = (id) => {
+        if (confirm('Are you sure you want to delete this balance?')) {
+            Inertia.delete(`/balances/${id}`);
+        }
+    };
 console.log(balances);
     return (
 
@@ -14,8 +20,8 @@ console.log(balances);
     >
         <Head title="Profile" />
 
-        <div className="container mx-auto max-w-7xl px-4 py-8">
-            <h1 className="text-2xl font-bold mb-6">Balances</h1>
+        <div className="container w-full mx-auto px-4 py-8">
+            {/* <h1 className="text-2xl font-bold mb-6">Balances</h1> */}
             <Link
                 href="/balances/create"
                 className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition mb-4 inline-block"
@@ -65,18 +71,29 @@ console.log(balances);
                                 >
                                     Edit
                                 </Link>
-
-                                <Link
-                                    href={`/balances/${balance.id}`}
-                                    className="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 transition"
-                                >
-                                   Show
-                                </Link>
+                                <button
+                                        onClick={() => deleteBalance(balance.id)}
+                                        className=" hover:text-red-700 bg-red-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition"
+                                    >
+                                        Delete
+                                    </button>
                             </td>
                         </tr>
                     ))}
                 </tbody>
+                <tfoot>
+                            <tr className="bg-gray-100">
+                                <td className="px-4 py-2 border text-right font-bold" colSpan="6">
+                                    Totals:
+                                </td>
+                                <td className="px-4 py-2 border font-bold">{total_inflows}</td>
+                                <td className="px-4 py-2 border font-bold">{total_outflows}</td>
+                                <td className="px-4 py-2 border font-bold">{total_closing_balance}</td>
+                                <td className="px-4 py-2 border"></td>
+                            </tr>
+                        </tfoot>
             </table>
+
         </div>
     </AuthenticatedLayout>
 

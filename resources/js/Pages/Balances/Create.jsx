@@ -1,4 +1,5 @@
-import { useForm } from '@inertiajs/react';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { Head, useForm } from '@inertiajs/react';
 
 export default function Create({ companies, banks, users, accountTypes }) {
     const { data, setData, post, errors } = useForm({
@@ -18,7 +19,17 @@ export default function Create({ companies, banks, users, accountTypes }) {
     };
 
     return (
-        <div className="container mx-auto px-4 py-8">
+
+        <AuthenticatedLayout
+        header={
+            <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+                Profile
+            </h2>
+        }
+    >
+        <Head title="Profile" />
+
+        <div className="container mx-auto max-w-7xl px-4 py-8">
             <h1 className="text-2xl font-bold mb-6">Add Balance</h1>
             <form onSubmit={submit} className="space-y-4">
                 {/* Company Selection */}
@@ -155,12 +166,14 @@ export default function Create({ companies, banks, users, accountTypes }) {
                 <div>
                     <button
                         type="submit"
-                        className="w-full bg-blue-500 text-white font-medium py-2 rounded hover:bg-blue-600 focus:ring focus:ring-blue-200"
+                        className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 transition"
                     >
                         Submit
                     </button>
                 </div>
             </form>
         </div>
+    </AuthenticatedLayout>
+
     );
 }
