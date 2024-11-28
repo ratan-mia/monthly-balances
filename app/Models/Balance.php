@@ -30,27 +30,24 @@ class Balance extends Model
         'closing_balance', // new field
     ];
 
-    // Relationship: A Balance belongs to an AccountType
-    public function accountType()
-    {
-        return $this->belongsTo(AccountType::class);
-    }
 
     public function company()
     {
         return $this->belongsTo(Company::class);
     }
-    // Define the relationship to the Bank model
+
     public function bank()
     {
         return $this->belongsTo(Bank::class);
     }
 
-
-
-    // Define the relationship to the User model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function accountType()
+    {
+        return $this->belongsTo(AccountType::class);
     }
 }

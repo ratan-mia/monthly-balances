@@ -5,11 +5,11 @@ export default function Create({ companies, banks, users, accountTypes }) {
         opening_balance: '',
         inflows: '',
         outflows: '',
-        account_type: '',
+        account_type_id: '',
         account_number: '',
-        responsible_person: '',
+        user_id: '',
         bank_id: '',
-        company: '',
+        company_id: '',
     });
 
     const submit = (e) => {
@@ -25,8 +25,8 @@ export default function Create({ companies, banks, users, accountTypes }) {
                 <div>
                     <label className="block text-gray-700 font-medium mb-1">Company</label>
                     <select
-                        value={data.company}
-                        onChange={(e) => setData('company', e.target.value)}
+                        value={data.company_id}
+                        onChange={(e) => setData('company_id', e.target.value)}
                         className="w-full border border-gray-300 rounded px-3 py-1 focus:ring focus:ring-blue-200"
                     >
                         <option value="" disabled>Select a company</option>
@@ -36,15 +36,15 @@ export default function Create({ companies, banks, users, accountTypes }) {
                             </option>
                         ))}
                     </select>
-                    {errors.company && <span className="text-red-500 text-sm">{errors.company}</span>}
+                    {errors.company_id && <span className="text-red-500 text-sm">{errors.company_id}</span>}
                 </div>
 
                 {/* Responsible Person Selection */}
                 <div>
                     <label className="block text-gray-700 font-medium mb-1">Responsible Person</label>
                     <select
-                        value={data.responsible_person}
-                        onChange={(e) => setData('responsible_person', e.target.value)}
+                        value={data.user_id}
+                        onChange={(e) => setData('user_id', e.target.value)}
                         className="w-full border border-gray-300 rounded px-3 py-1 focus:ring focus:ring-blue-200"
                     >
                         <option value="" disabled>Select a responsible person</option>
@@ -54,8 +54,8 @@ export default function Create({ companies, banks, users, accountTypes }) {
                             </option>
                         ))}
                     </select>
-                    {errors.responsible_person && (
-                        <span className="text-red-500 text-sm">{errors.responsible_person}</span>
+                    {errors.user_id && (
+                        <span className="text-red-500 text-sm">{errors.user_id}</span>
                     )}
                 </div>
 
@@ -104,8 +104,8 @@ export default function Create({ companies, banks, users, accountTypes }) {
                 <div>
                     <label className="block text-gray-700 font-medium mb-1">Account Type</label>
                     <select
-                        value={data.account_type}
-                        onChange={(e) => setData('account_type', e.target.value)}
+                        value={data.account_type_id}
+                        onChange={(e) => setData('account_type_id', e.target.value)}
                         className="w-full border border-gray-300 rounded px-3 py-1 focus:ring focus:ring-blue-200"
                     >
                         <option value="" disabled>Select account type</option>
@@ -115,7 +115,7 @@ export default function Create({ companies, banks, users, accountTypes }) {
                             </option>
                         ))}
                     </select>
-                    {errors.account_type && <span className="text-red-500 text-sm">{errors.account_type}</span>}
+                    {errors.account_type_id && <span className="text-red-500 text-sm">{errors.account_type_id}</span>}
                 </div>
 
                 {/* Account Number */}

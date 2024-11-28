@@ -16,14 +16,43 @@ class BalanceController extends Controller
 {
     public function index()
     {
-        $companyId = auth()->user()->company_id; // Restrict to the logged-in user's company
-        $balances = Balance::where('company_id', $companyId)->get();
+        // Get the logged-in user's ID
+        $userId = auth()->id();
 
-        // Return an Inertia response with balances data
+        // Retrieve balances for the logged-in user, eager loading relevant fields
+        $balances = Balance::with([
+            'company:id,name',        // Only get the 'id' and 'name' fields for company
+            'bank:id,name',           // Only get the 'id' and 'name' fields for bank
+            'user:id,name',           // Only get the 'id' and 'name' fields for user
+            'accountType:id,name'     // Only get the 'id' and 'name' fields for accountType
+        ])
+            ->where('user_id', $userId)
+            ->get();
+
+        // Return the Inertia response with only the relevant balance and related model data
         return Inertia::render('Balances/Index', [
-            'balances' => $balances
+            'balances' => $balances,
+            'userId' => $userId,
         ]);
     }
+
+
+
+
+
+    public function show($id)
+    {
+        $balance = Balance::with(['company', 'bank', 'accountType'])->find($id);
+
+        if (!$balance) {
+            return redirect()->route('balances.index')->with('error', 'Balance not found');
+        }
+
+        return Inertia::render('Balances/Show', [
+            'invoiceData' => $balance
+        ]);
+    }
+
 
     public function create()
     {
@@ -45,10 +74,11 @@ class BalanceController extends Controller
     }
 
 
+
     public function store(Request $request)
     {
         // Dump all incoming request data for debugging
-        dd($request->all());
+        // dd($request->all());
 
         // Get the logged-in user
         $userId = Auth::id();
@@ -58,21 +88,21 @@ class BalanceController extends Controller
         }
 
         // Find the company by name (you can also find by ID if needed)
-        $company = Company::where('name', 'Asian Imports Limited')->first();
+        $company = Company::where('id', $request->company_id)->first();
 
         if (!$company) {
             return response()->json(['error' => 'Company not found'], 404);
         }
 
         // Find the bank by its ID
-        $bank = Bank::find($request->bank_id);
+        $bank = Bank::where('id', $request->bank_id)->first();
 
         if (!$bank) {
             return response()->json(['error' => 'Bank not found'], 404);
         }
 
         // Find the account type by its name
-        $accountType = AccountType::where('name', $request->account_type)->first();
+        $accountType = AccountType::where('id', $request->account_type_id)->first();
 
         if (!$accountType) {
             return response()->json(['error' => 'Account type not found'], 404);
@@ -83,38 +113,11 @@ class BalanceController extends Controller
             'opening_balance' => 'required|numeric', // Required and must be a number
             'company_id' => 'required|exists:companies,id',  // Validate Company exists
             'bank_id' => 'required|exists:banks,id',  // Validate Bank exists
-            'account_type' => 'required|exists:account_types,id',  // Validate Account type exists
+            'account_type_id' => 'required|exists:account_types,id',  // Validate Account type exists
             'account_number' => 'nullable|string|max:50',  // Optional account number with max length
-            'responsible_person' => 'nullable|exists:users,id', // Validate responsible person (optional)
+            'user_id' => 'nullable|exists:users,id', // Validate responsible person (optional)
         ]);
 
-        // $closingBalance = $request->opening_balance + $request->inflows - $request->outflows;
-
-        // Balance::create([
-        //     // 'company_id' => auth()->user()->company_id,
-        //     // 'fund_name' => $request->fund_name,
-        //     // 'current_balance' => $request->current_balance,
-        //     // 'fund_utilized' => $request->fund_utilized,
-        //     // 'remaining_balance' => $request->remaining_balance,
-        //     // 'user_id' => $userId, // Use the user_id from the logged-in user
-        //     // 'company_id' => $request->company,
-        //     // 'bank_name' => $request->bank_name,
-        //     'user_id' => $userId,
-        //     'company_id' => $company->id,
-        //     'bank_id' => $bank->id,
-        //     'account_type_id' => $accountType->id,  // Use account_type_id here
-        //     // 'responsible_person' => $request->responsible_person,
-        //     // 'responsible_person' => auth()->user()->name,
-        //     // 'account_type' => $request->account_type,
-        //     'account_number' => $request->account_number,
-        //     'opening_balance' => $request->opening_balance,
-        //     'inflows' => $request->inflows,
-        //     'outflows' => $request->outflows,
-        //     'closing_balance' => $closingBalance,
-        // ]);
-
-
-        // Step 1: Get the latest balance entry for the user (assuming you have a 'date' field or something to identify days)
         $lastBalance = Balance::where('user_id', $userId)
             ->where('company_id', $company->id)
             ->where('bank_id', $bank->id)
@@ -144,38 +147,120 @@ class BalanceController extends Controller
     }
 
 
-    public function edit(Balance $balance)
+    public function edit($id)
     {
-        $this->authorize('view', $balance); // Ensure data belongs to the user
+        // Get the logged-in user
+        $userId = Auth::id();
 
-        // Render the edit page with balance data
-        return Inertia::render('Balances/Edit', [
-            'balance' => $balance
-        ]);
+        if (!$userId) {
+            return response()->json(['error' => 'User is not authenticated'], 401);
+        }
+
+        // Find the company (optional, if needed)
+        $company = Company::find(1); // Adjust as needed, e.g., find by user's associated company
+
+        if (!$company) {
+            return response()->json(['error' => 'Company not found'], 404);
+        }
+
+        // Find the balance by its ID
+        $balance = Balance::find($id);
+
+        if (!$balance) {
+            return response()->json(['error' => 'Balance not found'], 404);
+        }
+
+        // Fetch necessary data for the edit view (banks, account types, etc.)
+        $banks = Bank::all();
+        $accountTypes = AccountType::all();
+        $companies = Company::all(); // Adjust this as needed
+        $users = User::all(); // Assuming you might need user data
+
+        // Render the edit page with the balance data
+        return Inertia::render(
+            'Balances/Edit',
+            [
+                'balance' => $balance,
+                'companies' => $companies,
+                'banks' => $banks,
+                'accountTypes' => $accountTypes,
+                'users' => $users, // Optional, depending on the requirements
+            ]
+        );
     }
 
-    public function update(Request $request, Balance $balance)
-    {
-        $this->authorize('update', $balance);
 
+
+    public function update(Request $request, $id)
+    {
+        // Get the logged-in user
+        $userId = Auth::id();
+
+        if (!$userId) {
+            return response()->json(['error' => 'User is not authenticated'], 401);
+        }
+
+        // Find the balance by its ID
+        $balance = Balance::find($id);
+
+        if (!$balance) {
+            return response()->json(['error' => 'Balance not found'], 404);
+        }
+
+        // Optionally, you can check if the user is authorized to update this balance.
+        // For example, if only certain users can update a balance related to a specific company or bank:
+        if ($balance->user_id !== $userId) {
+            return response()->json(['error' => 'You are not authorized to update this balance'], 403);
+        }
+
+        // Find the company by ID
+        $company = Company::where('id', $request->company_id)->first();
+        if (!$company) {
+            return response()->json(['error' => 'Company not found'], 404);
+        }
+
+        // Find the bank by ID
+        $bank = Bank::where('id', $request->bank_id)->first();
+        if (!$bank) {
+            return response()->json(['error' => 'Bank not found'], 404);
+        }
+
+        // Find the account type by ID
+        $accountType = AccountType::where('id', $request->account_type_id)->first();
+        if (!$accountType) {
+            return response()->json(['error' => 'Account type not found'], 404);
+        }
+
+        // Validate incoming data
         $request->validate([
-            'fund_name' => 'required|string|max:255',
-            'opening_balance' => 'required|numeric',
-            'current_balance' => 'required|numeric',
-            'fund_utilized' => 'nullable|numeric',
-            'remaining_balance' => 'nullable|numeric',
+            'opening_balance' => 'required|numeric',  // Required and must be a number
+            'company_id' => 'required|exists:companies,id',  // Validate Company exists
+            'bank_id' => 'required|exists:banks,id',  // Validate Bank exists
+            'account_type_id' => 'required|exists:account_types,id',  // Validate Account type exists
+            'account_number' => 'nullable|string|max:50',  // Optional account number with max length
+            'user_id' => 'nullable|exists:users,id',  // Optional, if you want to associate a user with the balance
         ]);
 
-        $balance->update($request->only([
-            'fund_name',
-            'opening_balance',
-            'current_balance',
-            'fund_utilized',
-            'remaining_balance',
-        ]));
+        // Update the balance
+        $balance->company_id = $request->company_id;
+        $balance->bank_id = $request->bank_id;
+        $balance->account_type_id = $request->account_type_id;
+        $balance->account_number = $request->account_number ?? $balance->account_number; // Preserve the current account number if not provided
+        $balance->opening_balance = $request->opening_balance;
 
+        // Optionally update the user_id if provided
+        if ($request->user_id) {
+            $balance->user_id = $request->user_id;
+        }
+
+        // Save the updated balance
+        $balance->save();
+
+        // Return a success response
         return redirect()->route('balances.index')->with('success', 'Balance updated successfully.');
     }
+
+
 
     public function destroy(Balance $balance)
     {
