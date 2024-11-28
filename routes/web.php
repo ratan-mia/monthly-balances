@@ -11,6 +11,8 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\BalanceController;
 use Inertia\Inertia;
 
+require __DIR__ . '/auth.php';
+
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -28,21 +30,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::resource('balances', BalanceController::class);
 });
 
 
 
-Route::resource('companies', CompanyController::class);
-Route::resource('balances', BalanceController::class);
-Route::resource('banks', BankController::class);
+
 
 
 
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('account-types', AccountTypeController::class);
+    Route::resource('companies', CompanyController::class);
+    Route::resource('banks', BankController::class);
 });
-
-
-
-require __DIR__ . '/auth.php';
