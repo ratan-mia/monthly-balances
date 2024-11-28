@@ -1,7 +1,7 @@
 import { jsPDF } from 'jspdf';
 import 'tailwindcss/tailwind.css';
 
-const Show = ({ invoiceData }) => {
+const Show = ({ balanceData }) => {
   // Sample data in case the invoice data is missing
   const sampleData = {
     company: {
@@ -12,8 +12,8 @@ const Show = ({ invoiceData }) => {
     date: "2024-11-01",
     due_date: "2024-11-15",
     items: [
-      { description: "Sample Item 1", quantity: 1, price: 50, total: 50 },
-      { description: "Sample Item 2", quantity: 2, price: 25, total: 50 }
+      { description: "Sample Item 1", quantity: 1, price: 50, total: 50 }
+
     ],
     subtotal: 100,
     tax: 10,
@@ -30,24 +30,24 @@ const Show = ({ invoiceData }) => {
 
   };
 
-  // Check if the invoiceData is provided, otherwise use sampleData
-  const company = invoiceData?.company || sampleData.company;
-  const invoiceNumber = invoiceData?.invoice_number || sampleData.invoice_number;
-  const date = invoiceData?.date || sampleData.date;
-  const dueDate = invoiceData?.due_date || sampleData.due_date;
-  const items = invoiceData?.items || sampleData.items;
-  const subtotal = invoiceData?.subtotal || sampleData.subtotal;
-  const tax = invoiceData?.tax || sampleData.tax;
-  const total = invoiceData?.total || sampleData.total;
-  const userId = invoiceData?.user_id || sampleData.user_id;
-  const companyId = invoiceData?.company_id || sampleData.company_id;
-  const bankId = invoiceData?.bank_id || sampleData.bank_id;
-  const accountTypeId = invoiceData?.account_type_id || sampleData.account_type_id;
-  const accountNumber = invoiceData?.account_number || sampleData.account_number;
-  const openingBalance = invoiceData?.opening_balance || sampleData.opening_balance;
-  const inflows = invoiceData?.inflows || sampleData.inflows;
-  const outflows = invoiceData?.outflows || sampleData.outflows;
-  const closingBalance = invoiceData?.closing_balance || sampleData.closing_balance;
+  // Check if the balanceData is provided, otherwise use sampleData
+  const company = balanceData?.company || sampleData.company;
+  const invoiceNumber = balanceData?.invoice_number || sampleData.invoice_number;
+  const date = balanceData?.date || sampleData.date;
+  const dueDate = balanceData?.due_date || sampleData.due_date;
+  const items = balanceData?.items || sampleData.items;
+  const subtotal = balanceData?.subtotal || sampleData.subtotal;
+  const tax = balanceData?.tax || sampleData.tax;
+  const total = balanceData?.total || sampleData.total;
+  const userId = balanceData?.user_id || sampleData.user_id;
+  const companyId = balanceData?.company_id || sampleData.company_id;
+  const bankId = balanceData?.bank_id || sampleData.bank_id;
+  const accountTypeId = balanceData?.account_type_id || sampleData.account_type_id;
+  const accountNumber = balanceData?.account_number || sampleData.account_number;
+  const openingBalance = balanceData?.opening_balance || sampleData.opening_balance;
+  const inflows = balanceData?.inflows || sampleData.inflows;
+  const outflows = balanceData?.outflows || sampleData.outflows;
+  const closingBalance = balanceData?.closing_balance || sampleData.closing_balance;
 
   // Function to handle PDF generation and download
   const downloadPDF = () => {
@@ -111,30 +111,47 @@ const Show = ({ invoiceData }) => {
           <p><strong>Due Date:</strong> {dueDate}</p>
         </div>
         <div className="mt-4">
-          <table className="min-w-full table-auto border-collapse">
-            <thead>
-              <tr>
-                <th className="border p-2">Description</th>
-                <th className="border p-2">Quantity</th>
-                <th className="border p-2">Price</th>
-                <th className="border p-2">Total</th>
+
+        <table className="min-w-full table-auto border-collapse">
+        <thead>
+            <tr>
+            <th className="border p-2">Description</th>
+            <th className="border p-2">Quantity</th>
+            <th className="border p-2">Price</th>
+            <th className="border p-2">Total</th>
+            <th className="border p-2">User ID</th>
+            <th className="border p-2">Company ID</th>
+            <th className="border p-2">Bank ID</th>
+            <th className="border p-2">Account Type ID</th>
+            <th className="border p-2">Account Number</th>
+            <th className="border p-2">Opening Balance</th>
+            <th className="border p-2">Inflows</th>
+            <th className="border p-2">Outflows</th>
+            <th className="border p-2">Closing Balance</th>
+            </tr>
+        </thead>
+        <tbody>
+            {items.map((item, index) => (
+            <tr key={index}>
+                <td className="border p-2">{item.description}</td>
+                <td className="border p-2">{item.quantity}</td>
+                <td className="border p-2">${item.price}</td>
+                <td className="border p-2">${item.total}</td>
+                <td className="border p-2">{userId}</td>
+                <td className="border p-2">{companyId}</td>
+                <td className="border p-2">{bankId}</td>
+                <td className="border p-2">{accountTypeId}</td>
+                <td className="border p-2">{accountNumber}</td>
+                <td className="border p-2">${openingBalance}</td>
+                <td className="border p-2">${inflows}</td>
+                <td className="border p-2">${outflows}</td>
+                <td className="border p-2">${closingBalance}</td>
+            </tr>
+            ))}
+        </tbody>
+        </table>
 
 
-
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((item, index) => (
-                <tr key={index}>
-                  <td className="border p-2">{item.description}</td>
-                  <td className="border p-2">{item.quantity}</td>
-                  <td className="border p-2">${item.price}</td>
-                  <td className="border p-2">${item.total}</td>
-
-                </tr>
-              ))}
-            </tbody>
-          </table>
         </div>
         <div className="mt-4">
           <p><strong>Subtotal:</strong> ${subtotal}</p>
@@ -148,6 +165,7 @@ const Show = ({ invoiceData }) => {
           onClick={downloadPDF}
           className="bg-blue-500 text-white p-2 rounded-md"
         >
+
           Download PDF
         </button>
         <button
