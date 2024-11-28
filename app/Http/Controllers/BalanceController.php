@@ -96,29 +96,57 @@ class BalanceController extends Controller
             'outflows' => 'nullable|numeric',
         ]);
 
-        $closingBalance = $request->opening_balance + $request->inflows - $request->outflows;
+        // $closingBalance = $request->opening_balance + $request->inflows - $request->outflows;
+
+        // Balance::create([
+        //     // 'company_id' => auth()->user()->company_id,
+        //     // 'fund_name' => $request->fund_name,
+        //     // 'current_balance' => $request->current_balance,
+        //     // 'fund_utilized' => $request->fund_utilized,
+        //     // 'remaining_balance' => $request->remaining_balance,
+        //     // 'user_id' => $userId, // Use the user_id from the logged-in user
+        //     // 'company_id' => $request->company,
+        //     // 'bank_name' => $request->bank_name,
+        //     'user_id' => $userId,
+        //     'company_id' => $company->id,
+        //     'bank_id' => $bank->id,
+        //     'account_type_id' => $accountType->id,  // Use account_type_id here
+        //     // 'responsible_person' => $request->responsible_person,
+        //     // 'responsible_person' => auth()->user()->name,
+        //     // 'account_type' => $request->account_type,
+        //     'account_number' => $request->account_number,
+        //     'opening_balance' => $request->opening_balance,
+        //     'inflows' => $request->inflows,
+        //     'outflows' => $request->outflows,
+        //     'closing_balance' => $closingBalance,
+        // ]);
+
+
+        // Step 1: Get the latest balance entry for the user (assuming you have a 'date' field or something to identify days)
+        $lastBalance = Balance::where('user_id', $userId)
+            ->where('company_id', $company->id)
+            ->where('bank_id', $bank->id)
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        // Step 2: Calculate the opening balance for the next day (it will be the closing balance of the last entry)
+        $openingBalanceForNextDay = $lastBalance ? $lastBalance->closing_balance : $request->opening_balance; // If no previous balance, use the provided opening_balance
+
+        // Step 3: Insert the new balance for the next day
+        $closingBalance = $openingBalanceForNextDay + $request->inflows - $request->outflows; // Closing balance logic
+
         Balance::create([
-            // 'company_id' => auth()->user()->company_id,
-            // 'fund_name' => $request->fund_name,
-            // 'current_balance' => $request->current_balance,
-            // 'fund_utilized' => $request->fund_utilized,
-            // 'remaining_balance' => $request->remaining_balance,
-            // 'user_id' => $userId, // Use the user_id from the logged-in user
-            // 'company_id' => $request->company,
-            // 'bank_name' => $request->bank_name,
             'user_id' => $userId,
             'company_id' => $company->id,
             'bank_id' => $bank->id,
-            'account_type_id' => $accountType->id,  // Use account_type_id here
-            // 'responsible_person' => $request->responsible_person,
-            // 'responsible_person' => auth()->user()->name,
-            // 'account_type' => $request->account_type,
+            'account_type_id' => $accountType->id,
             'account_number' => $request->account_number,
-            'opening_balance' => $request->opening_balance,
+            'opening_balance' => $openingBalanceForNextDay, // Set opening balance for the next day
             'inflows' => $request->inflows,
             'outflows' => $request->outflows,
-            'closing_balance' => $closingBalance,
+            'closing_balance' => $closingBalance, // Calculate closing balance
         ]);
+
 
         return redirect()->route('balances.index')->with('success', 'Balance added successfully.');
     }
