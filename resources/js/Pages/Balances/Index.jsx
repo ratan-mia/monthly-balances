@@ -18,7 +18,7 @@ console.log(balances);
             </h2>
         }
     >
-        <Head title="Profile" />
+        <Head title="Balances" />
 
         <div className="container w-full mx-auto px-4 py-8">
             {/* <h1 className="text-2xl font-bold mb-6">Balances</h1> */}
