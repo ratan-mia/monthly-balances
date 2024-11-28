@@ -60,20 +60,20 @@ console.log(balances);
                                 {/* View Button */}
                                 <Link
                                     href={`/balances/${balance.id}`}
-                                    className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
+                                    className="text-blue-500 hover:underline mr-2"
                                 >
                                     View
                                 </Link>
                                 {/* Edit Button */}
                                 <Link
                                     href={`/balances/${balance.id}/edit`}
-                                    className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition"
+                                    className="text-yellow-500 hover:underline mr-2"
                                 >
                                     Edit
                                 </Link>
                                 <button
                                         onClick={() => deleteBalance(balance.id)}
-                                        className=" hover:text-red-700 bg-red-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition"
+                                        className="text-red-500 hover:underline"
                                     >
                                         Delete
                                     </button>
