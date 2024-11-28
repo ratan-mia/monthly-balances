@@ -44,8 +44,11 @@ class BalanceController extends Controller
         );
     }
 
+
     public function store(Request $request)
     {
+        // Dump all incoming request data for debugging
+        dd($request->all());
 
         // Get the logged-in user
         $userId = Auth::id();
@@ -54,7 +57,7 @@ class BalanceController extends Controller
             return response()->json(['error' => 'User is not authenticated'], 401);
         }
 
-        // Find the company by name
+        // Find the company by name (you can also find by ID if needed)
         $company = Company::where('name', 'Asian Imports Limited')->first();
 
         if (!$company) {
@@ -75,25 +78,14 @@ class BalanceController extends Controller
             return response()->json(['error' => 'Account type not found'], 404);
         }
 
-
-
-
+        // Validate incoming data
         $request->validate([
-            // 'fund_name' => 'required|string|max:255',
-            'opening_balance' => 'required|numeric',
-            // 'current_balance' => 'required|numeric',
-            // 'fund_utilized' => 'nullable|numeric',
-            // 'remaining_balance' => 'nullable|numeric',
-            // 'company_id' => 'nullable|max:255',
-            'company_id' => 'required|exists:companies,id',  // Validate Companies exists
-            // 'bank_name' => 'nullable|max:255',
-            'bank_id' => 'required|exists:banks,id',  // Validate bank exists
-            // 'responsible_person' => 'nullable|string|max:255',
-            // 'account_type' => 'nullable|string|max:50',
-            'account_type' => 'required|exists:account_types,id',  // Validate bank exists
-            'account_number' => 'nullable|string|max:50',
-            'inflows' => 'nullable|numeric',
-            'outflows' => 'nullable|numeric',
+            'opening_balance' => 'required|numeric', // Required and must be a number
+            'company_id' => 'required|exists:companies,id',  // Validate Company exists
+            'bank_id' => 'required|exists:banks,id',  // Validate Bank exists
+            'account_type' => 'required|exists:account_types,id',  // Validate Account type exists
+            'account_number' => 'nullable|string|max:50',  // Optional account number with max length
+            'responsible_person' => 'nullable|exists:users,id', // Validate responsible person (optional)
         ]);
 
         // $closingBalance = $request->opening_balance + $request->inflows - $request->outflows;
@@ -150,6 +142,7 @@ class BalanceController extends Controller
 
         return redirect()->route('balances.index')->with('success', 'Balance added successfully.');
     }
+
 
     public function edit(Balance $balance)
     {
