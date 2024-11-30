@@ -25,7 +25,7 @@ export default function Create() {
     >
         <Head title="Profile" />
 
-        <div className="container mx-auto max-w-7xl px-4 py-8">
+        <div className="container w-full mx-auto px-4 py-8">
             <h1 className="text-2xl font-bold mb-4">Add New Account Type</h1>
             <form onSubmit={handleSubmit} className="space-y-4">
                 {/* Account Type Name Field */}
