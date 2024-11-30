@@ -103,25 +103,25 @@ export default function Dashboard({ balances, companies, users, accountTypes, ba
               {/* Chart Section */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {/* Line Chart */}
-                <div className="bg-white p-4 rounded-lg shadow dark:bg-gray-700">
+                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-700">
                   <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Balance Trend (Line Chart)</h4>
                   <Line data={lineChartData} />
                 </div>
 
                 {/* Pie Chart */}
-                <div className="bg-white p-4 rounded-lg shadow dark:bg-gray-700">
+                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-700">
                   <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Account Type Distribution (Pie Chart)</h4>
                   <Pie data={pieChartData} />
                 </div>
 
                 {/* Bar Chart */}
-                <div className="bg-white p-4 rounded-lg shadow dark:bg-gray-700">
+                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-700">
                   <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Inflows vs Outflows (Bar Chart)</h4>
                   <Bar data={barChartData} />
                 </div>
 
                   {/* Bar Chart */}
-                  <div className="bg-white p-4 rounded-lg shadow dark:bg-gray-700">
+                  <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-700">
                   <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Bank-wise Balance</h4>
                   <BankWiseBalanceChart chartData={chartData} />
                 </div>
