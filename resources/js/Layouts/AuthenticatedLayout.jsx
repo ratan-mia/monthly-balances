@@ -93,7 +93,7 @@ export default function AuthenticatedLayout({ header, children }) {
 
             {/* Main content */}
             <div className="flex-1 transition-all duration-300">
-                <nav className="border-b border-gray-100 bg-white dark:border-gray-700 dark:bg-cyan-800">
+                <nav className="border-b border-gray-100 bg-white dark:border-gray-700 dark:bg-gray-700">
                     <div className="mx-auto w-full  sm:px-6 lg:px-8">
                         <div className="flex h-16 justify-between">
                             <div className="flex">
