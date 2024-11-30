@@ -66,6 +66,20 @@ class DashboardController extends Controller
             ];
         });
 
+        $topPerformingCompanies = Balance::select('company_id', DB::raw('SUM(closing_balance) as total_balance'))
+            ->groupBy('company_id')
+            ->with('company')  // Assuming Balance model has a relation to Company model
+            ->orderByDesc('total_balance')
+            ->limit(10)  // Show top 10 performing companies
+            ->get();
+
+        $topCompaniesData = $topPerformingCompanies->map(function ($item) {
+            return [
+                'companyName' => $item->company->name,
+                'total_balance' => $item->total_balance,
+            ];
+        });
+
 
 
 
@@ -85,6 +99,7 @@ class DashboardController extends Controller
             'chartData' => $chartData,
             'trendData' => $trendDataForChart,
             'companyBalances' => $formattedData,
+            'topPerformingCompanies' => $topCompaniesData,
         ]);
     }
 }
