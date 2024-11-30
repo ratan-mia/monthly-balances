@@ -122,7 +122,7 @@ export default function Dashboard({ balances, companies, users, accountTypes, ba
 
                   {/* Bar Chart */}
                   <div className="bg-white p-4 rounded-lg shadow dark:bg-gray-700">
-                  <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Inflows vs Outflows (Bar Chart)</h4>
+                  <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Bank-wise Balance</h4>
                   <BankWiseBalanceChart chartData={chartData} />
                 </div>
               </div>
