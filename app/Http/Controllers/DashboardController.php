@@ -33,6 +33,20 @@ class DashboardController extends Controller
             ];
         });
 
+        // Fetch balance trend data over time (for example, monthly data)
+        $trendData = Balance::selectRaw('DATE_FORMAT(created_at, "%Y-%m") as date, SUM(opening_balance + inflows - outflows) as total_balance')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get();
+
+        // Prepare data for the chart
+        $trendDataForChart = $trendData->map(function ($item) {
+            return [
+                'date' => $item->date,
+                'total_balance' => $item->total_balance,
+            ];
+        });
+
 
 
         $companies = Company::all();
@@ -48,6 +62,7 @@ class DashboardController extends Controller
             'accountTypes' => $accountTypes,
             'banks' => $banks,
             'chartData' => $chartData,
+            'trendData' => $trendDataForChart,
         ]);
     }
 }

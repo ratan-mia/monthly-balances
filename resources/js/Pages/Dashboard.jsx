@@ -1,7 +1,7 @@
+import BalanceTrendChart from '@/Components/BalanceTrendChart';
 import BankWiseBalanceChart from '@/Components/BankWiseBalanceChart';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
-
 import {
     ArcElement,
     BarElement,
@@ -31,7 +31,7 @@ ChartJS.register(
 
 
 
-export default function Dashboard({ balances, companies, users, accountTypes, banks, chartData }) {
+export default function Dashboard({ balances, companies, users, accountTypes, banks, chartData, trendData }) {
   // Process the balance data for charts
   const lineChartData = {
     labels: balances.map(balance => `Month ${balance.month}`),
@@ -104,7 +104,7 @@ export default function Dashboard({ balances, companies, users, accountTypes, ba
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {/* Line Chart */}
                 <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-700">
-                  <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Balance Trend (Line Chart)</h4>
+                  <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Balance Trend (Inflows and Outflows)</h4>
                   <Line data={lineChartData} />
                 </div>
 
@@ -124,6 +124,12 @@ export default function Dashboard({ balances, companies, users, accountTypes, ba
                   <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-700">
                   <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Bank-wise Balance</h4>
                   <BankWiseBalanceChart chartData={chartData} />
+                </div>
+
+                  {/* Balance Trend Chart */}
+                  <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-700">
+                  <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Balance Trend Over Time</h4>
+                  <BalanceTrendChart trendData={trendData} />
                 </div>
               </div>
             </div>
