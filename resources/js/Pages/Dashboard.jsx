@@ -117,7 +117,7 @@ export default function Dashboard({ balances, companies, users, accountTypes, ba
 
                 {/* Bar Chart */}
                 <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-700">
-                  <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Inflows vs Outflows (Bar Chart)</h4>
+                  <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Inflows vs Outflows (Monthly)</h4>
                   <Bar data={barChartData} />
                 </div>
 

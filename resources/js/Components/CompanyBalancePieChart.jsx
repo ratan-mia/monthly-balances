@@ -36,8 +36,8 @@ const CompanyBalancePieChart = ({ companyData }) => {
   };
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-lg">
-      <h3 className="text-xl font-semibold mb-4 text-gray-800">Balance Distribution by Company</h3>
+    <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-700">
+      <h3 className="text-xl font-semibold mb-4 text-white">Balance Distribution by Company</h3>
       <Pie data={chartData} options={options} />
     </div>
   );
