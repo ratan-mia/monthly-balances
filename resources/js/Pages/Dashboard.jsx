@@ -32,7 +32,7 @@ ChartJS.register(
 
 
 
-export default function Dashboard({ balances, companies, users, accountTypes, banks, chartData, trendData, companyBalanceData }) {
+export default function Dashboard({ balances, companies, users, accountTypes, banks, chartData, trendData, companyBalances }) {
   // Process the balance data for charts
   const lineChartData = {
     labels: balances.map(balance => `Month ${balance.month}`),
@@ -135,7 +135,7 @@ export default function Dashboard({ balances, companies, users, accountTypes, ba
                   {/* Balance Trend Chart */}
                   <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-700">
                   <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Balance Trend Over Time</h4>
-                  <CompanyBalancePieChart companyData={companyBalanceData} />
+                  <CompanyBalancePieChart companyData={companyBalances} />
                 </div>
               </div>
             </div>

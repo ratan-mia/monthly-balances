@@ -8,6 +8,10 @@ use App\Models\Bank;
 use App\Models\Company;
 use App\Models\User;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\DB;
+
+
+
 
 class DashboardController extends Controller
 {
@@ -49,7 +53,7 @@ class DashboardController extends Controller
 
 
         // Fetching data for the Pie chart - Grouped by company
-        $company_balances = Balance::select('company_id', \DB::raw('SUM(balance) as total_balance'))
+        $company_balances = Balance::select('company_id', DB::raw('SUM(closing_balance) as total_balance'))
             ->groupBy('company_id')
             ->with('company')  // Assuming Balance model has a relation to Company model
             ->get();
@@ -61,6 +65,8 @@ class DashboardController extends Controller
                 'balance' => $balance->total_balance,
             ];
         });
+
+
 
 
 
