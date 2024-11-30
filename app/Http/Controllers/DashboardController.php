@@ -48,6 +48,21 @@ class DashboardController extends Controller
         });
 
 
+        // Fetching data for the Pie chart - Grouped by company
+        $company_balances = Balance::select('company_id', \DB::raw('SUM(balance) as total_balance'))
+            ->groupBy('company_id')
+            ->with('company')  // Assuming Balance model has a relation to Company model
+            ->get();
+
+        // Format the data for the frontend
+        $formattedData = $company_balances->map(function ($balance) {
+            return [
+                'companyName' => $balance->company->name,  // Assuming Company model has a `name` field
+                'balance' => $balance->total_balance,
+            ];
+        });
+
+
 
         $companies = Company::all();
         $users = User::all();
@@ -63,6 +78,7 @@ class DashboardController extends Controller
             'banks' => $banks,
             'chartData' => $chartData,
             'trendData' => $trendDataForChart,
+            'companyBalances' => $formattedData,
         ]);
     }
 }
