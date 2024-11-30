@@ -27,7 +27,7 @@ export default function Index({ balances, total_inflows, total_outflows, total_c
                     <div className="text-right">
                         <Link
                             href="/balances/create"
-                            className="inline-block bg-gradient-to-r from-blue-500 to-blue-600 text-white text-lg font-semibold px-6 py-3 rounded-full shadow-lg hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300"
+                            className="inline-block bg-gradient-to-r from-blue-500 to-blue-600 text-white text-lg font-semibold px-6 py-3 rounded-full shadow-lg hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-3000"
                         >
                             Add Balance
                         </Link>
