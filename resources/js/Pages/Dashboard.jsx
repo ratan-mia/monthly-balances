@@ -102,7 +102,7 @@ export default function Dashboard({ balances, companies, users, accountTypes, ba
               <h3 className="text-2xl font-semibold mb-6">Welcome to the Dashboard!</h3>
 
               {/* Chart Section */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 {/* Line Chart */}
                 <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-700">
                   <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Balance Trend (Inflows and Outflows)</h4>
