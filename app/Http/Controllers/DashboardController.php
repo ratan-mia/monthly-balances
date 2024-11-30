@@ -81,6 +81,22 @@ class DashboardController extends Controller
         });
 
 
+        // Assuming Profit Margin is calculated as (Total Inflows - Total Outflows) / Total Inflows * 100
+        $profitMarginData = Balance::selectRaw('DATE_FORMAT(created_at, "%Y-%m") as date,
+    (SUM(inflows) - SUM(outflows)) / NULLIF(SUM(inflows), 0) * 100 as profit_margin')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get();
+
+        // Format the data for the frontend
+        $formattedProfitData = $profitMarginData->map(function ($item) {
+            return [
+                'date' => $item->date,
+                'profit_margin' => $item->profit_margin,  // Profit margin as percentage
+            ];
+        });
+
+
 
 
 
@@ -100,6 +116,7 @@ class DashboardController extends Controller
             'trendData' => $trendDataForChart,
             'companyBalances' => $formattedData,
             'topPerformingCompanies' => $topCompaniesData,
+            'profitMarginData' => $formattedProfitData,
         ]);
     }
 }

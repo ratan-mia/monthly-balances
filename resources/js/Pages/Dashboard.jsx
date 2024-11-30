@@ -1,6 +1,7 @@
 import BalanceTrendChart from '@/Components/BalanceTrendChart';
 import BankWiseBalanceChart from '@/Components/BankWiseBalanceChart';
 import CompanyBalancePieChart from '@/Components/CompanyBalancePieChart';
+import ProfitMarginOverTime from '@/Components/ProfitMarginOverTime';
 import TopPerformingCompanies from '@/Components/TopPerformingCompanies';
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
@@ -34,7 +35,7 @@ ChartJS.register(
 
 
 
-export default function Dashboard({ balances, companies, users, accountTypes, banks, chartData, trendData, companyBalances, topPerformingCompanies }) {
+export default function Dashboard({ balances, companies, users, accountTypes, banks, chartData, trendData, companyBalances, topPerformingCompanies,profitMarginData }) {
   // Process the balance data for charts
   const lineChartData = {
     labels: balances.map(balance => `Month ${balance.month}`),
@@ -145,6 +146,15 @@ export default function Dashboard({ balances, companies, users, accountTypes, ba
                   <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Top Performing Companies</h4>
                   <TopPerformingCompanies topCompaniesData={topPerformingCompanies} />
                 </div>
+
+
+                      {/* Balance Trend Chart */}
+                      <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-700">
+                  <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Top Performing Companies</h4>
+                  <ProfitMarginOverTime profitData={profitMarginData} />
+                </div>
+
+
 
 
               </div>
