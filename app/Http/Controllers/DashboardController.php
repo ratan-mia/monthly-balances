@@ -102,7 +102,18 @@ class DashboardController extends Controller
 
         $companies = Company::all();
         $users = User::all();
+        // $accountTypes = AccountType::all();
+
+        // Get all account types
         $accountTypes = AccountType::all();
+
+        // For each account type, calculate the total number of accounts associated with it
+        $accountTypes = $accountTypes->map(function ($accountType) {
+            // Count how many balances are associated with this account type
+            $accountType->totalAccounts = Balance::where('account_type_id', $accountType->id)->count();
+            return $accountType;
+        });
+
         $banks = Bank::all();
 
         // Pass data to Inertia
