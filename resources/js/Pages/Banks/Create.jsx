@@ -7,6 +7,7 @@ export default function Create() {
     const [form, setForm] = useState({
         name: '',
         branch: '',
+        account_number: '',
         address: '',
         contact_number: '',
     });
@@ -31,12 +32,13 @@ export default function Create() {
             <h1 className="text-2xl font-bold mb-4">Add New Bank</h1>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                    <label className="block text-gray-700 font-medium mb-1">Name</label>
+                    <label className="block text-gray-700 font-medium mb-1">Name(Required)</label>
                     <input
                         type="text"
                         value={form.name}
                         onChange={(e) => setForm({ ...form, name: e.target.value })}
                         className="w-full border border-gray-300 rounded px-3 py-2"
+                        autoComplete='on'
                     />
                 </div>
                 <div>
@@ -48,6 +50,19 @@ export default function Create() {
                         className="w-full border border-gray-300 rounded px-3 py-2"
                     />
                 </div>
+
+                <div>
+                    <label className="block text-gray-700 font-medium mb-1">Account Number(Required)</label>
+                    <input
+                        type="text"
+                        value={form.account_number}
+                        onChange={(e) => setForm({ ...form, account_number: e.target.value })}
+                        autoComplete='on'
+                        className="w-full border border-gray-300 rounded px-3 py-2"
+                    />
+                </div>
+
+
                 <div>
                     <label className="block text-gray-700 font-medium mb-1">Address</label>
                     <input

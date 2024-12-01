@@ -24,6 +24,7 @@ class BankController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'branch' => 'nullable|string|max:255',
+            'account_number' => 'required|unique:banks|max:255',
             'address' => 'nullable|string|max:255',
             'contact_number' => 'nullable|string|max:15',
         ]);
@@ -42,6 +43,7 @@ class BankController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'branch' => 'nullable|string|max:255',
+            'account_number' => 'required|unique:banks,account_number,' . $bank->id . '|max:255', // Unique validation excluding current record
             'address' => 'nullable|string|max:255',
             'contact_number' => 'nullable|string|max:15',
         ]);

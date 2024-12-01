@@ -33,6 +33,12 @@ export default function Edit({ balance, companies, banks, users, accountTypes })
         put(`/balances/${balance.id}`); // PUT request to update the balance data
     };
 
+    const handleBankChange = (e) => {
+        const selectedBankId = e.target.value;
+        const selectedBank = banks.find(bank => bank.id == selectedBankId);
+        setData({ ...data, bank_id: selectedBankId, account_number: selectedBank?.account_number || '' });
+    };
+
     return (
         <AuthenticatedLayout
         header={
@@ -82,23 +88,7 @@ export default function Edit({ balance, companies, banks, users, accountTypes })
                     {errors.user_id && <span className="text-red-500 text-sm">{errors.user_id}</span>}
                 </div>
 
-                {/* Bank Selection */}
-                <div>
-                    <label className="block text-gray-700 font-medium mb-1">Bank</label>
-                    <select
-                        value={data.bank_id}
-                        onChange={(e) => setData('bank_id', e.target.value)}
-                        className="w-full border border-gray-300 rounded px-3 py-1 focus:ring focus:ring-blue-200"
-                    >
-                        <option value="" disabled>Select a bank</option>
-                        {banks.map((bank) => (
-                            <option key={bank.id} value={bank.id}>
-                                {bank.name}
-                            </option>
-                        ))}
-                    </select>
-                    {errors.bank_id && <span className="text-red-500 text-sm">{errors.bank_id}</span>}
-                </div>
+
 
                 {/* Account Type Selection */}
                 <div>
@@ -154,12 +144,33 @@ export default function Edit({ balance, companies, banks, users, accountTypes })
                     {errors.outflows && <span className="text-red-500 text-sm">{errors.outflows}</span>}
                 </div>
 
+                      {/* Bank Selection */}
+                      <div>
+                    <label className="block text-gray-700 font-medium mb-1">Bank</label>
+                    <select
+                        value={data.bank_id}
+                        // onChange={(e) => setData('bank_id', e.target.value)}
+                        onChange={handleBankChange}
+                        className="w-full border border-gray-300 rounded px-3 py-1 focus:ring focus:ring-blue-200"
+                    >
+                        <option value="" disabled>Select a bank</option>
+                        {banks.map((bank) => (
+                            <option key={bank.id} value={bank.id}>
+                                {bank.name}
+                            </option>
+                        ))}
+                    </select>
+                    {errors.bank_id && <span className="text-red-500 text-sm">{errors.bank_id}</span>}
+                </div>
+
                 {/* Account Number */}
                 <div>
                     <label className="block text-gray-700 font-medium mb-1">Account Number</label>
                     <input
                         type="text"
+                        // value={data.account_number}
                         value={data.account_number}
+                        readOnly
                         onChange={(e) => setData('account_number', e.target.value)}
                         className="w-full border border-gray-300 rounded px-3 py-1 focus:ring focus:ring-blue-200"
                     />

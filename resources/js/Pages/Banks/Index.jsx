@@ -40,6 +40,7 @@ export default function Index({ banks }) {
                             <tr>
                                 <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Name</th>
                                 <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Branch</th>
+                                <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Account Number</th>
                                 <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Address</th>
                                 <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Contact Number</th>
                                 <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Actions</th>
@@ -50,6 +51,7 @@ export default function Index({ banks }) {
                                 <tr key={bank.id} className="border-b hover:bg-gray-50">
                                     <td className="py-4 px-6 text-sm text-gray-700">{bank.name}</td>
                                     <td className="py-4 px-6 text-sm text-gray-700">{bank.branch}</td>
+                                    <td className="py-4 px-6 text-sm text-gray-700">{bank.account_number}</td>
                                     <td className="py-4 px-6 text-sm text-gray-700">{bank.address}</td>
                                     <td className="py-4 px-6 text-sm text-gray-700">{bank.contact_number}</td>
                                     <td className="py-4 px-6 text-sm text-gray-700 space-x-4">

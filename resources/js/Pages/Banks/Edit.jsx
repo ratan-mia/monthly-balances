@@ -7,6 +7,7 @@ export default function Edit({ bank }) {
     const [form, setForm] = useState({
         name: bank.name || '',
         branch: bank.branch || '',
+        account_number: bank.account_number || '',
         address: bank.address || '',
         contact_number: bank.contact_number || '',
     });
@@ -49,6 +50,18 @@ export default function Edit({ bank }) {
                         className="w-full border border-gray-300 rounded px-3 py-2"
                     />
                 </div>
+
+                <div>
+                    <label className="block text-gray-700 font-medium mb-1">Account Number</label>
+                    <input
+                        type="text"
+                        value={form.account_number}
+                        onChange={(e) => setForm({ ...form, account_number: e.target.value })}
+                        className="w-full border border-gray-300 rounded px-3 py-2"
+                    />
+                </div>
+
+
                 <div>
                     <label className="block text-gray-700 font-medium mb-1">Address</label>
                     <input
