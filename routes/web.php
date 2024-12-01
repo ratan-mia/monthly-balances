@@ -25,7 +25,7 @@ Route::get('/', function () {
 
 
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
 
 // Route::get('/dashboard', function () {
 //     return Inertia::render('Dashboard');
@@ -49,4 +49,5 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('account-types', AccountTypeController::class);
     Route::resource('companies', CompanyController::class);
     Route::resource('banks', BankController::class);
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });
