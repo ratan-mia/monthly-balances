@@ -66,15 +66,4 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Company::class);
     }
-
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::created(function ($user) {
-            $accountantRole = Role::where('name', 'Accountant')->first();
-            $user->roles()->attach($accountantRole);
-        });
-    }
 }

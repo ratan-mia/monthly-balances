@@ -5,11 +5,10 @@ import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 
-export default function Register({companies}) {
+export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         email: '',
-        company_id: '', // Add company_id to form data
         password: '',
         password_confirmation: '',
     });
@@ -43,23 +42,6 @@ export default function Register({companies}) {
 
                     <InputError message={errors.name} className="mt-2" />
                 </div>
-                     {/* Company Selection */}
-                     <div>
-                        <label className="block text-gray-700 font-medium mb-1">Company</label>
-                        <select
-                            value={data.company_id}
-                            onChange={(e) => setData('company_id', e.target.value)}
-                            className="w-full border border-gray-300 rounded px-3 py-2 focus:ring focus:ring-blue-200"
-                        >
-                            <option value="" disabled>Select a company</option>
-                            {companies.map((company) => (
-                                <option key={company.id} value={company.id}>
-                                    {company.name}
-                                </option>
-                            ))}
-                        </select>
-                        {errors.company_id && <span className="text-red-500 text-sm">{errors.company_id}</span>}
-                    </div>
 
                 <div className="mt-4">
                     <InputLabel htmlFor="email" value="Email" />
