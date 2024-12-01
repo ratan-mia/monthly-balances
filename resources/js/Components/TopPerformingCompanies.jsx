@@ -29,7 +29,7 @@ const TopPerformingCompanies = ({ topCompaniesData }) => {
         plugins: {
             title: {
                 display: true,
-                text: 'Top Performing Companies (By Balance)',
+                text: '',
                 font: {
                     size: 18,
                 },

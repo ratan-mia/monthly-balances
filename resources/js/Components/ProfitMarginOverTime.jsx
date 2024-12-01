@@ -68,7 +68,7 @@ const ProfitMarginOverTime = ({ profitData }) => {
 
     return (
         <div className="profit-margin-over-time">
-            <h2>Profit Margin Over Time</h2>
+            {/* <h2>Profit Margin Over Time</h2> */}
             <Line data={chartData} options={options} />
         </div>
     );

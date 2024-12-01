@@ -143,14 +143,14 @@ export default function Dashboard({ balances, companies, users, accountTypes, ba
 
                      {/* Balance Trend Chart */}
                      <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-700">
-                  <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Top Performing Companies</h4>
+                  <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Top Performing Companies (By Balance)</h4>
                   <TopPerformingCompanies topCompaniesData={topPerformingCompanies} />
                 </div>
 
 
                       {/* Balance Trend Chart */}
                       <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-700">
-                  <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Top Performing Companies</h4>
+                  <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Profit Margin Over Time</h4>
                   <ProfitMarginOverTime profitData={profitMarginData} />
                 </div>
 

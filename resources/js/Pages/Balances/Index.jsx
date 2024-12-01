@@ -1,6 +1,9 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Inertia } from '@inertiajs/inertia';
 import { Head, Link } from '@inertiajs/react';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable'; // Import the autoTable plugin
+import * as XLSX from 'xlsx'; // Import xlsx package
 
 export default function Index({ balances, total_inflows, total_outflows, total_closing_balance }) {
 
@@ -9,6 +12,105 @@ export default function Index({ balances, total_inflows, total_outflows, total_c
             Inertia.delete(`/balances/${id}`);
         }
     };
+
+    const downloadPDF = () => {
+        const doc = new jsPDF();
+        const tableColumn = [
+            'User Name', 'Company', 'Bank', 'Account Type', 'Account Number',
+            'Opening Balance', 'Inflows', 'Outflows', 'Closing Balance'
+        ];
+
+        const tableRows = balances.map(balance => [
+            balance.user ? balance.user.name : 'N/A',
+            balance.company ? balance.company.name : 'N/A',
+            balance.bank ? balance.bank.name : 'N/A',
+            balance.account_type ? balance.account_type.name : 'N/A',
+            balance.account_number || 'N/A',
+            balance.opening_balance || '0',
+            balance.inflows || '0',
+            balance.outflows || '0',
+            balance.closing_balance || '0',
+        ]);
+
+        // Add title before the table
+        doc.setFontSize(18);
+        doc.text('Balances Report', 14, 20);
+
+        // Add the table
+        doc.setFontSize(12);
+        doc.autoTable({
+            head: [tableColumn],
+            body: tableRows,
+            startY: 30, // Start the table below the title
+        });
+
+        // Calculate totals for the summary
+        const totalInflows = total_inflows || 0;
+        const totalOutflows = total_outflows || 0;
+        const totalClosingBalance = total_closing_balance || 0;
+
+        // Add the summary under the relevant columns
+        doc.autoTable({
+            head: [['', '', '', '', '', '', 'Total Inflows', 'Total Outflows', 'Total Closing Balance']],
+            body: [
+                ['', '', '', '', '', '', totalInflows, totalOutflows, totalClosingBalance]
+            ],
+            startY: doc.lastAutoTable.finalY + 10, // Start the summary below the table
+            theme: 'grid',
+            columnStyles: {
+                6: { halign: 'center', fontStyle: 'bold' },
+                7: { halign: 'center', fontStyle: 'bold' },
+                8: { halign: 'center', fontStyle: 'bold' },
+            }
+        });
+
+        // Save the PDF
+        doc.save('balances_report.pdf');
+    };
+
+
+    const printTable = () => {
+        const printContent = document.getElementById('balances-table').outerHTML;
+        const newWindow = window.open('', '', 'width=800,height=600');
+        newWindow.document.write('<html><head><title>Print</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.2/dist/tailwind.min.css" /></head><body>');
+        newWindow.document.write(printContent);
+        newWindow.document.write('</body></html>');
+        newWindow.document.close();
+        newWindow.print();
+    };
+
+    const shareReport = () => {
+        if (navigator.share) {
+            navigator.share({
+                title: 'Balances Report',
+                text: 'Check out the balances report.',
+                url: window.location.href,
+            }).catch(console.error);
+        } else {
+            // Fallback: show an alert or open an email modal
+            alert('Sharing not supported on this browser');
+        }
+    };
+
+        // Excel Download Function
+        const downloadExcel = () => {
+            const worksheet = XLSX.utils.json_to_sheet(balances.map((balance) => ({
+                'User Name': balance.user ? balance.user.name : 'N/A',
+                'Company': balance.company ? balance.company.name : 'N/A',
+                'Bank': balance.bank ? balance.bank.name : 'N/A',
+                'Account Type': balance.account_type ? balance.account_type.name : 'N/A',
+                'Account Number': balance.account_number || 'N/A',
+                'Opening Balance': balance.opening_balance || '0',
+                'Inflows': balance.inflows || '0',
+                'Outflows': balance.outflows || '0',
+                'Closing Balance': balance.closing_balance || '0',
+            })));
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Balances');
+
+            // Download the Excel file
+            XLSX.writeFile(workbook, 'balances.xlsx');
+        };
 
     return (
         <AuthenticatedLayout
@@ -24,19 +126,50 @@ export default function Index({ balances, total_inflows, total_outflows, total_c
                 {/* Create Balance Button */}
                 <div className="flex justify-between items-center mb-6">
                     <h1 className="text-3xl font-semibold text-gray-800">Balances</h1>
-                    <div className="text-right">
+
+
+                    <div className="text-right space-x-4">
                         <Link
                             href="/balances/create"
-                            className="inline-block bg-gradient-to-r from-blue-500 to-blue-600 text-white text-lg font-semibold px-6 py-3 rounded-full shadow-lg hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-3000"
+                            className="inline-block bg-transparent text-blue-600 text-sm font-medium px-3 py-1.5 border border-blue-600 hover:bg-blue-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300"
                         >
                             Add Balance
                         </Link>
+                        {/* Action Buttons */}
+                        <button
+                            onClick={downloadExcel}
+                            className="inline-block bg-transparent text-blue-600 text-sm font-medium px-3 py-1.5 border border-blue-600 hover:bg-blue-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300"
+                        >
+                            Download Excel
+                        </button>
+
+                        <button
+                            onClick={downloadPDF}
+                            className="inline-block bg-transparent text-blue-600 text-sm font-medium px-3 py-1.5 border border-blue-600 hover:bg-blue-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300"
+                        >
+                            Download PDF
+                        </button>
+
+                        <button
+                            onClick={printTable}
+                            className="inline-block bg-transparent text-yellow-600 text-sm font-medium px-3 py-1.5 border border-yellow-600 hover:bg-yellow-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-300"
+                        >
+                            Print
+                        </button>
+
+                        <button
+                            onClick={shareReport}
+                            className="inline-block bg-transparent text-purple-600 text-sm font-medium px-3 py-1.5 border border-purple-600 hover:bg-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all duration-300"
+                        >
+                            Share
+                        </button>
+
                     </div>
                 </div>
 
                 {/* Balances Table */}
                 <div className="overflow-x-auto bg-white rounded-lg shadow-lg">
-                    <table className="min-w-full table-auto">
+                    <table id="balances-table" className="min-w-full table-auto">
                         <thead className="bg-gray-100 border-b">
                             <tr>
                                 <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">User Name</th>
@@ -65,12 +198,12 @@ export default function Index({ balances, total_inflows, total_outflows, total_c
                                     <td className="py-4 px-6 text-sm text-gray-700">{balance.closing_balance || '0'}</td>
                                     <td className="py-4 px-6 text-sm text-gray-700 space-x-4">
                                         {/* View Button */}
-                                        <Link
+                                        {/* <Link
                                             href={`/balances/${balance.id}`}
                                             className="text-blue-600 hover:text-blue-700 font-medium transition-all"
                                         >
                                             View
-                                        </Link>
+                                        </Link> */}
                                         {/* Edit Button */}
                                         <Link
                                             href={`/balances/${balance.id}/edit`}

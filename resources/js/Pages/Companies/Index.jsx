@@ -13,16 +13,18 @@ export default function Index({ companies }) {
             <Head title="Profile" />
 
             <div className="container w-full mx-auto px-6 py-8">
-                <h1 className="text-3xl font-semibold text-gray-800">Companies</h1>
 
-                {/* Create Company Button aligned to the right */}
-                <div className="text-right">
-                    <Link
+                      {/* Header and Add New Bank Button */}
+                      <div className="flex justify-between items-center mb-6">
+                    <h1 className="text-3xl font-semibold text-gray-800">Companies</h1>
+                    <div className="text-right">
+                        <Link
                         href="/companies/create"
-                        className="inline-block bg-gradient-to-r from-blue-500 to-blue-600 text-white text-lg font-semibold px-6 py-3 rounded-full shadow-lg hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300"
-                    >
-                        Create Company
-                    </Link>
+                            className="inline-block bg-transparent text-blue-600 text-sm font-medium px-3 py-1.5 border border-blue-600 hover:bg-blue-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300"
+                        >
+                           Create Company
+                        </Link>
+                    </div>
                 </div>
 
                 {/* Companies Table */}

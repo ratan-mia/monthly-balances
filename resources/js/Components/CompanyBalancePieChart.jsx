@@ -1,5 +1,3 @@
-// resources/js/Components/CompanyBalancePieChart.jsx
-
 import { ArcElement, Chart as ChartJS, Legend, Tooltip } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 
@@ -28,7 +26,10 @@ const CompanyBalancePieChart = ({ companyData }) => {
       tooltip: {
         callbacks: {
           label: function (tooltipItem) {
-            return `${tooltipItem.label}: $${tooltipItem.raw.toFixed(2)}`; // Format tooltip with $ sign
+            // Fix tooltip to display correct data
+            const { datasetIndex, dataIndex } = tooltipItem;
+            const value = chartData.datasets[datasetIndex].data[dataIndex];
+            return `${tooltipItem.label}: $${value.toFixed(2)}`; // Format tooltip with $ sign
           },
         },
       },
@@ -37,7 +38,7 @@ const CompanyBalancePieChart = ({ companyData }) => {
 
   return (
     <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-700">
-      <h3 className="text-xl font-semibold mb-4 text-white">Balance Distribution by Company</h3>
+      {/* <h3 className="text-xl font-semibold mb-4 text-white">Balance Distribution by Company</h3> */}
       <Pie data={chartData} options={options} />
     </div>
   );

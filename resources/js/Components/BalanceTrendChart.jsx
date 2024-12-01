@@ -42,7 +42,7 @@ export default function BalanceTrendChart({ trendData }) {
     responsive: true,
     plugins: {
       legend: {
-        position: 'top',
+        position: 'bottom',
       },
       title: {
         display: true,
@@ -68,7 +68,7 @@ export default function BalanceTrendChart({ trendData }) {
 
   return (
     <div className="chart-container">
-      <h3 className="font-medium mb-4">Balance Trend Over Time</h3>
+      {/* <h3 className="font-medium mb-4">Balance Trend Over Time</h3> */}
       <Line data={lineChartData} options={options} />
     </div>
   );

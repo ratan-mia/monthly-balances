@@ -24,7 +24,10 @@
         "@heroicons/react": "^2.2.0",
         "@inertiajs/inertia": "^0.11.1",
         "chart.js": "^4.4.6",
+        "chartjs-plugin-datalabels": "^2.2.0",
         "jspdf": "^2.5.2",
-        "react-chartjs-2": "^5.2.0"
+        "jspdf-autotable": "^3.8.4",
+        "react-chartjs-2": "^5.2.0",
+        "xlsx": "^0.18.5"
     }
 }
