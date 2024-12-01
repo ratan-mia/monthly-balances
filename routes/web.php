@@ -40,11 +40,6 @@ Route::middleware('auth')->group(function () {
 
 
 
-
-
-
-
-
 Route::middleware(['auth'])->group(function () {
     Route::resource('account-types', AccountTypeController::class);
     Route::resource('companies', CompanyController::class);
