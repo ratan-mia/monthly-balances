@@ -3,9 +3,25 @@ import { Inertia } from '@inertiajs/inertia';
 import { Head, Link } from '@inertiajs/react';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable'; // Import the autoTable plugin
+import { useEffect } from 'react';
 import * as XLSX from 'xlsx'; // Import xlsx package
 
+
+import 'datatables.net'; // Import DataTables JS
+import 'datatables.net-dt/css/jquery.dataTables.min.css'; // Import DataTables CSS
+import $ from 'jquery'; // Import jQuery
+
+
+
+
+
 export default function Index({ balances, total_inflows, total_outflows, total_closing_balance }) {
+
+    // DataTable initialization
+    useEffect(() => {
+        // Initialize DataTable after the component mounts
+        $('#balances-table').DataTable();
+    }, []);
 
     const deleteBalance = (id) => {
         if (confirm('Are you sure you want to delete this balance?')) {
@@ -68,7 +84,6 @@ export default function Index({ balances, total_inflows, total_outflows, total_c
         doc.save('balances_report.pdf');
     };
 
-
     const printTable = () => {
         const printContent = document.getElementById('balances-table').outerHTML;
         const newWindow = window.open('', '', 'width=800,height=600');
@@ -87,30 +102,28 @@ export default function Index({ balances, total_inflows, total_outflows, total_c
                 url: window.location.href,
             }).catch(console.error);
         } else {
-            // Fallback: show an alert or open an email modal
             alert('Sharing not supported on this browser');
         }
     };
 
-        // Excel Download Function
-        const downloadExcel = () => {
-            const worksheet = XLSX.utils.json_to_sheet(balances.map((balance) => ({
-                'User Name': balance.user ? balance.user.name : 'N/A',
-                'Company': balance.company ? balance.company.name : 'N/A',
-                'Bank': balance.bank ? balance.bank.name : 'N/A',
-                'Account Type': balance.account_type ? balance.account_type.name : 'N/A',
-                'Account Number': balance.account_number || 'N/A',
-                'Opening Balance': balance.opening_balance || '0',
-                'Inflows': balance.inflows || '0',
-                'Outflows': balance.outflows || '0',
-                'Closing Balance': balance.closing_balance || '0',
-            })));
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, 'Balances');
+    const downloadExcel = () => {
+        const worksheet = XLSX.utils.json_to_sheet(balances.map((balance) => ({
+            'User Name': balance.user ? balance.user.name : 'N/A',
+            'Company': balance.company ? balance.company.name : 'N/A',
+            'Bank': balance.bank ? balance.bank.name : 'N/A',
+            'Account Type': balance.account_type ? balance.account_type.name : 'N/A',
+            'Account Number': balance.account_number || 'N/A',
+            'Opening Balance': balance.opening_balance || '0',
+            'Inflows': balance.inflows || '0',
+            'Outflows': balance.outflows || '0',
+            'Closing Balance': balance.closing_balance || '0',
+        })));
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Balances');
 
-            // Download the Excel file
-            XLSX.writeFile(workbook, 'balances.xlsx');
-        };
+        // Download the Excel file
+        XLSX.writeFile(workbook, 'balances.xlsx');
+    };
 
     return (
         <AuthenticatedLayout
@@ -126,7 +139,6 @@ export default function Index({ balances, total_inflows, total_outflows, total_c
                 {/* Create Balance Button */}
                 <div className="flex justify-between items-center mb-6">
                     <h1 className="text-3xl font-semibold text-gray-800">Balances</h1>
-
 
                     <div className="text-right space-x-4">
                         <Link
@@ -197,21 +209,12 @@ export default function Index({ balances, total_inflows, total_outflows, total_c
                                     <td className="py-4 px-6 text-sm text-gray-700">{balance.outflows || '0'}</td>
                                     <td className="py-4 px-6 text-sm text-gray-700">{balance.closing_balance || '0'}</td>
                                     <td className="py-4 px-6 text-sm text-gray-700 space-x-4">
-                                        {/* View Button */}
-                                        {/* <Link
-                                            href={`/balances/${balance.id}`}
-                                            className="text-blue-600 hover:text-blue-700 font-medium transition-all"
-                                        >
-                                            View
-                                        </Link> */}
-                                        {/* Edit Button */}
                                         <Link
                                             href={`/balances/${balance.id}/edit`}
                                             className="text-yellow-600 hover:text-yellow-700 font-medium transition-all"
                                         >
                                             Edit
                                         </Link>
-                                        {/* Delete Button */}
                                         <button
                                             onClick={() => deleteBalance(balance.id)}
                                             className="text-red-600 hover:text-red-700 font-medium transition-all"
