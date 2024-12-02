@@ -105,6 +105,13 @@ return [
         ),
     ],
 
+    // 'providers' => [
+    //     Illuminate\Auth\AuthServiceProvider::class,
+    //     Spatie\Permission\PermissionServiceProvider::class,
+    // ],
+
+
+
     /*
     |--------------------------------------------------------------------------
     | Maintenance Mode Driver
