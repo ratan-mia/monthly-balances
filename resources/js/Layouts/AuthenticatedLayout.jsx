@@ -88,6 +88,14 @@ export default function AuthenticatedLayout({ header, children }) {
                             {isSidebarCollapsed ? 'B' : 'Balances'}
                         </NavLink>
                     </div>
+                    <div className="block">
+                        <NavLink
+                            href={route('users.index')}
+                            active={route().current('users.index')}
+                        >
+                            {isSidebarCollapsed ? 'U' : 'Users Management'}
+                        </NavLink>
+                    </div>
                 </div>
             </div>
 

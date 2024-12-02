@@ -4,11 +4,19 @@ import { Head } from '@inertiajs/react';
 import { useState } from 'react';
 
 const UserIndex = ({ users, roles }) => {
-    const [selectedRole, setSelectedRole] = useState('');
+    const [selectedRoles, setSelectedRoles] = useState({});
 
-    const handleRoleChange = (userId) => {
-        if (selectedRole) {
-            Inertia.post(`/admin/users/${userId}/assign-role`, { role: selectedRole });
+    const handleRoleChange = (userId, role) => {
+        setSelectedRoles((prevSelectedRoles) => ({
+            ...prevSelectedRoles,
+            [userId]: role,
+        }));
+    };
+
+    const handleAssignRole = (userId) => {
+        const role = selectedRoles[userId];
+        if (role) {
+            Inertia.post(`/admin/users/${userId}/assign-role`, { role });
         }
     };
 
@@ -56,8 +64,8 @@ const UserIndex = ({ users, roles }) => {
                                     <td className="px-6 py-4 flex items-center space-x-2">
                                         <select
                                             className="bg-gray-100 border border-gray-300 rounded-md p-2 text-sm"
-                                            onChange={(e) => setSelectedRole(e.target.value)}
-                                            value={selectedRole}
+                                            onChange={(e) => handleRoleChange(user.id, e.target.value)}
+                                            value={selectedRoles[user.id] || ''}
                                         >
                                             <option value="">Select Role</option>
                                             {roles.map((role) => (
@@ -67,7 +75,7 @@ const UserIndex = ({ users, roles }) => {
                                             ))}
                                         </select>
                                         <button
-                                            onClick={() => handleRoleChange(user.id)}
+                                            onClick={() => handleAssignRole(user.id)}
                                             className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                                         >
                                             Assign Role

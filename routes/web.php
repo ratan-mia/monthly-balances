@@ -61,6 +61,14 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
     // Admin can manage user roles
-    Route::get('/admin/users', [UserController::class, 'index'])->name('admin.users.index');
-    Route::post('/admin/users/{user}/assign-role', [UserController::class, 'assignRole'])->name('admin.users.assignRole');
+    // Route::get('/admin/users', [UserController::class, 'index'])->name('admin.users.index');
+    Route::resource('users', UserController::class);
+    // Route::post('users/{user}/assign-role', [UserController::class, 'assignRole'])->name('users.assignRole');
 });
+
+
+// Admin routes
+// Route::prefix('admin')->middleware('auth')->group(function () {
+//     Route::resource('users', UserController::class);
+//     Route::post('users/{user}/assign-role', [UserController::class, 'assignRole'])->name('users.assignRole');
+// });
