@@ -1,7 +1,8 @@
-import ApplicationLogo from '@/Components/ApplicationLogo';
+// resources/js/Layouts/AuthenticatedLayout.js
 import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
-import { Link, usePage } from '@inertiajs/react';
+import Sidebar from '@/Components/Sidebar';
+import { usePage } from '@inertiajs/react';
 import { useState } from 'react';
 
 export default function AuthenticatedLayout({ header, children }) {
@@ -13,96 +14,17 @@ export default function AuthenticatedLayout({ header, children }) {
 
     return (
         <div className="min-h-screen bg-gray-100 flex">
+
             {/* Sidebar */}
-            <div
-                className={`bg-gray-800 text-white transition-all duration-300 ${isSidebarCollapsed ? 'w-20' : 'w-64'} space-y-6 py-7 px-2 absolute sm:relative left-0`}
-            >
-                <div className="flex items-center justify-between">
-                    <Link href="/" className="text-2xl font-semibold text-white">
-                        <ApplicationLogo className="h-9 w-auto" />
-                    </Link>
-                    {/* Toggle button for collapsing/expanding sidebar */}
-                    <button
-                        onClick={() => setIsSidebarCollapsed(prev => !prev)}
-                        className="text-white sm:hidden p-2"
-                    >
-                        <svg
-                            className="h-6 w-6"
-                            stroke="currentColor"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M6 18L18 6M6 6l12 12"
-                            />
-                        </svg>
-                    </button>
-                </div>
-
-                {/* Sidebar Menu as Block Divs */}
-                <div className="space-y-4">
-                    <div className="block">
-                        <NavLink
-                            href={route('dashboard')}
-                            active={route().current('dashboard')}
-                        >
-                            {isSidebarCollapsed ? 'D' : 'Dashboard'}
-                        </NavLink>
-                    </div>
-
-                    <div className="block">
-                        <NavLink
-                            href={route('banks.index')}
-                            active={route().current('banks.index')}
-                        >
-                            {isSidebarCollapsed ? 'B' : 'Banks'}
-                        </NavLink>
-                    </div>
-
-                    <div className="block">
-                        <NavLink
-                            href={route('companies.index')}
-                            active={route().current('companies.index')}
-                        >
-                            {isSidebarCollapsed ? 'C' : 'Companies'}
-                        </NavLink>
-                    </div>
-
-                    <div className="block">
-                        <NavLink
-                            href={route('account-types.index')}
-                            active={route().current('account-types.index')}
-                        >
-                            {isSidebarCollapsed ? 'A' : 'Account Types'}
-                        </NavLink>
-                    </div>
-
-                    <div className="block">
-                        <NavLink
-                            href={route('balances.index')}
-                            active={route().current('balances.index')}
-                        >
-                            {isSidebarCollapsed ? 'B' : 'Balances'}
-                        </NavLink>
-                    </div>
-                    <div className="block">
-                        <NavLink
-                            href={route('users.index')}
-                            active={route().current('users.index')}
-                        >
-                            {isSidebarCollapsed ? 'U' : 'Users Management'}
-                        </NavLink>
-                    </div>
-                </div>
-            </div>
+            <Sidebar
+                isSidebarCollapsed={isSidebarCollapsed}
+                setIsSidebarCollapsed={setIsSidebarCollapsed}
+            />
 
             {/* Main content */}
             <div className="flex-1 transition-all duration-300">
                 <nav className="border-b border-gray-100 bg-white dark:border-gray-700 dark:bg-gray-700">
-                    <div className="mx-auto w-full  sm:px-6 lg:px-8">
+                    <div className="mx-auto w-full sm:px-6 lg:px-8">
                         <div className="flex h-16 justify-between">
                             <div className="flex">
                                 {/* Mobile sidebar toggle */}
