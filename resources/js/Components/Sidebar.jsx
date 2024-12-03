@@ -31,11 +31,11 @@ const Sidebar = ({ isSidebarCollapsed, setIsSidebarCollapsed }) => {
             <div className="space-y-4 mt-6">
                 {[
                     { href: 'dashboard', icon: <FaHome />, label: 'Dashboard' },
-                    { href: 'banks.index', icon: <FaBuilding />, label: 'Banks' },
+                    { href: 'banks.index', icon: <FaBuilding />, label: 'Banks Accounts' },
                     { href: 'companies.index', icon: <FaBuilding />, label: 'Companies' },
                     { href: 'account-types.index', icon: <FaCog />, label: 'Account Types' },
                     { href: 'loan-types.index', icon: <FaMoneyCheckAlt />, label: 'Loan Types' },
-                    { href: 'loans.index', icon: <FaMoneyCheckAlt />, label: 'Loans' },
+                    { href: 'loans.index', icon: <FaMoneyCheckAlt />, label: 'Loan Summary' },
                     { href: 'balances.index', icon: <FaMoneyBillWave />, label: 'Balances' },
                     { href: 'users.index', icon: <FaUsers />, label: 'Users Management' }
                 ].map(({ href, icon, label }) => (
