@@ -9,39 +9,34 @@ class Loan extends Model
 {
     use HasFactory;
 
-    // Define the table if it's not the plural of the model name (not needed here, but good practice)
-    protected $table = 'loans';
-
-    // The attributes that are mass assignable
     protected $fillable = [
         'company_id',
         'user_id',
         'bank_id',
+        'loan_type_id',  // Add loan_type_id to the fillable array
         'type',
         'limit',
         'occupied_balance',
         'available_balance',
     ];
 
-    /**
-     * Get the company that owns the loan.
-     */
+    // Define the relationship with LoanType
+    public function loanType()
+    {
+        return $this->belongsTo(LoanType::class);
+    }
+
+    // Define the relationship with other models like Company, User, and Bank
     public function company()
     {
         return $this->belongsTo(Company::class);
     }
 
-    /**
-     * Get the user that owns the loan.
-     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Get the bank that owns the loan.
-     */
     public function bank()
     {
         return $this->belongsTo(Bank::class);

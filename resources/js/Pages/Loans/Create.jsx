@@ -2,7 +2,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Link, useForm } from '@inertiajs/react';
 
-export default function Create({ companies, users, banks }) {
+export default function Create({ companies, users, banks, loanTypes }) {
     const { data, setData, post, processing, errors } = useForm({
         company_id: '',
         user_id: '',
@@ -93,6 +93,24 @@ export default function Create({ companies, users, banks }) {
                                 ))}
                             </select>
                             {errors.bank_id && <p className="text-red-500 text-sm">{errors.bank_id}</p>}
+                        </div>
+
+                            {/* Loan Type */}
+                            <div>
+                            <label htmlFor="loan_type_id" className="block text-sm font-medium text-gray-700">Loan Type</label>
+                            <select
+                                id="loan_type_id"
+                                name="loan_type_id"
+                                value={data.loan_type_id}
+                                onChange={(e) => setData('loan_type_id', e.target.value)}
+                                className="block w-full mt-2 p-2 border border-gray-300 rounded-md"
+                            >
+                                <option value="">Select Loan Type</option>
+                                {loanTypes.map((loantype) => (
+                                    <option key={loantype.id} value={loantype.id}>{loantype.name}</option>
+                                ))}
+                            </select>
+                            {errors.loan_type_id && <p className="text-red-500 text-sm">{errors.loan_type_id}</p>}
                         </div>
 
                         {/* Loan Type Field */}

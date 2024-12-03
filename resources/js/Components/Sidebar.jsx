@@ -1,7 +1,7 @@
 import ApplicationLogo from '@/Components/ApplicationLogo';
 import NavLink from '@/Components/NavLink';
 import { Link } from '@inertiajs/react';
-import { FaBuilding, FaCog, FaHome, FaMoneyBillWave, FaUsers } from 'react-icons/fa';
+import { FaBuilding, FaCog, FaHome, FaMoneyBillWave, FaMoneyCheckAlt, FaUsers } from 'react-icons/fa';
 
 const Sidebar = ({ isSidebarCollapsed, setIsSidebarCollapsed }) => {
     return (
@@ -10,7 +10,7 @@ const Sidebar = ({ isSidebarCollapsed, setIsSidebarCollapsed }) => {
         >
             {/* Sidebar Header */}
             <div className="flex items-center justify-between px-4">
-                <Link href="/" className="text-2xl font-semibold text-white">
+                <Link href="/" className="text-2xl</div> font-semibold text-white">
                     <ApplicationLogo className="h-9 w-auto" />
                 </Link>
 
@@ -34,6 +34,8 @@ const Sidebar = ({ isSidebarCollapsed, setIsSidebarCollapsed }) => {
                     { href: 'banks.index', icon: <FaBuilding />, label: 'Banks' },
                     { href: 'companies.index', icon: <FaBuilding />, label: 'Companies' },
                     { href: 'account-types.index', icon: <FaCog />, label: 'Account Types' },
+                    { href: 'loan-types.index', icon: <FaMoneyCheckAlt />, label: 'Loan Types' },
+                    { href: 'loans.index', icon: <FaMoneyCheckAlt />, label: 'Loans' },
                     { href: 'balances.index', icon: <FaMoneyBillWave />, label: 'Balances' },
                     { href: 'users.index', icon: <FaUsers />, label: 'Users Management' }
                 ].map(({ href, icon, label }) => (
@@ -56,7 +58,7 @@ const Sidebar = ({ isSidebarCollapsed, setIsSidebarCollapsed }) => {
             {/* Sidebar Footer (Optional) */}
             {!isSidebarCollapsed && (
                 <div className="absolute bottom-10 left-0 px-4 py-2 text-center text-gray-400 text-xs">
-                    <span>&copy; 2024 Your Company</span>
+                    <span>&copy; 2024 Asian Holdings</span>
                 </div>
             )}
         </div>

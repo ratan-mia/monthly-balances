@@ -97,7 +97,7 @@ export default function Edit({ loan, companies, users, banks }) {
                         </div>
 
                         {/* Loan Type Field */}
-                        <div>
+                        {/* <div>
                             <label htmlFor="type" className="block text-sm font-medium text-gray-700">Loan Type</label>
                             <input
                                 type="text"
@@ -107,6 +107,24 @@ export default function Edit({ loan, companies, users, banks }) {
                                 className="block w-full mt-2 p-2 border border-gray-300 rounded-md"
                             />
                             {errors.type && <p className="text-red-500 text-sm">{errors.type}</p>}
+                        </div> */}
+
+                             {/* Loan Type */}
+                             <div>
+                            <label htmlFor="loan_type_id" className="block text-sm font-medium text-gray-700">Loan Type</label>
+                            <select
+                                id="loan_type_id"
+                                name="loan_type_id"
+                                value={data.loan_type_id}
+                                onChange={(e) => setData('loan_type_id', e.target.value)}
+                                className="block w-full mt-2 p-2 border border-gray-300 rounded-md"
+                            >
+                                <option value="">Select Loan Type</option>
+                                {loanTypes.map((loantype) => (
+                                    <option key={loantype.id} value={loantype.id}>{loantype.name}</option>
+                                ))}
+                            </select>
+                            {errors.loan_type_id && <p className="text-red-500 text-sm">{errors.loan_type_id}</p>}
                         </div>
 
                         {/* Limit Field */}

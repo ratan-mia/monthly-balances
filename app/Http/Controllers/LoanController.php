@@ -5,6 +5,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Loan;
+use App\Models\LoanType;
 use App\Models\Company;
 use App\Models\User;
 use App\Models\Bank;
@@ -19,7 +20,8 @@ class LoanController extends Controller
     public function index()
     {
         // Fetch all loans with the related company, user, and bank data
-        $loans = Loan::with(['company', 'user', 'bank'])->get();
+
+        $loans = Loan::with(['loanType', 'company', 'user', 'bank'])->get();
 
         // Return the Inertia response to display the loans list
         return Inertia::render('Loans/Index', [
@@ -32,6 +34,10 @@ class LoanController extends Controller
      */
     public function create()
     {
+
+
+        $loanTypes = LoanType::all();  // Get all loan types to populate the dropdown
+
         // Get all companies, users, and banks to populate the form options
         $companies = Company::all();
         $users = User::all();
@@ -42,6 +48,7 @@ class LoanController extends Controller
             'companies' => $companies,
             'users' => $users,
             'banks' => $banks,
+            'loanTypes' => $loanTypes,  // Passing the loan types to the view
         ]);
     }
 
@@ -55,6 +62,7 @@ class LoanController extends Controller
             'company_id' => 'required|exists:companies,id',
             'user_id' => 'required|exists:users,id',
             'bank_id' => 'required|exists:banks,id',
+            'loan_type_id' => 'nullable|exists:loan_types,id',
             'type' => 'required|string|max:255',
             'limit' => 'required|numeric',
             'occupied_balance' => 'required|numeric',
@@ -93,10 +101,12 @@ class LoanController extends Controller
         // Get the loan by ID
         $loan = Loan::findOrFail($id);
 
+
         // Get all companies, users, and banks for form options
         $companies = Company::all();
         $users = User::all();
         $banks = Bank::all();
+        $loanTypes = LoanType::all();
 
         // Return the Inertia response to display the edit form
         return Inertia::render('Loans/Edit', [
@@ -104,6 +114,7 @@ class LoanController extends Controller
             'companies' => $companies,
             'users' => $users,
             'banks' => $banks,
+            'loanTypes' => $loanTypes,  // Passing the loan types to the view
         ]);
     }
 
@@ -118,6 +129,7 @@ class LoanController extends Controller
             'user_id' => 'required|exists:users,id',
             'bank_id' => 'required|exists:banks,id',
             'type' => 'required|string|max:255',
+            'loan_type_id' => 'nullable|exists:loan_types,id',
             'limit' => 'required|numeric',
             'occupied_balance' => 'required|numeric',
             // 'available_balance' => 'required|numeric',

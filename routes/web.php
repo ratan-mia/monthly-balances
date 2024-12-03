@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LoanController;
-
+use App\Http\Controllers\LoanTypeController;
 use App\Http\Controllers\AccountTypeController;
 
 use App\Http\Controllers\CompanyController;
@@ -78,3 +78,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
 
 Route::resource('loans', LoanController::class);
+
+
+Route::resource('loan-types', LoanTypeController::class);
