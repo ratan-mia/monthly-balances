@@ -3,14 +3,15 @@ import { Inertia } from '@inertiajs/inertia';
 import { Head, Link } from '@inertiajs/react';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable'; // Import the autoTable plugin
-import { useEffect } from 'react';
 import * as XLSX from 'xlsx'; // Import xlsx package
 
 
-import 'datatables.net'; // Import DataTables JS
-import 'datatables.net-dt/css/jquery.dataTables.min.css'; // Import DataTables CSS
-import $ from 'jquery'; // Import jQuery
 
+
+// import 'datatables.net-responsive-dt';
+// import 'datatables.net-responsive-dt';
+// import 'datatables.net-dt/css/jquery.dataTables.min.css';
+// import 'datatables.net-responsive-dt';
 
 
 
@@ -18,10 +19,16 @@ import $ from 'jquery'; // Import jQuery
 export default function Index({ balances, total_inflows, total_outflows, total_closing_balance }) {
 
     // DataTable initialization
-    useEffect(() => {
-        // Initialize DataTable after the component mounts
-        $('#balances-table').DataTable();
-    }, []);
+    // useEffect(() => {
+    //     // Initialize DataTable after the component mounts
+    //     // $('#balances-table').DataTable();
+
+    //      new DataTable('#balances-table', {
+    //         responsive: true
+    //     });
+
+
+    // }, []);
 
     const deleteBalance = (id) => {
         if (confirm('Are you sure you want to delete this balance?')) {

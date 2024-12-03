@@ -4,6 +4,7 @@ import NavLink from '@/Components/NavLink';
 import Sidebar from '@/Components/Sidebar';
 import { usePage } from '@inertiajs/react';
 import { useState } from 'react';
+import { FaBars } from 'react-icons/fa';
 
 export default function AuthenticatedLayout({ header, children }) {
     const user = usePage().props.auth.user;
@@ -24,7 +25,7 @@ export default function AuthenticatedLayout({ header, children }) {
             {/* Main content */}
             <div className="flex-1 transition-all duration-300">
                 <nav className="border-b border-gray-100 bg-white dark:border-gray-700 dark:bg-gray-700">
-                    <div className="mx-auto w-full sm:px-6 lg:px-8">
+                    <div className="mx-auto w-full sm:px-3 lg:px-3">
                         <div className="flex h-16 justify-between">
                             <div className="flex">
                                 {/* Mobile sidebar toggle */}
@@ -51,6 +52,17 @@ export default function AuthenticatedLayout({ header, children }) {
 
                                 {/* Desktop nav links */}
                                 <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                      {/* Hamburger Button */}
+                                    <button
+                                        onClick={() => setIsSidebarCollapsed(prev => !prev)}
+                                        className="text-white p-1 transition duration-300 ease-in-out transform hover:scale-110"
+                                    >
+                                        {isSidebarCollapsed ? (
+                                            <FaBars className="h-6 w-6" />
+                                        ) : (
+                                            <FaBars className="h-6 w-6" />
+                                        )}
+                                    </button>
                                     <NavLink
                                         href={route('dashboard')}
                                         active={route().current('dashboard')}

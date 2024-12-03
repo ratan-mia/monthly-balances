@@ -1,7 +1,7 @@
 import ApplicationLogo from '@/Components/ApplicationLogo';
 import NavLink from '@/Components/NavLink';
 import { Link } from '@inertiajs/react';
-import { FaBars, FaBuilding, FaCog, FaHome, FaMoneyBillWave, FaTimes, FaUsers } from 'react-icons/fa';
+import { FaBuilding, FaCog, FaHome, FaMoneyBillWave, FaUsers } from 'react-icons/fa';
 
 const Sidebar = ({ isSidebarCollapsed, setIsSidebarCollapsed }) => {
     return (
@@ -15,16 +15,16 @@ const Sidebar = ({ isSidebarCollapsed, setIsSidebarCollapsed }) => {
                 </Link>
 
                 {/* Hamburger Button */}
-                <button
+                {/* <button
                     onClick={() => setIsSidebarCollapsed(prev => !prev)}
                     className="text-white p-2 transition duration-300 ease-in-out transform hover:scale-110"
                 >
                     {isSidebarCollapsed ? (
                         <FaBars className="h-6 w-6" />
                     ) : (
-                        <FaTimes className="h-6 w-6" />
+                        <FaBars className="h-6 w-6" />
                     )}
-                </button>
+                </button> */}
             </div>
 
             {/* Sidebar Menu */}
