@@ -43,6 +43,7 @@ export default function Index({ loans }) {
                                 <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Company</th>
                                 <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">User</th>
                                 <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Bank</th>
+                                <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Loan Type</th>
                                 <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Limit</th>
                                 <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Occupied Balance </th>
                                 <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Available Balance</th>
@@ -56,6 +57,7 @@ export default function Index({ loans }) {
                                     <td className="py-4 px-6 text-sm text-gray-700">{loan.company.name}</td>
                                     <td className="py-4 px-6 text-sm text-gray-700">{loan.user.name}</td>
                                     <td className="py-4 px-6 text-sm text-gray-700">{loan.bank.name}</td>
+                                    <td className="py-4 px-6 text-sm text-gray-700">{loan.loan_type.name}</td>
                                     <td className="py-4 px-6 text-sm text-gray-700">{loan.limit}</td>
                                     <td className="py-4 px-6 text-sm text-gray-700">{loan.occupied_balance}</td>
                                     <td className="py-4 px-6 text-sm text-gray-700">{loan.available_balance}</td>

@@ -2,7 +2,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Link, useForm } from '@inertiajs/react';
 
-export default function Edit({ loan, companies, users, banks }) {
+export default function Edit({ loan, companies, users, banks, loanTypes }) {
     const { data, setData, put, processing, errors } = useForm({
         company_id: loan.company_id,
         user_id: loan.user_id,
