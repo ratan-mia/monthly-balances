@@ -25,4 +25,9 @@ class Company extends Model
     {
         return $this->hasMany(Balance::class);
     }
+
+    public function loans()
+    {
+        return $this->hasMany(Loan::class);
+    }
 }

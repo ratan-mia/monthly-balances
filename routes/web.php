@@ -5,7 +5,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\UserController;
-
+use App\Http\Controllers\LoanController;
 
 use App\Http\Controllers\AccountTypeController;
 
@@ -72,3 +72,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 //     Route::resource('users', UserController::class);
 //     Route::post('users/{user}/assign-role', [UserController::class, 'assignRole'])->name('users.assignRole');
 // });
+
+
+
+
+
+Route::resource('loans', LoanController::class);
