@@ -113,19 +113,6 @@ export default function Create({ companies, users, banks, loanTypes }) {
                             {errors.loan_type_id && <p className="text-red-500 text-sm">{errors.loan_type_id}</p>}
                         </div>
 
-                        {/* Loan Type Field */}
-                        <div>
-                            <label htmlFor="type" className="block text-sm font-medium text-gray-700">Loan Type</label>
-                            <input
-                                type="text"
-                                name="type"
-                                value={data.type}
-                                onChange={(e) => setData('type', e.target.value)}
-                                className="block w-full mt-2 p-2 border border-gray-300 rounded-md"
-                            />
-                            {errors.type && <p className="text-red-500 text-sm">{errors.type}</p>}
-                        </div>
-
                         {/* Limit Field */}
                         <div>
                             <label htmlFor="limit" className="block text-sm font-medium text-gray-700">Limit</label>

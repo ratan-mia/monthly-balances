@@ -125,6 +125,21 @@ class DashboardController extends Controller
             ->first();
 
 
+        // Fetch bank-wise loan allocations
+        $bankLoanAllocation = Bank::withCount('loans')->get();
+        $latestLoanRequest = Loan::with('company', 'user', 'bank', 'loanType')->latest()->first();
+
+
+
+        // Fetch loan performance over time (monthly)
+        $loanPerformance = Loan::selectRaw('MONTH(created_at) as month, COUNT(id) as total_loans, SUM(occupied_balance) as total_amount')
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
+
+
+
+
         // Pass data to Inertia
         return Inertia::render('Dashboard', [
             'balances' => $balances,
@@ -139,6 +154,9 @@ class DashboardController extends Controller
             'profitMarginData' => $formattedProfitData,
             'totalLoanAmount' => $totalLoanAmount,
             'topCompany' => $topCompany,
+            'bankLoanAllocation' => $bankLoanAllocation,
+            'latestLoanRequest' => $latestLoanRequest,
+            'loanPerformance' => $loanPerformance,
         ]);
     }
 }

@@ -1,6 +1,7 @@
 import BalanceTrendChart from "@/Components/BalanceTrendChart";
 import BankWiseBalanceChart from "@/Components/BankWiseBalanceChart";
 import CompanyBalancePieChart from "@/Components/CompanyBalancePieChart";
+import LoanPerformanceChart from "@/Components/LoanPerformanceChart";
 import ProfitMarginOverTime from "@/Components/ProfitMarginOverTime";
 import StatBox from "@/Components/StatBox";
 import TopPerformingCompanies from "@/Components/TopPerformingCompanies";
@@ -47,7 +48,9 @@ export default function Dashboard({
     profitMarginData,
     totalLoanAmount,
     topCompany,
-
+    bankLoanAllocation,
+    latestLoanRequest,
+    loanPerformance,
 }) {
     // Process the balance data for charts
     const lineChartData = {
@@ -121,24 +124,48 @@ export default function Dashboard({
                                 <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-700">
                                     <StatBox
                                         title="Total Loan Amount"
-                                        value={`${totalLoanAmount}`}
+                                        value={`৳${totalLoanAmount}`}
                                         icon="💰"
                                         bgColor="bg-blue-500"
                                     />
                                 </div>
-                                 {/* Total Loan */}
-                                 <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-700">
-                                   <StatBox
-                                    title="Top Company by Loan Utilization"
-                                    value={topCompany ? topCompany.company.name : 'N/A'}
-                                    icon="🏢"
-                                    bgColor="bg-indigo-500"
-                                />
+                                {/* Total Loan */}
+                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-700">
+                                    <StatBox
+                                        title="Top Company by Loan Utilization"
+                                        value={
+                                            topCompany
+                                                ? topCompany.company.name
+                                                : "N/A"
+                                        }
+                                        icon="🏢"
+                                        bgColor="bg-indigo-500"
+                                    />
+                                </div>
+                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-700">
+                                    <StatBox
+                                        title="Latest Loan"
+                                        value={`${latestLoanRequest.user.name} - ${latestLoanRequest.loan_type.name} - ৳${latestLoanRequest.occupied_balance}`}
+                                        icon="🆕"
+                                        bgColor="bg-yellow-500"
+                                    />
+                                </div>
+                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-700">
+                                    <StatBox
+                                        title="Loans by Bank"
+                                        value={`${bankLoanAllocation.length} Banks`}
+                                        icon="🏦"
+                                        bgColor="bg-green-500"
+                                    />
                                 </div>
                             </div>
 
                             {/* Chart Section */}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+
+
+
+
                                 {/* Line Chart */}
                                 <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-700">
                                     <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">
@@ -153,6 +180,16 @@ export default function Dashboard({
                                         Account Type Distribution (Pie Chart)
                                     </h4>
                                     <Pie data={pieChartData} />
+                                </div>
+                                             {/* Line Chart */}
+                               <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-700">
+                                    <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">
+                                        Loan Performance over month
+                                    </h4>
+
+                                    <LoanPerformanceChart loanPerformance={loanPerformance} />
+
+
                                 </div>
 
                                 {/* Bar Chart */}
