@@ -6,11 +6,11 @@ import { FaBuilding, FaCog, FaHome, FaMoneyBillWave, FaMoneyCheckAlt, FaUsers } 
 const Sidebar = ({ isSidebarCollapsed, setIsSidebarCollapsed }) => {
     return (
         <div
-            className={`bg-gray-800 text-white transition-all duration-300 ease-in-out ${isSidebarCollapsed ? 'w-20' : 'w-64'} space-y-6 py-7 px-2 absolute sm:relative left-0 h-screen`}
+            className={`bg-gray-800 text-white transition-all duration-300 ease-in-out ${isSidebarCollapsed ? 'w-20' : 'w-64'} space-y-6 py-7 px-2 fixed top-0 left-0 h-screen z-50`}
         >
             {/* Sidebar Header */}
             <div className="flex items-center justify-between px-4">
-                <Link href="/" className="text-2xl</div> font-semibold text-white">
+                <Link href="/" className="text-2xl font-semibold text-white">
                     <ApplicationLogo className="h-9 w-auto" />
                 </Link>
 

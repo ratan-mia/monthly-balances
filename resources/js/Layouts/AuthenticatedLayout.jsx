@@ -23,7 +23,12 @@ export default function AuthenticatedLayout({ header, children }) {
             />
 
             {/* Main content */}
-            <div className="flex-1 transition-all duration-300">
+            {/* <div className="flex-1 transition-all duration-300"> */}
+
+           <div  className={`flex-1 transition-all duration-300 ease-in-out ${
+                    isSidebarCollapsed ? 'ml-20' : 'ml-64'
+                }`}>
+
                 <nav className="border-b border-gray-100 bg-white dark:border-gray-700 dark:bg-gray-700">
                     <div className="mx-auto w-full sm:px-3 lg:px-3">
                         <div className="flex h-16 justify-between">
