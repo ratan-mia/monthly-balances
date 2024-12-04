@@ -35,7 +35,7 @@ export default function Welcome() {
             </div>
 
             {/* Login Form Section */}
-            <div className="w-full md:w-1/2 bg-white p-10 flex flex-col justify-center shadow-xl">
+            <div className="w-full md:w-1/2 bg-white p-10 px-60 flex flex-col justify-center shadow-xl">
                 <Head title="Login" />
                 <h2 className="text-3xl font-semibold text-center mb-6">
                     Login to Your Account
