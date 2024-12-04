@@ -145,7 +145,7 @@ export default function Dashboard({
                                 <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-50">
                                     <StatBox
                                         title="Latest Loan"
-                                        value={`${latestLoanRequest.user.name} - ${latestLoanRequest.loan_type.name} - ৳${latestLoanRequest.occupied_balance}`}
+                                        value={`${latestLoanRequest.bank.name} - ${latestLoanRequest.loan_type.name} - ৳${latestLoanRequest.occupied_balance}`}
                                         icon="🆕"
                                         bgColor="bg-yellow-500"
                                     />
