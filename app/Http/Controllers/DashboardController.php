@@ -7,6 +7,7 @@ use App\Models\AccountType;
 use App\Models\Bank;
 use App\Models\Company;
 use App\Models\User;
+use App\Models\Loan;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 
@@ -115,6 +116,14 @@ class DashboardController extends Controller
         });
 
         $banks = Bank::all();
+        $totalLoanAmount = Loan::sum('occupied_balance');
+        // Fetch top-performing company by loan amount
+        $topCompany = Loan::select('company_id', DB::raw('SUM(occupied_balance) as total_amount'))
+            ->groupBy('company_id')
+            ->with('company')
+            ->orderByDesc('total_amount')
+            ->first();
+
 
         // Pass data to Inertia
         return Inertia::render('Dashboard', [
@@ -128,6 +137,8 @@ class DashboardController extends Controller
             'companyBalances' => $formattedData,
             'topPerformingCompanies' => $topCompaniesData,
             'profitMarginData' => $formattedProfitData,
+            'totalLoanAmount' => $totalLoanAmount,
+            'topCompany' => $topCompany,
         ]);
     }
 }
