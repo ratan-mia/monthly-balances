@@ -12,7 +12,8 @@ const CompanyBalancePieChart = ({ companyData }) => {
       {
         label: 'Balance by Company',
         data: companyData.map(item => item.balance),  // Balance data
-        backgroundColor: ['#FF5733', '#33FF57', '#3357FF', '#FF33A6', '#FF9633'], // Colors for the pie chart segments
+        backgroundColor: ['#B4A7D6', '#A1D6A1', '#A6C8FF', '#FFB3D9', '#FFD1A6'],
+        // Colors for the pie chart segments
         borderColor: '#fff',
         borderWidth: 1,
       },
