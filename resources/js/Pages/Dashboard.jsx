@@ -105,7 +105,7 @@ export default function Dashboard({
     return (
         <AuthenticatedLayout
             header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-800">
+                <h2 className="text-xl font-semibold leading-tight text-gray-100 dark:text-gray-100">
                     Dashboard
                 </h2>
             }
@@ -115,7 +115,7 @@ export default function Dashboard({
             <div className="py-6">
                 <div className="w-full sm:px-6 lg:px-6">
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
-                        <div className="p-6 text-gray-900 dark:text-gray-800">
+                        <div className="p-6 text-gray-100 dark:text-gray-100">
                             <h3 className="text-2xl font-semibold mb-6">
                                 Welcome to the Dashboard!
                             </h3>
@@ -144,7 +144,7 @@ export default function Dashboard({
                                 </div>
                                 <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-50">
                                     <StatBox
-                                        title="Latest Loan"
+                                        title=""
                                         value={`${latestLoanRequest.bank.name} - ${latestLoanRequest.loan_type.name} - ৳${latestLoanRequest.occupied_balance}`}
                                         icon="🆕"
                                         bgColor="bg-yellow-500"
