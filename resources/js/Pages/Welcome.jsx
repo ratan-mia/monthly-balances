@@ -1,6 +1,7 @@
 // resources/js/Pages/Welcome.jsx
 import InputError from "@/Components/InputError";
-import { Head, useForm } from "@inertiajs/react";
+import { useForm } from "@inertiajs/react";
+
 export default function Welcome() {
     const { data, setData, post, processing, errors, reset } = useForm({
         email: "",
@@ -19,15 +20,15 @@ export default function Welcome() {
     return (
         <div className="min-h-screen flex flex-col md:flex-row bg-gray-50">
             {/* Banner Section */}
-            <div className="w-full md:w-1/2 bg-blue-600 text-white p-10 flex flex-col justify-center">
-                <h1 className="text-4xl font-bold mb-4">
+            <div className="w-full md:w-1/2 bg-blue-600 text-white p-10 flex flex-col justify-center md:px-16">
+                <h1 className="text-4xl font-bold mb-4 text-center md:text-left">
                     Welcome to Loan Management System
                 </h1>
-                <p className="text-lg mb-6">
+                <p className="text-lg mb-6 text-center md:text-left">
                     Manage loans, track balances, and streamline your financial
                     processes all in one platform.
                 </p>
-                <ul className="list-disc pl-6 text-lg">
+                <ul className="list-disc pl-6 text-lg text-center md:text-left">
                     <li>Track loan amounts and payments</li>
                     <li>Analyze loan performance</li>
                     <li>Generate reports and insights</li>
@@ -35,73 +36,86 @@ export default function Welcome() {
             </div>
 
             {/* Login Form Section */}
-            <div className="w-full md:w-1/2 bg-white p-10 px-60 flex flex-col justify-center shadow-xl">
-                <Head title="Login" />
-                <h2 className="text-3xl font-semibold text-center mb-6">
+            <div className="w-full md:w-1/2 bg-white p-10 flex flex-col justify-center md:px-16">
+                <h2 className="text-2xl font-semibold mb-6 text-center md:text-left">
                     Login to Your Account
                 </h2>
 
                 <form onSubmit={submit}>
-                    {/* Email */}
+                    {/* Email Input */}
                     <div className="mb-4">
                         <label
                             htmlFor="email"
-                            className="block text-gray-700 font-medium"
+                            className="block text-sm font-medium text-gray-700"
                         >
                             Email
                         </label>
                         <input
-                            id="email"
                             type="email"
+                            id="email"
                             name="email"
                             value={data.email}
                             onChange={(e) => setData("email", e.target.value)}
-                            className="w-full p-3 border border-gray-300 rounded-md"
+                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                             required
                         />
                         <InputError message={errors.email} className="mt-2" />
                     </div>
 
-                    {/* Password */}
-                    <div className="mb-6">
+                    {/* Password Input */}
+                    <div className="mb-4">
                         <label
                             htmlFor="password"
-                            className="block text-gray-700 font-medium"
+                            className="block text-sm font-medium text-gray-700"
                         >
                             Password
                         </label>
                         <input
-                            id="password"
                             type="password"
+                            id="password"
                             name="password"
                             value={data.password}
-                            onChange={(e) =>
-                                setData("password", e.target.value)
-                            }
-                            className="w-full p-3 border border-gray-300 rounded-md"
+                            onChange={(e) => setData("password", e.target.value)}
+                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                             required
                         />
-                        <InputError
-                            message={errors.password}
-                            className="mt-2"
+                        <InputError message={errors.password} className="mt-2" />
+                    </div>
+
+                    {/* Remember Me */}
+                    <div className="mb-4 flex items-center">
+                        <input
+                            type="checkbox"
+                            id="remember"
+                            name="remember"
+                            checked={data.remember}
+                            onChange={(e) => setData("remember", e.target.checked)}
+                            className="mr-2"
                         />
+                        <label htmlFor="remember" className="text-sm text-gray-700">
+                            Remember me
+                        </label>
                     </div>
 
                     {/* Submit Button */}
-                    <button
-                        type="submit"
-                        className="w-full bg-blue-600 text-white font-semibold p-3 rounded-md hover:bg-blue-700 transition duration-300"
-                    >
-                        Login
-                    </button>
+                    <div className="mb-4">
+                        <button
+                            type="submit"
+                            disabled={processing}
+                            className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                            {processing ? "Logging in..." : "Login"}
+                        </button>
+                    </div>
                 </form>
 
-                <div className="mt-4 text-center">
+                {/* Forgot Password Link */}
+                <div className="text-center">
                     <a
-                        href="/register"
-                        className="text-blue-600 hover:text-blue-700"
+                        href="#"
+                        className="text-sm text-blue-600 hover:text-blue-800"
                     >
-                        Don't have an account? Register
+                        Forgot your password?
                     </a>
                 </div>
             </div>

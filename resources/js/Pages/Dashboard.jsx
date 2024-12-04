@@ -105,7 +105,7 @@ export default function Dashboard({
     return (
         <AuthenticatedLayout
             header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+                <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-800">
                     Dashboard
                 </h2>
             }
@@ -115,13 +115,13 @@ export default function Dashboard({
             <div className="py-6">
                 <div className="w-full sm:px-6 lg:px-6">
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
-                        <div className="p-6 text-gray-900 dark:text-gray-100">
+                        <div className="p-6 text-gray-900 dark:text-gray-800">
                             <h3 className="text-2xl font-semibold mb-6">
                                 Welcome to the Dashboard!
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 py-5">
                                 {/* Total Loan */}
-                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-700">
+                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-50">
                                     <StatBox
                                         title="Total Loan Amount"
                                         value={`৳${totalLoanAmount}`}
@@ -130,7 +130,7 @@ export default function Dashboard({
                                     />
                                 </div>
                                 {/* Total Loan */}
-                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-700">
+                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-50">
                                     <StatBox
                                         title="Top Company by Loan Utilization"
                                         value={
@@ -142,7 +142,7 @@ export default function Dashboard({
                                         bgColor="bg-indigo-500"
                                     />
                                 </div>
-                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-700">
+                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-50">
                                     <StatBox
                                         title="Latest Loan"
                                         value={`${latestLoanRequest.user.name} - ${latestLoanRequest.loan_type.name} - ৳${latestLoanRequest.occupied_balance}`}
@@ -150,7 +150,7 @@ export default function Dashboard({
                                         bgColor="bg-yellow-500"
                                     />
                                 </div>
-                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-700">
+                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-50">
                                     <StatBox
                                         title="Loans by Bank"
                                         value={`${bankLoanAllocation.length} Banks`}
@@ -167,23 +167,23 @@ export default function Dashboard({
 
 
                                 {/* Line Chart */}
-                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-700">
-                                    <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">
+                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-50">
+                                    <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-800 mb-4">
                                         Balance Trend (Inflows and Outflows)
                                     </h4>
                                     <Line data={lineChartData} />
                                 </div>
 
                                 {/* Pie Chart */}
-                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-700">
-                                    <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">
+                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-50">
+                                    <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-800 mb-4">
                                         Account Type Distribution (Pie Chart)
                                     </h4>
                                     <Pie data={pieChartData} />
                                 </div>
                                              {/* Line Chart */}
-                               <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-700">
-                                    <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">
+                               <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-50">
+                                    <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-800 mb-4">
                                         Loan Performance over month
                                     </h4>
 
@@ -193,16 +193,16 @@ export default function Dashboard({
                                 </div>
 
                                 {/* Bar Chart */}
-                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-700">
-                                    <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">
+                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-50">
+                                    <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-800 mb-4">
                                         Inflows vs Outflows (Monthly)
                                     </h4>
                                     <Bar data={barChartData} />
                                 </div>
 
                                 {/* Bar Chart */}
-                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-700">
-                                    <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">
+                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-50">
+                                    <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-800 mb-4">
                                         Bank-wise Balance
                                     </h4>
                                     <BankWiseBalanceChart
@@ -211,15 +211,15 @@ export default function Dashboard({
                                 </div>
 
                                 {/* Balance Trend Chart */}
-                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-700">
-                                    <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">
+                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-50">
+                                    <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-800 mb-4">
                                         Balance Trend Over Time
                                     </h4>
                                     <BalanceTrendChart trendData={trendData} />
                                 </div>
                                 {/* Balance Trend Chart */}
-                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-700">
-                                    <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">
+                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-50">
+                                    <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-800 mb-4">
                                         Balance Trend Over Time
                                     </h4>
                                     <CompanyBalancePieChart
@@ -228,8 +228,8 @@ export default function Dashboard({
                                 </div>
 
                                 {/* Balance Trend Chart */}
-                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-700">
-                                    <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">
+                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-50">
+                                    <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-800 mb-4">
                                         Top Performing Companies (By Balance)
                                     </h4>
                                     <TopPerformingCompanies
@@ -240,8 +240,8 @@ export default function Dashboard({
                                 </div>
 
                                 {/* Balance Trend Chart */}
-                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-700">
-                                    <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">
+                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-50">
+                                    <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-800 mb-4">
                                         Profit Margin Over Time
                                     </h4>
                                     <ProfitMarginOverTime
