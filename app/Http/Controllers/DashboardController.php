@@ -137,6 +137,8 @@ class DashboardController extends Controller
             ->orderBy('month')
             ->get();
 
+        $totalBalance = Balance::sum(DB::raw('opening_balance + inflows - outflows'));
+
 
 
 
@@ -157,6 +159,7 @@ class DashboardController extends Controller
             'bankLoanAllocation' => $bankLoanAllocation,
             'latestLoanRequest' => $latestLoanRequest,
             'loanPerformance' => $loanPerformance,
+            'totalBalance' => $totalBalance,
         ]);
     }
 }

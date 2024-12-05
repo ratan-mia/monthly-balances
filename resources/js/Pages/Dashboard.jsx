@@ -51,6 +51,8 @@ export default function Dashboard({
     bankLoanAllocation,
     latestLoanRequest,
     loanPerformance,
+    totalBalance,
+
 }) {
     // Process the balance data for charts
     const lineChartData = {
@@ -120,6 +122,16 @@ export default function Dashboard({
                                 Welcome to the Dashboard!
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 py-5">
+                                    {/* Total Loan */}
+                                    <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-50">
+                                    <StatBox
+                                        title="Total Closing Balance"
+                                        value={`৳${totalBalance}`}
+                                        icon="💰"
+                                        bgColor="bg-emerald-500"
+                                    />
+                                </div>
+
                                 {/* Total Loan */}
                                 <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-50">
                                     <StatBox
