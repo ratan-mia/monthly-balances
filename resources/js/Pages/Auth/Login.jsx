@@ -1,100 +1,124 @@
-import Checkbox from '@/Components/Checkbox';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import GuestLayout from '@/Layouts/GuestLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
+// resources/js/Pages/Welcome.jsx
+import InputError from "@/Components/InputError";
+import { useForm } from "@inertiajs/react";
 
-export default function Login({ status, canResetPassword }) {
+export default function Login() {
     const { data, setData, post, processing, errors, reset } = useForm({
-        email: '',
-        password: '',
+        email: "",
+        password: "",
         remember: false,
     });
 
     const submit = (e) => {
         e.preventDefault();
 
-        post(route('login'), {
-            onFinish: () => reset('password'),
+        post(route("login"), {
+            onFinish: () => reset("password"),
         });
     };
 
     return (
-        <GuestLayout>
-            <Head title="Log in" />
+        <div className="min-h-screen flex flex-col md:flex-row bg-gray-50">
+            {/* Banner Section */}
+            <div className="w-full md:w-1/2 bg-blue-600 text-white p-10 flex flex-col justify-center md:px-16">
+                <h1 className="text-4xl font-bold mb-4 text-center md:text-left">
+                    Welcome to Loan Management System
+                </h1>
+                <p className="text-lg mb-6 text-center md:text-left">
+                    Manage loans, track balances, and streamline your financial
+                    processes all in one platform.
+                </p>
+                <ul className="list-disc pl-6 text-lg text-center md:text-left">
+                    <li>Track loan amounts and payments</li>
+                    <li>Analyze loan performance</li>
+                    <li>Generate reports and insights</li>
+                </ul>
+            </div>
 
-            {status && (
-                <div className="mb-4 text-sm font-medium text-green-600">
-                    {status}
-                </div>
-            )}
+            {/* Login Form Section */}
+            <div className="w-full md:w-1/2 bg-white p-10 flex flex-col justify-center md:px-16">
+                <h2 className="text-2xl font-semibold mb-6 text-center md:text-left">
+                    Login to Your Account
+                </h2>
 
-            <form onSubmit={submit}>
-                <div>
-                    <InputLabel htmlFor="email" value="Email" />
+                <form onSubmit={submit}>
+                    {/* Email Input */}
+                    <div className="mb-4">
+                        <label
+                            htmlFor="email"
+                            className="block text-sm font-medium text-gray-700"
+                        >
+                            Email
+                        </label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            value={data.email}
+                            onChange={(e) => setData("email", e.target.value)}
+                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required
+                        />
+                        <InputError message={errors.email} className="mt-2" />
+                    </div>
 
-                    <TextInput
-                        id="email"
-                        type="email"
-                        name="email"
-                        value={data.email}
-                        className="mt-1 block w-full"
-                        autoComplete="username"
-                        isFocused={true}
-                        onChange={(e) => setData('email', e.target.value)}
-                    />
+                    {/* Password Input */}
+                    <div className="mb-4">
+                        <label
+                            htmlFor="password"
+                            className="block text-sm font-medium text-gray-700"
+                        >
+                            Password
+                        </label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            value={data.password}
+                            onChange={(e) => setData("password", e.target.value)}
+                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required
+                        />
+                        <InputError message={errors.password} className="mt-2" />
+                    </div>
 
-                    <InputError message={errors.email} className="mt-2" />
-                </div>
-
-                <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
-
-                    <TextInput
-                        id="password"
-                        type="password"
-                        name="password"
-                        value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="current-password"
-                        onChange={(e) => setData('password', e.target.value)}
-                    />
-
-                    <InputError message={errors.password} className="mt-2" />
-                </div>
-
-                <div className="mt-4 block">
-                    <label className="flex items-center">
-                        <Checkbox
+                    {/* Remember Me */}
+                    <div className="mb-4 flex items-center">
+                        <input
+                            type="checkbox"
+                            id="remember"
                             name="remember"
                             checked={data.remember}
-                            onChange={(e) =>
-                                setData('remember', e.target.checked)
-                            }
+                            onChange={(e) => setData("remember", e.target.checked)}
+                            className="mr-2"
                         />
-                        <span className="ms-2 text-sm text-gray-600 dark:text-gray-400">
+                        <label htmlFor="remember" className="text-sm text-gray-700">
                             Remember me
-                        </span>
-                    </label>
-                </div>
+                        </label>
+                    </div>
 
-                <div className="mt-4 flex items-center justify-end">
-                    {canResetPassword && (
-                        <Link
-                            href={route('password.request')}
-                            className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
+                    {/* Submit Button */}
+                    <div className="mb-4">
+                        <button
+                            type="submit"
+                            disabled={processing}
+                            className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
-                            Forgot your password?
-                        </Link>
-                    )}
+                            {processing ? "Logging in..." : "Login"}
+                        </button>
+                    </div>
+                </form>
 
-                    <PrimaryButton className="ms-4" disabled={processing}>
-                        Log in
-                    </PrimaryButton>
+                {/* Forgot Password Link */}
+                <div className="text-center">
+                    <a
+                        href="#"
+                        className="text-sm text-blue-600 hover:text-blue-800"
+                    >
+                        Forgot your password?
+                    </a>
                 </div>
-            </form>
-        </GuestLayout>
+            </div>
+        </div>
     );
 }
