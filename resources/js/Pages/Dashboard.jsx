@@ -52,7 +52,10 @@ export default function Dashboard({
     latestLoanRequest,
     loanPerformance,
     totalBalance,
-
+    totalAvailableBalance,
+    totalLoanLimit,
+    totalInflows,
+    totalOutflows,
 }) {
     // Process the balance data for charts
     const lineChartData = {
@@ -122,8 +125,28 @@ export default function Dashboard({
                                 Welcome to the Dashboard!
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 py-5">
-                                    {/* Total Loan */}
-                                    <div className="bg-white p-2 rounded-lg shadow dark:bg-emerald-400">
+                                {/* Total Inflows */}
+                                <div className="bg-white p-2 rounded-lg shadow dark:bg-emerald-400">
+                                    <StatBox
+                                        title="Total Inflows"
+                                        value={`৳${totalInflows}`}
+                                        icon="💰"
+                                        bgColor="bg-emerald-500"
+                                    />
+                                </div>
+
+                                    {/* Total Outflows */}
+                                    <div className="bg-white p-2 rounded-lg shadow dark:bg-blue-400">
+                                    <StatBox
+                                        title="Total Outflows"
+                                        value={`৳${totalOutflows}`}
+                                        icon="💰"
+                                        bgColor="bg-blue-500"
+                                    />
+                                </div>
+
+                                {/* Total Loan */}
+                                <div className="bg-white p-2 rounded-lg shadow dark:bg-emerald-400">
                                     <StatBox
                                         title="Total Closing Balance"
                                         value={`৳${totalBalance}`}
@@ -132,15 +155,6 @@ export default function Dashboard({
                                     />
                                 </div>
 
-                                {/* Total Loan */}
-                                <div className="bg-white p-2 rounded-lg shadow dark:bg-blue-400">
-                                    <StatBox
-                                        title="Total Loan Amount"
-                                        value={`৳${totalLoanAmount}`}
-                                        icon="💰"
-                                        bgColor="bg-blue-500"
-                                    />
-                                </div>
                                 {/* Total Loan */}
                                 <div className="bg-white p-2 rounded-lg shadow dark:bg-indigo-400">
                                     <StatBox
@@ -170,15 +184,39 @@ export default function Dashboard({
                                         bgColor="bg-indigo-500"
                                     />
                                 </div>
+                                {/* Available Balance(Loanable)*/}
+                                <div className="bg-white p-2 rounded-lg shadow dark:bg-blue-400">
+                                    <StatBox
+                                        title="Available Balance(Loanable)"
+                                        value={`৳${totalAvailableBalance}`}
+                                        icon="💰"
+                                        bgColor="bg-blue-500"
+                                    />
+                                </div>
 
+                                {/* Total Loan Limit*/}
+                                <div className="bg-white p-2 rounded-lg shadow dark:bg-blue-400">
+                                    <StatBox
+                                        title="Total Limit(Loan)"
+                                        value={`৳${totalLoanLimit}`}
+                                        icon="💰"
+                                        bgColor="bg-blue-500"
+                                    />
+                                </div>
+
+                                {/* Total Loan */}
+                                <div className="bg-white p-2 rounded-lg shadow dark:bg-blue-600">
+                                    <StatBox
+                                        title="Total Loan Amount"
+                                        value={`৳${totalLoanAmount}`}
+                                        icon="💰"
+                                        bgColor="bg-blue-600"
+                                    />
+                                </div>
                             </div>
 
                             {/* Chart Section */}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-
-
-
-
                                 {/* Line Chart */}
                                 <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-50">
                                     <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-800 mb-4">
@@ -194,15 +232,15 @@ export default function Dashboard({
                                     </h4>
                                     <Pie data={pieChartData} />
                                 </div>
-                                             {/* Line Chart */}
-                               <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-50">
+                                {/* Line Chart */}
+                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-50">
                                     <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-800 mb-4">
                                         Loan Performance over month
                                     </h4>
 
-                                    <LoanPerformanceChart loanPerformance={loanPerformance} />
-
-
+                                    <LoanPerformanceChart
+                                        loanPerformance={loanPerformance}
+                                    />
                                 </div>
 
                                 {/* Bar Chart */}

@@ -138,6 +138,10 @@ class DashboardController extends Controller
             ->get();
 
         $totalBalance = Balance::sum(DB::raw('opening_balance + inflows - outflows'));
+        $totalAvailableBalance = Loan::sum('available_balance');
+        $totalLoanLimit = Loan::sum('limit');
+        $totalInflows = Balance::sum('inflows');  // Sum of all inflows
+        $totalOutflows = Balance::sum('outflows');  // Sum of all outflows
 
 
 
@@ -160,6 +164,10 @@ class DashboardController extends Controller
             'latestLoanRequest' => $latestLoanRequest,
             'loanPerformance' => $loanPerformance,
             'totalBalance' => $totalBalance,
+            'totalAvailableBalance' => $totalAvailableBalance,
+            'totalLoanLimit' => $totalLoanLimit,
+            'totalInflows' => $totalInflows,
+            'totalOutflows' => $totalOutflows,
         ]);
     }
 }
