@@ -1,6 +1,6 @@
 // resources/js/Pages/Welcome.jsx
 import InputError from "@/Components/InputError";
-import { useForm } from "@inertiajs/react";
+import { Link, useForm } from "@inertiajs/react";
 
 export default function Welcome() {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -111,12 +111,18 @@ export default function Welcome() {
 
                 {/* Forgot Password Link */}
                 <div className="text-center">
-                    <a
-                        href="#"
+                <Link
+                        href="/register"
+                        className="text-sm text-blue-600 hover:text-blue-800"
+                    >
+                        Register Now?
+                    </Link>
+                    <Link
+                        href="/forgot-password"
                         className="text-sm text-blue-600 hover:text-blue-800"
                     >
                         Forgot your password?
-                    </a>
+                    </Link>
                 </div>
             </div>
         </div>
