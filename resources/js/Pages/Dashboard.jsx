@@ -1,11 +1,8 @@
-import BalanceTrendChart from "@/Components/BalanceTrendChart";
 import BankWiseBalanceChart from "@/Components/BankWiseBalanceChart";
-import CompanyBalancePieChart from "@/Components/CompanyBalancePieChart";
 import LoanPerformanceChart from "@/Components/LoanPerformanceChart";
-import ProfitMarginOverTime from "@/Components/ProfitMarginOverTime";
 import StatBox from "@/Components/StatBox";
-import TopPerformingCompanies from "@/Components/TopPerformingCompanies";
 
+import TopPerformingCompanies from "@/Components/TopPerformingCompanies";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import {
@@ -231,46 +228,44 @@ export default function Dashboard({
                                 </div>
                             </div>
 
-
-
                             {/* Chart Section */}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                                {/* Line Chart */}
-                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-50">
+                                {/* Line Chart: Balance Trend (Inflows and Outflows) */}
+                                <div className="bg-white p-4 rounded-lg shadow dark:bg-gray-50">
                                     <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-800 mb-4">
                                         Balance Trend (Inflows and Outflows)
                                     </h4>
                                     <Line data={lineChartData} />
                                 </div>
 
-                                {/* Pie Chart */}
-                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-50">
+                                {/* Pie Chart: Account Type Distribution */}
+                                <div className="bg-white p-4 rounded-lg shadow dark:bg-gray-50">
                                     <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-800 mb-4">
                                         Account Type Distribution (Pie Chart)
                                     </h4>
                                     <Pie data={pieChartData} />
                                 </div>
-                                {/* Line Chart */}
-                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-50">
-                                    <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-800 mb-4">
-                                        Loan Performance over month
-                                    </h4>
 
+                                {/* Line Chart: Loan Performance over Month */}
+                                <div className="bg-white p-4 rounded-lg shadow dark:bg-gray-50">
+                                    <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-800 mb-4">
+                                        Loan Performance over Month
+                                    </h4>
                                     <LoanPerformanceChart
                                         loanPerformance={loanPerformance}
                                     />
                                 </div>
 
-                                {/* Bar Chart */}
-                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-50">
+                                {/* Bar Chart: Inflows vs Outflows (Monthly) */}
+                                <div className="bg-white p-4 rounded-lg shadow dark:bg-gray-50">
                                     <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-800 mb-4">
                                         Inflows vs Outflows (Monthly)
                                     </h4>
                                     <Bar data={barChartData} />
                                 </div>
 
-                                {/* Bar Chart */}
-                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-50">
+                                {/* Bar Chart: Bank-wise Balance */}
+                                <div className="bg-white p-4 rounded-lg shadow dark:bg-gray-50">
                                     <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-800 mb-4">
                                         Bank-wise Balance
                                     </h4>
@@ -279,25 +274,8 @@ export default function Dashboard({
                                     />
                                 </div>
 
-                                {/* Balance Trend Chart */}
-                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-50">
-                                    <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-800 mb-4">
-                                        Balance Trend Over Time
-                                    </h4>
-                                    <BalanceTrendChart trendData={trendData} />
-                                </div>
-                                {/* Balance Trend Chart */}
-                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-50">
-                                    <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-800 mb-4">
-                                        Balance Trend Over Time
-                                    </h4>
-                                    <CompanyBalancePieChart
-                                        companyData={companyBalances}
-                                    />
-                                </div>
-
-                                {/* Balance Trend Chart */}
-                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-50">
+                                    {/*  Top Performing Companies (By Balance) */}
+                                    <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-50">
                                     <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-800 mb-4">
                                         Top Performing Companies (By Balance)
                                     </h4>
@@ -308,15 +286,6 @@ export default function Dashboard({
                                     />
                                 </div>
 
-                                {/* Balance Trend Chart */}
-                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-50">
-                                    <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-800 mb-4">
-                                        Profit Margin Over Time
-                                    </h4>
-                                    <ProfitMarginOverTime
-                                        profitData={profitMarginData}
-                                    />
-                                </div>
                             </div>
                         </div>
                     </div>
