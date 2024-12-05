@@ -124,50 +124,53 @@ export default function Dashboard({
                             <h3 className="text-2xl font-semibold mb-6">
                                 Welcome to the Dashboard!
                             </h3>
+
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 py-5">
                                 {/* Total Inflows */}
                                 <div className="bg-white p-2 rounded-lg shadow dark:bg-emerald-400">
                                     <StatBox
                                         title="Total Inflows"
-                                        value={`৳${totalInflows}`}
+                                        value={`৳${totalInflows.toLocaleString()}`}
                                         icon="💰"
                                         bgColor="bg-emerald-500"
                                     />
                                 </div>
 
-                                    {/* Total Outflows */}
-                                    <div className="bg-white p-2 rounded-lg shadow dark:bg-blue-400">
+                                {/* Total Outflows */}
+                                <div className="bg-white p-2 rounded-lg shadow dark:bg-blue-400">
                                     <StatBox
                                         title="Total Outflows"
-                                        value={`৳${totalOutflows}`}
+                                        value={`৳${totalOutflows.toLocaleString()}`}
                                         icon="💰"
                                         bgColor="bg-blue-500"
                                     />
                                 </div>
 
-                                {/* Total Loan */}
+                                {/* Total Closing Balance */}
                                 <div className="bg-white p-2 rounded-lg shadow dark:bg-emerald-400">
                                     <StatBox
                                         title="Total Closing Balance"
-                                        value={`৳${totalBalance}`}
+                                        value={`৳${totalBalance.toLocaleString()}`}
                                         icon="💰"
                                         bgColor="bg-emerald-500"
                                     />
                                 </div>
 
-                                {/* Total Loan */}
+                                {/* Top Company by Loan Utilization */}
                                 <div className="bg-white p-2 rounded-lg shadow dark:bg-indigo-400">
                                     <StatBox
                                         title="Top Company by Loan Utilization"
                                         value={
                                             topCompany
                                                 ? topCompany.company.name
-                                                : "N/A"
+                                                : "No data available"
                                         }
                                         icon="🏢"
                                         bgColor="bg-indigo-500"
                                     />
                                 </div>
+
+                                {/* Loans by Bank */}
                                 <div className="bg-white p-2 rounded-lg shadow dark:bg-green-400">
                                     <StatBox
                                         title="Loans by Bank"
@@ -176,44 +179,59 @@ export default function Dashboard({
                                         bgColor="bg-green-500"
                                     />
                                 </div>
+
+                                {/* Latest Loan Request */}
                                 <div className="bg-white p-2 rounded-lg shadow dark:bg-indigo-400">
                                     <StatBox
                                         title=""
-                                        value={`${latestLoanRequest.bank.name} - ${latestLoanRequest.loan_type.name} - ৳${latestLoanRequest.occupied_balance}`}
+                                        value={
+                                            latestLoanRequest
+                                                ? `${
+                                                      latestLoanRequest.bank
+                                                          .name
+                                                  } - ${
+                                                      latestLoanRequest
+                                                          .loan_type.name
+                                                  } - ৳${latestLoanRequest.occupied_balance.toLocaleString()}`
+                                                : "No recent requests"
+                                        }
                                         icon="🆕"
                                         bgColor="bg-indigo-500"
                                     />
                                 </div>
-                                {/* Available Balance(Loanable)*/}
+
+                                {/* Available Balance (Loanable) */}
                                 <div className="bg-white p-2 rounded-lg shadow dark:bg-blue-400">
                                     <StatBox
-                                        title="Available Balance(Loanable)"
-                                        value={`৳${totalAvailableBalance}`}
+                                        title="Available Balance (Loanable)"
+                                        value={`৳${totalAvailableBalance.toLocaleString()}`}
                                         icon="💰"
                                         bgColor="bg-blue-500"
                                     />
                                 </div>
 
-                                {/* Total Loan Limit*/}
+                                {/* Total Loan Limit */}
                                 <div className="bg-white p-2 rounded-lg shadow dark:bg-blue-400">
                                     <StatBox
-                                        title="Total Limit(Loan)"
-                                        value={`৳${totalLoanLimit}`}
+                                        title="Total Loan Limit"
+                                        value={`৳${totalLoanLimit.toLocaleString()}`}
                                         icon="💰"
                                         bgColor="bg-blue-500"
                                     />
                                 </div>
 
-                                {/* Total Loan */}
+                                {/* Total Loan Amount */}
                                 <div className="bg-white p-2 rounded-lg shadow dark:bg-blue-600">
                                     <StatBox
                                         title="Total Loan Amount"
-                                        value={`৳${totalLoanAmount}`}
+                                        value={`৳${totalLoanAmount.toLocaleString()}`}
                                         icon="💰"
                                         bgColor="bg-blue-600"
                                     />
                                 </div>
                             </div>
+
+
 
                             {/* Chart Section */}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
