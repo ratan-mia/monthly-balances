@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
 
+use Spatie\Permission\Models\Role;      // For accessing roles, if needed
+
+
 class AuthenticatedSessionController extends Controller
 {
     /**
@@ -33,8 +36,15 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        // Check if the user has the 'admin' role
+        if ($request->user()->hasRole('admin')) {
+            return redirect()->intended(route('dashboard', absolute: false));
+        }
+
+        // If not admin, redirect to balances.index
+        return redirect()->intended(route('balances.index', absolute: false));
     }
+
 
     /**
      * Destroy an authenticated session.
