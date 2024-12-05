@@ -123,7 +123,7 @@ export default function Dashboard({
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 py-5">
                                     {/* Total Loan */}
-                                    <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-50">
+                                    <div className="bg-white p-2 rounded-lg shadow dark:bg-emerald-400">
                                     <StatBox
                                         title="Total Closing Balance"
                                         value={`৳${totalBalance}`}
@@ -133,7 +133,7 @@ export default function Dashboard({
                                 </div>
 
                                 {/* Total Loan */}
-                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-50">
+                                <div className="bg-white p-2 rounded-lg shadow dark:bg-blue-400">
                                     <StatBox
                                         title="Total Loan Amount"
                                         value={`৳${totalLoanAmount}`}
@@ -142,7 +142,7 @@ export default function Dashboard({
                                     />
                                 </div>
                                 {/* Total Loan */}
-                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-50">
+                                <div className="bg-white p-2 rounded-lg shadow dark:bg-indigo-400">
                                     <StatBox
                                         title="Top Company by Loan Utilization"
                                         value={
@@ -154,15 +154,7 @@ export default function Dashboard({
                                         bgColor="bg-indigo-500"
                                     />
                                 </div>
-                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-50">
-                                    <StatBox
-                                        title=""
-                                        value={`${latestLoanRequest.bank.name} - ${latestLoanRequest.loan_type.name} - ৳${latestLoanRequest.occupied_balance}`}
-                                        icon="🆕"
-                                        bgColor="bg-yellow-500"
-                                    />
-                                </div>
-                                <div className="bg-white p-2 rounded-lg shadow dark:bg-gray-50">
+                                <div className="bg-white p-2 rounded-lg shadow dark:bg-green-400">
                                     <StatBox
                                         title="Loans by Bank"
                                         value={`${bankLoanAllocation.length} Banks`}
@@ -170,6 +162,15 @@ export default function Dashboard({
                                         bgColor="bg-green-500"
                                     />
                                 </div>
+                                <div className="bg-white p-2 rounded-lg shadow dark:bg-indigo-400">
+                                    <StatBox
+                                        title=""
+                                        value={`${latestLoanRequest.bank.name} - ${latestLoanRequest.loan_type.name} - ৳${latestLoanRequest.occupied_balance}`}
+                                        icon="🆕"
+                                        bgColor="bg-indigo-500"
+                                    />
+                                </div>
+
                             </div>
 
                             {/* Chart Section */}
