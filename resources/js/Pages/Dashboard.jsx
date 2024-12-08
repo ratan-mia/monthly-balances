@@ -195,7 +195,7 @@ export default function Dashboard({
                             </div>
 
                             {/* Chart Section */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
                                 <div className="bg-white p-4 rounded-lg shadow dark:bg-gray-50">
                                     <h4 className="text-lg font-semibold text-gray-800 mb-4">
                                         Balance Trend (Inflows and Outflows)
