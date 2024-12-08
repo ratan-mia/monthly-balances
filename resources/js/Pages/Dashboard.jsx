@@ -177,6 +177,21 @@ export default function Dashboard({
                                     icon="💰"
                                     bgColor="bg-blue-600"
                                 />
+                                <StatBox
+                                    title=""
+                                    value={
+                                        latestLoanRequest
+                                            ? `${
+                                                  latestLoanRequest.bank.name
+                                              } - ${
+                                                  latestLoanRequest.loan_type
+                                                      .name
+                                              } - ৳${latestLoanRequest.occupied_balance.toLocaleString()}`
+                                            : "No recent requests"
+                                    }
+                                    icon="🆕"
+                                    bgColor="bg-indigo-500"
+                                />
                             </div>
 
                             {/* Chart Section */}
@@ -211,14 +226,18 @@ export default function Dashboard({
                                     <h4 className="text-lg font-semibold text-gray-800 mb-4">
                                         Bank-wise Balance
                                     </h4>
-                                    <BankWiseBalanceChart chartData={chartData} />
+                                    <BankWiseBalanceChart
+                                        chartData={chartData}
+                                    />
                                 </div>
                                 <div className="bg-white p-4 rounded-lg shadow dark:bg-gray-50">
                                     <h4 className="text-lg font-semibold text-gray-800 mb-4">
                                         Top Performing Companies (By Balance)
                                     </h4>
                                     <TopPerformingCompanies
-                                        topCompaniesData={topPerformingCompanies}
+                                        topCompaniesData={
+                                            topPerformingCompanies
+                                        }
                                     />
                                 </div>
                             </div>
@@ -228,5 +247,4 @@ export default function Dashboard({
             </div>
         </AuthenticatedLayout>
     );
-
 }
