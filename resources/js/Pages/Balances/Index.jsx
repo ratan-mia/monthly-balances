@@ -145,6 +145,28 @@ export default function BalancesIndex({
         doc.save('balances_report.pdf');
     };
 
+    const printTable = () => {
+        const printContent = document.getElementById('balances-table').outerHTML;
+        const newWindow = window.open('', '', 'width=800,height=600');
+        newWindow.document.write('<html><head><title>Print</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.2/dist/tailwind.min.css" /></head><body>');
+        newWindow.document.write(printContent);
+        newWindow.document.write('</body></html>');
+        newWindow.document.close();
+        newWindow.print();
+    };
+
+    const shareReport = () => {
+        if (navigator.share) {
+            navigator.share({
+                title: 'Balances Report',
+                text: 'Check out the balances report.',
+                url: window.location.href,
+            }).catch(console.error);
+        } else {
+            alert('Sharing not supported on this browser');
+        }
+    };
+
     const downloadExcel = () => {
         const worksheet = XLSX.utils.json_to_sheet(balances.map((balance) => ({
             'User Name': balance.user ? balance.user.name : 'N/A',
@@ -192,27 +214,44 @@ export default function BalancesIndex({
                     <div className="text-right space-x-4">
                         <Link
                             href="/balances/create"
-                            className="inline-block bg-blue-600 text-white text-sm font-medium px-3 py-1.5 hover:bg-blue-700 transition-all duration-300"
+                            className="inline-block bg-transparent text-blue-600 text-sm font-medium px-3 py-1.5 border border-blue-600 hover:bg-blue-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300"
                         >
                             Add Balance
                         </Link>
+                        {/* Action Buttons */}
                         <button
                             onClick={downloadExcel}
-                            className="inline-block bg-green-600 text-white text-sm font-medium px-3 py-1.5 hover:bg-green-700 transition-all duration-300"
+                            className="inline-block bg-transparent text-blue-600 text-sm font-medium px-3 py-1.5 border border-blue-600 hover:bg-blue-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300"
                         >
                             Download Excel
                         </button>
+
                         <button
                             onClick={downloadPDF}
-                            className="inline-block bg-red-600 text-white text-sm font-medium px-3 py-1.5 hover:bg-red-700 transition-all duration-300"
+                            className="inline-block bg-transparent text-blue-600 text-sm font-medium px-3 py-1.5 border border-blue-600 hover:bg-blue-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300"
                         >
                             Download PDF
                         </button>
+
+                        <button
+                            onClick={printTable}
+                            className="inline-block bg-transparent text-yellow-600 text-sm font-medium px-3 py-1.5 border border-yellow-600 hover:bg-yellow-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-300"
+                        >
+                            Print
+                        </button>
+
+                        <button
+                            onClick={shareReport}
+                            className="inline-block bg-transparent text-purple-600 text-sm font-medium px-3 py-1.5 border border-purple-600 hover:bg-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all duration-300"
+                        >
+                            Share
+                        </button>
+
                     </div>
                 </div>
 
                 <div className="overflow-x-auto bg-white rounded-lg shadow-lg">
-                    <table {...getTableProps()} className="min-w-full">
+                    <table {...getTableProps()} id="balances-table" className="min-w-full">
                         <thead className="bg-gray-100 border-b">
                             {headerGroups.map((headerGroup) => (
                                 <tr {...headerGroup.getHeaderGroupProps()}>
@@ -257,7 +296,7 @@ export default function BalancesIndex({
                             })}
                         </tbody>
                                 {/* Totals Row */}
-                                <tfoot>
+                                {/* <tfoot>
                             <tr className="bg-gray-100">
                                 <td className="px-4 py-2 border text-right font-semibold" colSpan="6">
                                     Totals:
@@ -267,7 +306,7 @@ export default function BalancesIndex({
                                 <td className="px-4 py-2 border font-semibold">{total_closing_balance}</td>
                                 <td className="px-4 py-2 border"></td>
                             </tr>
-                        </tfoot>
+                        </tfoot> */}
 
                     </table>
 
