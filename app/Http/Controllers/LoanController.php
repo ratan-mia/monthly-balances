@@ -22,10 +22,16 @@ class LoanController extends Controller
         // Fetch all loans with the related company, user, and bank data
 
         $loans = Loan::with(['loanType', 'company', 'user', 'bank'])->get();
+        $total_loans = $loans->sum('occupied_balance');
+        $total_limit = $loans->sum('limit');
+        $total_available_balance = $loans->sum('available_balance');
 
         // Return the Inertia response to display the loans list
         return Inertia::render('Loans/Index', [
-            'loans' => $loans, // Passing the raw loans data to the view
+            'loans' => $loans,
+            'total_loans' => $total_loans,
+            'total_limit' => $total_limit,
+            'total_available_balance' => $total_available_balance,
         ]);
     }
 

@@ -3,7 +3,8 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Inertia } from '@inertiajs/inertia';
 import { Head, Link } from '@inertiajs/react';
 
-export default function Index({ loans }) {
+
+export default function Index({ loans,total_loans,total_limit,total_available_balance }) {
     const deleteLoan = (id) => {
         if (confirm('Are you sure you want to delete this loan?')) {
             Inertia.delete(`/loans/${id}`);
@@ -87,6 +88,18 @@ export default function Index({ loans }) {
                                 </tr>
                             ))}
                         </tbody>
+                              {/* Totals Row */}
+                              <tfoot>
+                            <tr className="bg-gray-100">
+                                <td className="px-4 py-2 border text-blue-600 text-right font-semibold" colSpan="5">
+                                    Totals:
+                                </td>
+                                <td className="px-4 py-2 border font-semibold">{total_limit}</td>
+                                <td className="px-4 py-2 border font-semibold">{total_loans}</td>
+                                <td className="px-4 py-2 border font-semibold">{total_available_balance}</td>
+                                <td className="px-4 py-2 border"></td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
