@@ -1,141 +1,149 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Inertia } from '@inertiajs/inertia';
-import { Head, Link } from '@inertiajs/react';
-import jsPDF from 'jspdf';
-import 'jspdf-autotable'; // Import the autoTable plugin
-import * as XLSX from 'xlsx'; // Import xlsx package
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { Inertia } from "@inertiajs/inertia";
+import { Head, Link } from "@inertiajs/react";
+import { useMemo } from "react";
+import {
+    useGlobalFilter,
+    usePagination,
+    useSortBy,
+    useTable,
+} from "react-table";
 
+// Export libraries
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import * as XLSX from "xlsx";
 
+export default function BalancesIndex({
+    balances,
+    total_inflows,
+    total_outflows,
+    total_closing_balance,
+    auth,
+}) {
+    const columns = useMemo(
+        () => [
+            { Header: "User", accessor: "user.name" },
+            { Header: "Company", accessor: "company.name" },
+            { Header: "Bank", accessor: "bank.name" },
+            { Header: "Account Type", accessor: "account_type.name" },
+            { Header: "Account Number", accessor: "account_number" },
+            { Header: "Opening Balance", accessor: "opening_balance" },
+            { Header: "Inflows", accessor: "inflows" },
+            { Header: "Outflows", accessor: "outflows" },
+            { Header: "Closing Balance", accessor: "closing_balance" },
+            {
+                Header: "Actions",
+                accessor: "id",
+                Cell: ({ value }) => (
+                    <>
+                        <Link
+                            href={`/balances/${value}/edit`}
+                            className="text-yellow-600 hover:text-yellow-700 mr-2"
+                        >
+                            Edit
+                        </Link>
+                        <button
+                            onClick={() => deleteBalance(value)}
+                            className="text-red-600 hover:text-red-700"
+                        >
+                            Delete
+                        </button>
+                    </>
+                ),
+            },
+        ],
+        []
+    );
 
+    const data = useMemo(() => balances, [balances]);
 
-// import 'datatables.net-responsive-dt';
-// import 'datatables.net-responsive-dt';
-// import 'datatables.net-dt/css/jquery.dataTables.min.css';
-// import 'datatables.net-responsive-dt';
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        page,
+        prepareRow,
+        state,
+        setGlobalFilter,
+        nextPage,
+        previousPage,
+        canNextPage,
+        canPreviousPage,
+        pageOptions,
+        setPageSize,
+    } = useTable(
+        {
+            columns,
+            data,
+            initialState: { pageSize: 10 },
+        },
+        useGlobalFilter,
+        useSortBy,
+        usePagination
+    );
 
-
-
-
-export default function Index({ balances, total_inflows, total_outflows, total_closing_balance }) {
-
-    // DataTable initialization
-    // useEffect(() => {
-    //     // Initialize DataTable after the component mounts
-    //     // $('#balances-table').DataTable();
-
-    //      new DataTable('#balances-table', {
-    //         responsive: true
-    //     });
-
-
-    // }, []);
+    const { globalFilter, pageIndex, pageSize } = state;
 
     const deleteBalance = (id) => {
-        if (confirm('Are you sure you want to delete this balance?')) {
+        if (confirm("Are you sure you want to delete this balance?")) {
             Inertia.delete(`/balances/${id}`);
         }
     };
 
     const downloadPDF = () => {
         const doc = new jsPDF();
-        const tableColumn = [
-            'User Name', 'Company', 'Bank', 'Account Type', 'Account Number',
-            'Opening Balance', 'Inflows', 'Outflows', 'Closing Balance'
-        ];
+        doc.text("Balances Report", 14, 16);
 
-        const tableRows = balances.map(balance => [
-            balance.user ? balance.user.name : 'N/A',
-            balance.company ? balance.company.name : 'N/A',
-            balance.bank ? balance.bank.name : 'N/A',
-            balance.account_type ? balance.account_type.name : 'N/A',
-            balance.account_number || 'N/A',
-            balance.opening_balance || '0',
-            balance.inflows || '0',
-            balance.outflows || '0',
-            balance.closing_balance || '0',
-        ]);
+        const tableColumn = columns.map((col) => col.Header);
+        const tableRows = balances.map((balance) =>
+            tableColumn.map((col) => {
+                switch (col) {
+                    case "User":
+                        return balance.user?.name;
+                    case "Company":
+                        return balance.company?.name;
+                    case "Bank":
+                        return balance.bank?.name;
+                    case "Account Type":
+                        return balance.account_type?.name;
+                    case "Account Number":
+                        return balance.account_number;
+                    case "Opening Balance":
+                        return balance.opening_balance;
+                    case "Inflows":
+                        return balance.inflows;
+                    case "Outflows":
+                        return balance.outflows;
+                    case "Closing Balance":
+                        return balance.closing_balance;
+                    default:
+                        return "";
+                }
+            })
+        );
 
-        // Add title before the table
-        doc.setFontSize(18);
-        doc.text('Balances Report', 14, 20);
-
-        // Add the table
-        doc.setFontSize(12);
         doc.autoTable({
             head: [tableColumn],
             body: tableRows,
-            startY: 30, // Start the table below the title
+            startY: 20,
         });
 
-        // Calculate totals for the summary
-        const totalInflows = total_inflows || 0;
-        const totalOutflows = total_outflows || 0;
-        const totalClosingBalance = total_closing_balance || 0;
-
-        // Add the summary under the relevant columns
-        doc.autoTable({
-            head: [['', '', '', '', '', '', 'Total Inflows', 'Total Outflows', 'Total Closing Balance']],
-            body: [
-                ['', '', '', '', '', '', totalInflows, totalOutflows, totalClosingBalance]
-            ],
-            startY: doc.lastAutoTable.finalY + 10, // Start the summary below the table
-            theme: 'grid',
-            columnStyles: {
-                6: { halign: 'center', fontStyle: 'bold' },
-                7: { halign: 'center', fontStyle: 'bold' },
-                8: { halign: 'center', fontStyle: 'bold' },
-            }
-        });
-
-        // Save the PDF
-        doc.save('balances_report.pdf');
-    };
-
-    const printTable = () => {
-        const printContent = document.getElementById('balances-table').outerHTML;
-        const newWindow = window.open('', '', 'width=800,height=600');
-        newWindow.document.write('<html><head><title>Print</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.2/dist/tailwind.min.css" /></head><body>');
-        newWindow.document.write(printContent);
-        newWindow.document.write('</body></html>');
-        newWindow.document.close();
-        newWindow.print();
-    };
-
-    const shareReport = () => {
-        if (navigator.share) {
-            navigator.share({
-                title: 'Balances Report',
-                text: 'Check out the balances report.',
-                url: window.location.href,
-            }).catch(console.error);
-        } else {
-            alert('Sharing not supported on this browser');
-        }
+        doc.save("balances_report.pdf");
     };
 
     const downloadExcel = () => {
-        const worksheet = XLSX.utils.json_to_sheet(balances.map((balance) => ({
-            'User Name': balance.user ? balance.user.name : 'N/A',
-            'Company': balance.company ? balance.company.name : 'N/A',
-            'Bank': balance.bank ? balance.bank.name : 'N/A',
-            'Account Type': balance.account_type ? balance.account_type.name : 'N/A',
-            'Account Number': balance.account_number || 'N/A',
-            'Opening Balance': balance.opening_balance || '0',
-            'Inflows': balance.inflows || '0',
-            'Outflows': balance.outflows || '0',
-            'Closing Balance': balance.closing_balance || '0',
-        })));
+        const worksheet = XLSX.utils.json_to_sheet(balances);
         const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, 'Balances');
-
-        // Download the Excel file
-        XLSX.writeFile(workbook, 'balances.xlsx');
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Balances");
+        XLSX.writeFile(workbook, "balances_report.xlsx");
     };
 
     return (
         <AuthenticatedLayout
+            user={auth.user}
             header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+                <h2 className="text-xl font-semibold leading-tight text-gray-800">
                     Balances
                 </h2>
             }
@@ -143,97 +151,88 @@ export default function Index({ balances, total_inflows, total_outflows, total_c
             <Head title="Balances" />
 
             <div className="container w-full mx-auto px-6 py-8">
-                {/* Create Balance Button */}
                 <div className="flex justify-between items-center mb-6">
-                    <h1 className="text-3xl font-semibold text-gray-800">Balances</h1>
+                    <div className="flex items-center">
+                        <h1 className="text-3xl font-semibold text-gray-800 mr-4">
+                            Balances
+                        </h1>
+                        <input
+                            value={globalFilter || ""}
+                            onChange={(e) => setGlobalFilter(e.target.value)}
+                            placeholder="Search..."
+                            className="px-4 py-2 border rounded-lg"
+                        />
+                    </div>
 
                     <div className="text-right space-x-4">
                         <Link
                             href="/balances/create"
-                            className="inline-block bg-transparent text-blue-600 text-sm font-medium px-3 py-1.5 border border-blue-600 hover:bg-blue-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300"
+                            className="inline-block bg-blue-600 text-white text-sm font-medium px-3 py-1.5 hover:bg-blue-700 transition-all duration-300"
                         >
                             Add Balance
                         </Link>
-                        {/* Action Buttons */}
                         <button
                             onClick={downloadExcel}
-                            className="inline-block bg-transparent text-blue-600 text-sm font-medium px-3 py-1.5 border border-blue-600 hover:bg-blue-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300"
+                            className="inline-block bg-green-600 text-white text-sm font-medium px-3 py-1.5 hover:bg-green-700 transition-all duration-300"
                         >
                             Download Excel
                         </button>
-
                         <button
                             onClick={downloadPDF}
-                            className="inline-block bg-transparent text-blue-600 text-sm font-medium px-3 py-1.5 border border-blue-600 hover:bg-blue-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300"
+                            className="inline-block bg-red-600 text-white text-sm font-medium px-3 py-1.5 hover:bg-red-700 transition-all duration-300"
                         >
                             Download PDF
                         </button>
-
-                        <button
-                            onClick={printTable}
-                            className="inline-block bg-transparent text-yellow-600 text-sm font-medium px-3 py-1.5 border border-yellow-600 hover:bg-yellow-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-300"
-                        >
-                            Print
-                        </button>
-
-                        <button
-                            onClick={shareReport}
-                            className="inline-block bg-transparent text-purple-600 text-sm font-medium px-3 py-1.5 border border-purple-600 hover:bg-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all duration-300"
-                        >
-                            Share
-                        </button>
-
                     </div>
                 </div>
 
-                {/* Balances Table */}
                 <div className="overflow-x-auto bg-white rounded-lg shadow-lg">
-                    <table id="balances-table" className="min-w-full table-auto">
+                    <table {...getTableProps()} className="min-w-full">
                         <thead className="bg-gray-100 border-b">
-                            <tr>
-                                <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">User Name</th>
-                                <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Company</th>
-                                <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Bank</th>
-                                <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Account Type</th>
-                                <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Account Number</th>
-                                <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Opening Balance</th>
-                                <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Inflows</th>
-                                <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Outflows</th>
-                                <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Closing Balance</th>
-                                <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {balances.map((balance) => (
-                                <tr key={balance.id} className="border-b hover:bg-gray-50">
-                                    <td className="py-4 px-6 text-sm text-gray-700">{balance.user ? balance.user.name : 'N/A'}</td>
-                                    <td className="py-4 px-6 text-sm text-gray-700">{balance.company ? balance.company.name : 'N/A'}</td>
-                                    <td className="py-4 px-6 text-sm text-gray-700">{balance.bank ? balance.bank.name : 'N/A'}</td>
-                                    <td className="py-4 px-6 text-sm text-gray-700">{balance.account_type ? balance.account_type.name : 'N/A'}</td>
-                                    <td className="py-4 px-6 text-sm text-gray-700">{balance.account_number || 'N/A'}</td>
-                                    <td className="py-4 px-6 text-sm text-gray-700">{balance.opening_balance || '0'}</td>
-                                    <td className="py-4 px-6 text-sm text-gray-700">{balance.inflows || '0'}</td>
-                                    <td className="py-4 px-6 text-sm text-gray-700">{balance.outflows || '0'}</td>
-                                    <td className="py-4 px-6 text-sm text-gray-700">{balance.closing_balance || '0'}</td>
-                                    <td className="py-4 px-6 text-sm text-gray-700 space-x-4">
-                                        <Link
-                                            href={`/balances/${balance.id}/edit`}
-                                            className="text-yellow-600 hover:text-yellow-700 font-medium transition-all"
+                            {headerGroups.map((headerGroup) => (
+                                <tr {...headerGroup.getHeaderGroupProps()}>
+                                    {headerGroup.headers.map((column) => (
+                                        <th
+                                            {...column.getHeaderProps(
+                                                column.getSortByToggleProps()
+                                            )}
+                                            className="px-6 py-3 text-left"
                                         >
-                                            Edit
-                                        </Link>
-                                        <button
-                                            onClick={() => deleteBalance(balance.id)}
-                                            className="text-red-600 hover:text-red-700 font-medium transition-all"
-                                        >
-                                            Delete
-                                        </button>
-                                    </td>
+                                            {column.render("Header")}
+                                            <span>
+                                                {column.isSorted
+                                                    ? column.isSortedDesc
+                                                        ? " 🔽"
+                                                        : " 🔼"
+                                                    : ""}
+                                            </span>
+                                        </th>
+                                    ))}
                                 </tr>
                             ))}
+                        </thead>
+                        <tbody {...getTableBodyProps()}>
+                            {page.map((row) => {
+                                prepareRow(row);
+                                return (
+                                    <tr
+                                        {...row.getRowProps()}
+                                        className="border-b hover:bg-gray-50"
+                                    >
+                                        {row.cells.map((cell) => (
+                                            <td
+                                                {...cell.getCellProps()}
+                                                className="px-6 py-4"
+                                            >
+                                                {cell.render("Cell")}
+                                            </td>
+                                        ))}
+                                    </tr>
+                                );
+                            })}
                         </tbody>
-                        {/* Totals Row */}
-                        <tfoot>
+                                {/* Totals Row */}
+                                <tfoot>
                             <tr className="bg-gray-100">
                                 <td className="px-4 py-2 border text-right font-semibold" colSpan="6">
                                     Totals:
@@ -244,7 +243,45 @@ export default function Index({ balances, total_inflows, total_outflows, total_c
                                 <td className="px-4 py-2 border"></td>
                             </tr>
                         </tfoot>
+
                     </table>
+
+                    <div className="px-6 py-4 flex items-center justify-between">
+                        <div>
+                            <select
+                                value={pageSize}
+                                onChange={(e) =>
+                                    setPageSize(Number(e.target.value))
+                                }
+                                className="border rounded px-3 py-1"
+                            >
+                                {[5,10, 25, 50].map((size) => (
+                                    <option key={size} value={size}>
+                                        Show {size}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="space-x-2">
+                            <button
+                                onClick={() => previousPage()}
+                                disabled={!canPreviousPage}
+                                className="px-3 py-1 border rounded disabled:opacity-50"
+                            >
+                                Previous
+                            </button>
+                            <span>
+                                Page {pageIndex + 1} of {pageOptions.length}
+                            </span>
+                            <button
+                                onClick={() => nextPage()}
+                                disabled={!canNextPage}
+                                className="px-3 py-1 border rounded disabled:opacity-50"
+                            >
+                                Next
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </AuthenticatedLayout>
