@@ -90,53 +90,78 @@ export default function BalancesIndex({
             Inertia.delete(`/balances/${id}`);
         }
     };
-
     const downloadPDF = () => {
         const doc = new jsPDF();
-        doc.text("Balances Report", 14, 16);
+        const tableColumn = [
+            'User Name', 'Company', 'Bank', 'Account Type', 'Account Number',
+            'Opening Balance', 'Inflows', 'Outflows', 'Closing Balance'
+        ];
 
-        const tableColumn = columns.map((col) => col.Header);
-        const tableRows = balances.map((balance) =>
-            tableColumn.map((col) => {
-                switch (col) {
-                    case "User":
-                        return balance.user?.name;
-                    case "Company":
-                        return balance.company?.name;
-                    case "Bank":
-                        return balance.bank?.name;
-                    case "Account Type":
-                        return balance.account_type?.name;
-                    case "Account Number":
-                        return balance.account_number;
-                    case "Opening Balance":
-                        return balance.opening_balance;
-                    case "Inflows":
-                        return balance.inflows;
-                    case "Outflows":
-                        return balance.outflows;
-                    case "Closing Balance":
-                        return balance.closing_balance;
-                    default:
-                        return "";
-                }
-            })
-        );
+        const tableRows = balances.map(balance => [
+            balance.user ? balance.user.name : 'N/A',
+            balance.company ? balance.company.name : 'N/A',
+            balance.bank ? balance.bank.name : 'N/A',
+            balance.account_type ? balance.account_type.name : 'N/A',
+            balance.account_number || 'N/A',
+            balance.opening_balance || '0',
+            balance.inflows || '0',
+            balance.outflows || '0',
+            balance.closing_balance || '0',
+        ]);
 
+        // Add title before the table
+        doc.setFontSize(18);
+        doc.text('Balances Report', 14, 20);
+
+        // Add the table
+        doc.setFontSize(12);
         doc.autoTable({
             head: [tableColumn],
             body: tableRows,
-            startY: 20,
+            startY: 30, // Start the table below the title
         });
 
-        doc.save("balances_report.pdf");
+        // Calculate totals for the summary
+        const totalInflows = total_inflows || 0;
+        const totalOutflows = total_outflows || 0;
+        const totalClosingBalance = total_closing_balance || 0;
+
+        // Add the summary under the relevant columns
+        doc.autoTable({
+            head: [['', '', '', '', '', '', 'Total Inflows', 'Total Outflows', 'Total Closing Balance']],
+            body: [
+                ['', '', '', '', '', '', totalInflows, totalOutflows, totalClosingBalance]
+            ],
+            startY: doc.lastAutoTable.finalY + 10, // Start the summary below the table
+            theme: 'grid',
+            columnStyles: {
+                6: { halign: 'center', fontStyle: 'bold' },
+                7: { halign: 'center', fontStyle: 'bold' },
+                8: { halign: 'center', fontStyle: 'bold' },
+            }
+        });
+
+        // Save the PDF
+        doc.save('balances_report.pdf');
     };
 
     const downloadExcel = () => {
-        const worksheet = XLSX.utils.json_to_sheet(balances);
+        const worksheet = XLSX.utils.json_to_sheet(balances.map((balance) => ({
+            'User Name': balance.user ? balance.user.name : 'N/A',
+            'Company': balance.company ? balance.company.name : 'N/A',
+            'Bank': balance.bank ? balance.bank.name : 'N/A',
+            'Account Type': balance.account_type ? balance.account_type.name : 'N/A',
+            'Account Number': balance.account_number || 'N/A',
+            'Opening Balance': balance.opening_balance || '0',
+            'Inflows': balance.inflows || '0',
+            'Outflows': balance.outflows || '0',
+            'Closing Balance': balance.closing_balance || '0',
+        })));
         const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Balances");
-        XLSX.writeFile(workbook, "balances_report.xlsx");
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Balances');
+
+        // Download the Excel file
+        XLSX.writeFile(workbook, 'balances.xlsx');
     };
 
     return (
