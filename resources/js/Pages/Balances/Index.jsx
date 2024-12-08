@@ -190,7 +190,7 @@ export default function BalancesIndex({
         <AuthenticatedLayout
             user={auth.user}
             header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800">
+                <h2 className="text-xl font-semibold leading-tight text-gray-100">
                     Balances
                 </h2>
             }
