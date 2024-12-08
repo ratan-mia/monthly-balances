@@ -1,4 +1,3 @@
-import ApplicationLogo from '@/Components/ApplicationLogo';
 import NavLink from '@/Components/NavLink';
 import { Link } from '@inertiajs/react';
 import { useState } from 'react';
@@ -30,7 +29,8 @@ const Sidebar = ({ isSidebarCollapsed, setIsSidebarCollapsed }) => {
                 {/* Sidebar Header */}
                 <div className="flex items-center justify-between px-4">
                     <Link href="/" className="text-2xl font-semibold text-white">
-                        <ApplicationLogo className="h-9 w-auto" />
+                        {/* <ApplicationLogo className="h-9 w-auto" /> */}
+                        <img src="https://asianholdings.com.bd/wp-content/uploads/2022/10/Asian-Holdings_W2-e1667211466563.png" alt="logo" className="h-7 mt-4 w-auto" />
                     </Link>
 
                     {/* Toggle Sidebar Collapse */}
