@@ -1,5 +1,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link } from '@inertiajs/react';
+import 'iconify-icon';
 
 export default function Index({ companies }) {
     return (
@@ -51,19 +52,19 @@ export default function Index({ companies }) {
                                             href={`/companies/${company.id}`}
                                             className="text-blue-600 hover:text-blue-800 font-medium transition-all"
                                         >
-                                            View
+                                            <iconify-icon icon="iconamoon:eye-light"></iconify-icon>
                                         </Link>
                                         <Link
                                             href={`/companies/${company.id}/edit`}
                                             className="text-yellow-600 hover:text-yellow-800 font-medium transition-all"
                                         >
-                                            Edit
+                                            <iconify-icon icon="lucide:edit"></iconify-icon>
                                         </Link>
                                         <button
                                             onClick={() => confirm('Are you sure you want to delete this?')}
                                             className="text-red-600 hover:text-red-800 font-medium transition-all"
                                         >
-                                            Delete
+                                          <iconify-icon icon="mingcute:delete-2-line"></iconify-icon>
                                         </button>
                                     </td>
                                 </tr>

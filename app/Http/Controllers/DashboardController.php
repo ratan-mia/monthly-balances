@@ -143,6 +143,14 @@ class DashboardController extends Controller
         $totalInflows = Balance::sum('inflows');  // Sum of all inflows
         $totalOutflows = Balance::sum('outflows');  // Sum of all outflows
 
+        $loanAllocations = Bank::with('loans')->get()->map(function ($bank) {
+            return [
+                'bankName' => $bank->name,
+                'total_loans' => $bank->loans->count(),
+                'total_amount' => $bank->loans->sum('occupied_balance'),
+            ];
+        });
+
 
 
 
@@ -168,6 +176,7 @@ class DashboardController extends Controller
             'totalLoanLimit' => $totalLoanLimit,
             'totalInflows' => $totalInflows,
             'totalOutflows' => $totalOutflows,
+            'loanAllocations' => $loanAllocations,
         ]);
     }
 }

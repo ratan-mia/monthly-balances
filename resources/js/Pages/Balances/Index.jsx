@@ -1,6 +1,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Inertia } from "@inertiajs/inertia";
 import { Head, Link } from "@inertiajs/react";
+import 'iconify-icon';
 import { useMemo } from "react";
 import {
     useGlobalFilter,
@@ -41,13 +42,13 @@ export default function BalancesIndex({
                             href={`/balances/${value}/edit`}
                             className="text-yellow-600 hover:text-yellow-700 mr-2"
                         >
-                            Edit
+                            <iconify-icon icon="lucide:edit"></iconify-icon>
                         </Link>
                         <button
                             onClick={() => deleteBalance(value)}
                             className="text-red-600 hover:text-red-700"
                         >
-                            Delete
+                              <iconify-icon icon="mingcute:delete-2-line"></iconify-icon>
                         </button>
                     </>
                 ),

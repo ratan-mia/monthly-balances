@@ -2,6 +2,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Inertia } from '@inertiajs/inertia';
 import { Head, Link } from '@inertiajs/react';
+import 'iconify-icon';
 
 
 export default function Index({ loans,total_loans,total_limit,total_available_balance }) {
@@ -68,21 +69,21 @@ export default function Index({ loans,total_loans,total_limit,total_available_ba
                                             href={`/loans/${loan.id}`}
                                             className="text-green-600 hover:text-green-700 font-medium transition-all"
                                         >
-                                            View
+                                           <iconify-icon icon="iconamoon:eye-light"></iconify-icon>
                                         </Link>
                                         {/* Edit Button */}
                                         <Link
                                             href={`/loans/${loan.id}/edit`}
                                             className="text-blue-600 hover:text-blue-700 font-medium transition-all"
                                         >
-                                            Edit
+                                           <iconify-icon icon="lucide:edit"></iconify-icon>
                                         </Link>
                                         {/* Delete Button */}
                                         <button
                                             onClick={() => deleteLoan(loan.id)}
                                             className="text-red-600 hover:text-red-700 font-medium transition-all"
                                         >
-                                            Delete
+                                          <iconify-icon icon="mingcute:delete-2-line"></iconify-icon>
                                         </button>
                                     </td>
                                 </tr>
