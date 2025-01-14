@@ -27,24 +27,25 @@ import {
 import * as XLSX from "xlsx";
 
 // Separate component for the action buttons
-const ActionButton = ({ onClick, icon: Icon, label, color = "blue" }) => (
-    <button
-        onClick={onClick}
-        className={`
-            inline-flex items-center gap-2
-            bg-white text-${color}-600
-            text-sm font-medium px-4 py-2
-            border border-${color}-600
-            rounded-lg shadow-sm
-            hover:bg-${color}-600 hover:text-white
-            focus:outline-none focus:ring-2 focus:ring-${color}-400
-            transition-all duration-300
-        `}
-    >
-        <Icon className="w-4 h-4" />
-        <span>{label}</span>
-    </button>
-);
+// const ActionButton = ({ onClick, icon: Icon, label, color = "blue" }) => (
+//     <button
+//         onClick={onClick}
+//         className={`
+//             inline-flex items-center gap-2
+//             bg-white text-${color}-600
+//             text-sm font-medium px-4 py-2
+//             border border-${color}-600
+//             rounded-lg shadow-sm
+//             hover:bg-${color}-600 hover:text-white
+//             focus:outline-none focus:ring-2 focus:ring-${color}-400
+//             transition-all duration-300
+//         `}
+//     >
+//         <Icon className="w-4 h-4" />
+//         <span>{label}</span>
+//     </button>
+// );
+import ActionButton from '@/Components/Buttons/ActionButton';
 
 // Separate component for the Stats Card
 // const StatsCard = ({ title, value, colorClass }) => (
