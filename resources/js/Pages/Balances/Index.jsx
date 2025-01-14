@@ -79,7 +79,7 @@ export default function BalancesIndex({
                     <div className="text-right">
                         {Number(value).toLocaleString('en-US', {
                             style: 'currency',
-                            currency: 'USD'
+                            currency: 'BDT'
                         })}
                     </div>
                 )
@@ -91,7 +91,7 @@ export default function BalancesIndex({
                     <div className="text-right text-green-600 font-medium">
                         +{Number(value).toLocaleString('en-US', {
                             style: 'currency',
-                            currency: 'USD'
+                            currency: 'BDT'
                         })}
                     </div>
                 )
@@ -103,7 +103,7 @@ export default function BalancesIndex({
                     <div className="text-right text-red-600 font-medium">
                         -{Number(value).toLocaleString('en-US', {
                             style: 'currency',
-                            currency: 'USD'
+                            currency: 'BDT'
                         })}
                     </div>
                 )
@@ -115,7 +115,7 @@ export default function BalancesIndex({
                     <div className="text-right font-semibold">
                         {Number(value).toLocaleString('en-US', {
                             style: 'currency',
-                            currency: 'USD'
+                            currency: 'BDT'
                         })}
                     </div>
                 )
@@ -195,19 +195,19 @@ export default function BalancesIndex({
             'Account Number': balance.account_number || 'N/A',
             'Opening Balance': Number(balance.opening_balance || 0).toLocaleString('en-US', {
                 style: 'currency',
-                currency: 'USD'
+                currency: 'BDT'
             }),
             'Inflows': Number(balance.inflows || 0).toLocaleString('en-US', {
                 style: 'currency',
-                currency: 'USD'
+                currency: 'BDT'
             }),
             'Outflows': Number(balance.outflows || 0).toLocaleString('en-US', {
                 style: 'currency',
-                currency: 'USD'
+                currency: 'BDT'
             }),
             'Closing Balance': Number(balance.closing_balance || 0).toLocaleString('en-US', {
                 style: 'currency',
-                currency: 'USD'
+                currency: 'BDT'
             }),
         })));
 
@@ -234,7 +234,7 @@ export default function BalancesIndex({
                         title="Total Inflows"
                         value={Number(total_inflows).toLocaleString('en-US', {
                             style: 'currency',
-                            currency: 'USD'
+                            currency: 'BDT'
                         })}
                         colorClass="text-green-600"
                     />
@@ -242,7 +242,7 @@ export default function BalancesIndex({
                         title="Total Outflows"
                         value={Number(total_outflows).toLocaleString('en-US', {
                             style: 'currency',
-                            currency: 'USD'
+                            currency: 'BDT'
                         })}
                         colorClass="text-red-600"
                     />
@@ -250,7 +250,7 @@ export default function BalancesIndex({
                         title="Net Balance"
                         value={Number(total_closing_balance).toLocaleString('en-US', {
                             style: 'currency',
-                            currency: 'USD'
+                            currency: 'BDT'
                         })}
                         colorClass="text-blue-600"
                     />
