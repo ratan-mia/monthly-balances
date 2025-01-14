@@ -8,6 +8,7 @@ import {
     FaChevronDown,
     FaChevronUp,
     FaEdit,
+    FaEye,
     FaFileExcel,
     FaFilePdf,
     FaPlus,
@@ -15,6 +16,8 @@ import {
     FaSearch,
     FaTrash,
 } from "react-icons/fa";
+
+
 import {
     useGlobalFilter,
     usePagination,
@@ -155,21 +158,30 @@ export default function BalancesIndex({
                 accessor: "id",
                 Cell: ({ value }) => (
                     <div className="flex items-center gap-3">
-                        <Link
+                               <ActionButton
+                            href={`/balances/${value}`}
+                            icon={FaEye}
+                            color="gray"
+                            label="View"
+                            className="!p-2"
+                        />
+                        <ActionButton
                             href={`/balances/${value}/edit`}
-                            className="text-yellow-600 hover:text-yellow-700 transition-colors"
-                        >
-                            <FaEdit className="w-5 h-5" />
-                        </Link>
-                        <button
+                            icon={FaEdit}
+                            color="yellow"
+                            label="Edit"
+                            className="!p-2"
+                        />
+                        <ActionButton
                             onClick={() => {
                                 setDeleteId(value);
                                 setShowDeleteModal(true);
                             }}
-                            className="text-red-600 hover:text-red-700 transition-colors"
-                        >
-                            <FaTrash className="w-5 h-5" />
-                        </button>
+                            icon={FaTrash}
+                            color="red"
+                            label="Delete"
+                            className="!p-2"
+                        />
                     </div>
                 ),
             },
