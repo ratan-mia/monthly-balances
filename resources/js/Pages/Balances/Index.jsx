@@ -5,14 +5,16 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { useMemo, useState } from "react";
 import {
+    FaChevronDown,
+    FaChevronUp,
     FaEdit,
     FaFileExcel,
     FaFilePdf,
     FaPlus,
     FaPrint,
     FaSearch,
-    FaTrash
-} from 'react-icons/fa';
+    FaTrash,
+} from "react-icons/fa";
 import {
     useGlobalFilter,
     usePagination,
@@ -42,12 +44,36 @@ const ActionButton = ({ onClick, icon: Icon, label, color = "blue" }) => (
 );
 
 // Separate component for the Stats Card
-const StatsCard = ({ title, value, colorClass }) => (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-        <h3 className="text-sm font-medium text-gray-500">{title}</h3>
-        <p className={`mt-2 text-3xl font-semibold ${colorClass}`}>{value}</p>
-    </div>
-);
+// const StatsCard = ({ title, value, colorClass }) => (
+//     <div className="bg-white p-6 rounded-lg shadow-md">
+//         <h3 className="text-sm font-medium text-gray-500">{title}</h3>
+//         <p className={`mt-2 text-3xl font-semibold ${colorClass}`}>{value}</p>
+//     </div>
+// );
+
+const StatsCard = ({ title, value, colorClass }) => {
+    // Handle null, undefined, or non-numeric values
+    const formatValue = (val) => {
+        const numericValue = typeof val === "string" ? parseFloat(val) : val;
+        if (isNaN(numericValue)) return "BDT 0.00";
+
+        return new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "BDT",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        }).format(numericValue);
+    };
+
+    return (
+        <div className="bg-white p-6 rounded-lg shadow-md">
+            <h3 className="text-sm font-medium text-gray-500">{title}</h3>
+            <p className={`mt-2 text-3xl font-semibold ${colorClass}`}>
+                {formatValue(value)}
+            </p>
+        </div>
+    );
+};
 
 export default function BalancesIndex({
     balances,
@@ -56,6 +82,8 @@ export default function BalancesIndex({
     total_closing_balance,
     auth,
 }) {
+
+    console.log(total_closing_balance);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
 
@@ -66,7 +94,7 @@ export default function BalancesIndex({
                 accessor: "user.name",
                 Cell: ({ value }) => (
                     <div className="font-medium text-gray-900">{value}</div>
-                )
+                ),
             },
             { Header: "Company", accessor: "company.name" },
             { Header: "Bank", accessor: "bank.name" },
@@ -77,48 +105,50 @@ export default function BalancesIndex({
                 accessor: "opening_balance",
                 Cell: ({ value }) => (
                     <div className="text-right">
-                        {Number(value).toLocaleString('en-US', {
-                            style: 'currency',
-                            currency: 'BDT'
+                        {Number(value).toLocaleString("en-US", {
+                            style: "currency",
+                            currency: "BDT",
                         })}
                     </div>
-                )
+                ),
             },
             {
                 Header: "Inflows",
                 accessor: "inflows",
                 Cell: ({ value }) => (
                     <div className="text-right text-green-600 font-medium">
-                        +{Number(value).toLocaleString('en-US', {
-                            style: 'currency',
-                            currency: 'BDT'
+                        +
+                        {Number(value).toLocaleString("en-US", {
+                            style: "currency",
+                            currency: "BDT",
                         })}
                     </div>
-                )
+                ),
             },
             {
                 Header: "Outflows",
                 accessor: "outflows",
                 Cell: ({ value }) => (
                     <div className="text-right text-red-600 font-medium">
-                        -{Number(value).toLocaleString('en-US', {
-                            style: 'currency',
-                            currency: 'BDT'
+                        -
+                        {Number(value).toLocaleString("en-US", {
+                            style: "currency",
+                            currency: "BDT",
                         })}
                     </div>
-                )
+                ),
             },
             {
                 Header: "Closing Balance",
                 accessor: "closing_balance",
                 Cell: ({ value }) => (
                     <div className="text-right font-semibold">
-                        {Number(value).toLocaleString('en-US', {
-                            style: 'currency',
-                            currency: 'BDT'
+                        {Number(value).toLocaleString("en-US", {
+                            style: "currency",
+                            currency: "BDT",
                         })}
                     </div>
-                )
+                ),
             },
             {
                 Header: "Actions",
@@ -183,37 +213,120 @@ export default function BalancesIndex({
 
     const downloadPDF = () => {
         const doc = new jsPDF();
-        // ... (rest of the PDF generation code remains the same)
+        const tableColumn = [
+            "User Name",
+            "Company",
+            "Bank",
+            "Account Type",
+            "Account Number",
+            "Opening Balance",
+            "Inflows",
+            "Outflows",
+            "Closing Balance",
+        ];
+
+        const tableRows = balances.map((balance) => [
+            balance.user?.name || "N/A",
+            balance.company?.name || "N/A",
+            balance.bank?.name || "N/A",
+            balance.account_type?.name || "N/A",
+            balance.account_number || "N/A",
+            balance.opening_balance || "0",
+            balance.inflows || "0",
+            balance.outflows || "0",
+            balance.closing_balance || "0",
+        ]);
+
+        doc.setFontSize(18);
+        doc.text("Balances Report", 14, 20);
+
+        doc.setFontSize(12);
+        doc.autoTable({
+            head: [tableColumn],
+            body: tableRows,
+            startY: 30,
+        });
+
+        const totalInflows = total_inflows || 0;
+        const totalOutflows = total_outflows || 0;
+        const totalClosingBalance = total_closing_balance || 0;
+
+        doc.autoTable({
+            head: [
+                [
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "Total Inflows",
+                    "Total Outflows",
+                    "Total Closing Balance",
+                ],
+            ],
+            body: [
+                [
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    totalInflows,
+                    totalOutflows,
+                    totalClosingBalance,
+                ],
+            ],
+            startY: doc.lastAutoTable.finalY + 10,
+            theme: "grid",
+            columnStyles: {
+                6: { halign: "center", fontStyle: "bold" },
+                7: { halign: "center", fontStyle: "bold" },
+                8: { halign: "center", fontStyle: "bold" },
+            },
+        });
+
+        doc.save("balances_report.pdf");
     };
 
     const downloadExcel = () => {
-        const worksheet = XLSX.utils.json_to_sheet(balances.map(balance => ({
-            'User Name': balance.user?.name || 'N/A',
-            'Company': balance.company?.name || 'N/A',
-            'Bank': balance.bank?.name || 'N/A',
-            'Account Type': balance.account_type?.name || 'N/A',
-            'Account Number': balance.account_number || 'N/A',
-            'Opening Balance': Number(balance.opening_balance || 0).toLocaleString('en-US', {
-                style: 'currency',
-                currency: 'BDT'
-            }),
-            'Inflows': Number(balance.inflows || 0).toLocaleString('en-US', {
-                style: 'currency',
-                currency: 'BDT'
-            }),
-            'Outflows': Number(balance.outflows || 0).toLocaleString('en-US', {
-                style: 'currency',
-                currency: 'BDT'
-            }),
-            'Closing Balance': Number(balance.closing_balance || 0).toLocaleString('en-US', {
-                style: 'currency',
-                currency: 'BDT'
-            }),
-        })));
+        const worksheet = XLSX.utils.json_to_sheet(
+            balances.map((balance) => ({
+                "User Name": balance.user?.name || "N/A",
+                Company: balance.company?.name || "N/A",
+                Bank: balance.bank?.name || "N/A",
+                "Account Type": balance.account_type?.name || "N/A",
+                "Account Number": balance.account_number || "N/A",
+                "Opening Balance": Number(
+                    balance.opening_balance || 0
+                ).toLocaleString("en-US", {
+                    style: "currency",
+                    currency: "BDT",
+                }),
+                Inflows: Number(balance.inflows || 0).toLocaleString("en-US", {
+                    style: "currency",
+                    currency: "BDT",
+                }),
+                Outflows: Number(balance.outflows || 0).toLocaleString(
+                    "en-US",
+                    {
+                        style: "currency",
+                        currency: "BDT",
+                    }
+                ),
+                "Closing Balance": Number(
+                    balance.closing_balance || 0
+                ).toLocaleString("en-US", {
+                    style: "currency",
+                    currency: "BDT",
+                }),
+            }))
+        );
 
         const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, 'Balances');
-        XLSX.writeFile(workbook, 'balances.xlsx');
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Balances");
+        XLSX.writeFile(workbook, "balances.xlsx");
     };
 
     return (
@@ -232,26 +345,18 @@ export default function BalancesIndex({
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                     <StatsCard
                         title="Total Inflows"
-                        value={Number(total_inflows).toLocaleString('en-US', {
-                            style: 'currency',
-                            currency: 'BDT'
-                        })}
+                        value={total_inflows || 0}
                         colorClass="text-green-600"
                     />
                     <StatsCard
                         title="Total Outflows"
-                        value={Number(total_outflows).toLocaleString('en-US', {
-                            style: 'currency',
-                            currency: 'BDT'
-                        })}
+                        value={total_outflows || 0}
                         colorClass="text-red-600"
                     />
+
                     <StatsCard
                         title="Net Balance"
-                        value={Number(total_closing_balance).toLocaleString('en-US', {
-                            style: 'currency',
-                            currency: 'BDT'
-                        })}
+                        value={total_closing_balance || 0}
                         colorClass="text-blue-600"
                     />
                 </div>
@@ -272,100 +377,163 @@ export default function BalancesIndex({
 
                     <div className="flex flex-wrap items-center gap-3">
                         <Link href="/balances/create">
-                            <ActionButton icon={FaPlus} label="Add Balance" color="green" />
+                            <ActionButton
+                                icon={FaPlus}
+                                label="Add Balance"
+                                color="green"
+                            />
                         </Link>
-                        <ActionButton onClick={downloadExcel} icon={FaFileExcel} label="Export Excel" />
-                        <ActionButton onClick={downloadPDF} icon={FaFilePdf} label="Export PDF" />
-                        <ActionButton onClick={() => window.print()} icon={FaPrint} label="Print" color="yellow" />
+                        <ActionButton
+                            onClick={downloadExcel}
+                            icon={FaFileExcel}
+                            label="Export Excel"
+                        />
+                        <ActionButton
+                            onClick={downloadPDF}
+                            icon={FaFilePdf}
+                            label="Export PDF"
+                        />
+                        <ActionButton
+                            onClick={() => window.print()}
+                            icon={FaPrint}
+                            label="Print"
+                            color="yellow"
+                        />
                     </div>
                 </div>
 
                 {/* Table */}
+
                 <div className="bg-white rounded-lg shadow overflow-hidden">
                     <div className="overflow-x-auto">
-                        <table {...getTableProps()} className="min-w-full divide-y divide-gray-200">
+                        <table className="min-w-full divide-y divide-gray-200">
                             <thead className="bg-gray-50">
-                                {headerGroups.map(headerGroup => (
-                                    <tr {...headerGroup.getHeaderGroupProps()}>
-                                        {headerGroup.headers.map(column => (
-                                            <th
-                                                {...column.getHeaderProps(column.getSortByToggleProps())}
-                                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                            >
-                                                <div className="flex items-center space-x-1">
-                                                    <span>{column.render('Header')}</span>
-                                                    {column.isSorted ? (
-                                                        column.isSortedDesc ? (
-                                                            <FaChevronDown className="w-4 h-4" />
-                                                        ) : (
-                                                            <FaChevronUp className="w-4 h-4" />
-                                                        )
-                                                    ) : null}
-                                                </div>
-                                            </th>
-                                        ))}
+                                {headerGroups.map((headerGroup, groupIndex) => (
+                                    <tr key={`header-group-${groupIndex}`}>
+                                        {headerGroup.headers.map(
+                                            (column, columnIndex) => {
+                                                const sortProps =
+                                                    column.getSortByToggleProps();
+                                                const { key, ...headerProps } =
+                                                    column.getHeaderProps(
+                                                        sortProps
+                                                    );
+                                                return (
+                                                    <th
+                                                        key={`header-${groupIndex}-${columnIndex}`}
+                                                        {...headerProps}
+                                                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                                    >
+                                                        <div className="flex items-center space-x-1">
+                                                            <span>
+                                                                {column.render(
+                                                                    "Header"
+                                                                )}
+                                                            </span>
+                                                            {column.isSorted &&
+                                                                (column.isSortedDesc ? (
+                                                                    <FaChevronDown className="w-4 h-4" />
+                                                                ) : (
+                                                                    <FaChevronUp className="w-4 h-4" />
+                                                                ))}
+                                                        </div>
+                                                    </th>
+                                                );
+                                            }
+                                        )}
                                     </tr>
                                 ))}
                             </thead>
-                            <tbody {...getTableBodyProps()} className="divide-y divide-gray-200">
-                                {page.map(row => {
+                            <tbody className="divide-y divide-gray-200">
+                                {page.map((row, rowIndex) => {
                                     prepareRow(row);
                                     return (
-                                        <tr {...row.getRowProps()} className="hover:bg-gray-50">
-                                            {row.cells.map(cell => (
-                                                <td
-                                                    {...cell.getCellProps()}
-                                                    className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
-                                                >
-                                                    {cell.render('Cell')}
-                                                </td>
-                                            ))}
+                                        <tr
+                                            key={`row-${rowIndex}-${
+                                                row.original.id || rowIndex
+                                            }`}
+                                            className="hover:bg-gray-50"
+                                        >
+                                            {row.cells.map(
+                                                (cell, cellIndex) => {
+                                                    const {
+                                                        key,
+                                                        ...cellProps
+                                                    } = cell.getCellProps();
+                                                    return (
+                                                        <td
+                                                            key={`cell-${rowIndex}-${cellIndex}`}
+                                                            {...cellProps}
+                                                            className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+                                                        >
+                                                            {cell.render(
+                                                                "Cell"
+                                                            )}
+                                                        </td>
+                                                    );
+                                                }
+                                            )}
                                         </tr>
                                     );
                                 })}
+
+                                {/* Totals Row */}
+                                <tr className="bg-gray-50 font-semibold">
+                                    <td
+                                        colSpan={5}
+                                        className="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                                    >
+                                        Totals
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">
+                                        {Number(
+                                            data.reduce(
+                                                (sum, row) =>
+                                                    sum +
+                                                    (Number(
+                                                        row.opening_balance
+                                                    ) || 0),
+                                                0
+                                            )
+                                        ).toLocaleString("en-US", {
+                                            style: "currency",
+                                            currency: "BDT",
+                                        })}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-medium text-right">
+                                        +
+                                        {Number(total_inflows).toLocaleString(
+                                            "en-US",
+                                            {
+                                                style: "currency",
+                                                currency: "BDT",
+                                            }
+                                        )}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600 font-medium text-right">
+                                        -
+                                        {Number(total_outflows).toLocaleString(
+                                            "en-US",
+                                            {
+                                                style: "currency",
+                                                currency: "BDT",
+                                            }
+                                        )}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-bold text-right">
+                                        {Number(
+                                            total_closing_balance
+                                        ).toLocaleString("en-US", {
+                                            style: "currency",
+                                            currency: "BDT",
+                                        })}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {/* Empty cell for actions column */}
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
-                    </div>
-
-                    {/* Pagination */}
-                    <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                                <span className="text-sm text-gray-700">Show</span>
-                                <select
-                                    value={pageSize}
-                                    onChange={e => setPageSize(Number(e.target.value))}
-                                    className="border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                                >
-                                    {[5, 10, 25, 50].map(size => (
-                                        <option key={size} value={size}>
-                                            {size}
-                                        </option>
-                                    ))}
-                                </select>
-                                <span className="text-sm text-gray-700">entries</span>
-                            </div>
-
-                            <div className="flex items-center gap-2">
-                                <button
-                                    onClick={() => previousPage()}
-                                    disabled={!canPreviousPage}
-                                    className="px-3 py-1 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
-                                >
-                                    Previous
-                                </button>
-                                <span className="text-sm text-gray-700">
-                                    Page {pageIndex + 1} of {pageOptions.length}
-                                </span>
-                                <button
-                                    onClick={() => nextPage()}
-                                    disabled={!canNextPage}
-                                    className="px-3 py-1 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
-                                >
-                                    Next
-                                </button>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -375,7 +543,10 @@ export default function BalancesIndex({
                 <div className="fixed inset-0 z-50 overflow-y-auto">
                     <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
                         {/* Background overlay */}
-                        <div className="fixed inset-0 transition-opacity" aria-hidden="true">
+                        <div
+                            className="fixed inset-0 transition-opacity"
+                            aria-hidden="true"
+                        >
                             <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
                         </div>
 
@@ -392,7 +563,9 @@ export default function BalancesIndex({
                                         </h3>
                                         <div className="mt-2">
                                             <p className="text-sm text-gray-500">
-                                                Are you sure you want to delete this balance? This action cannot be undone.
+                                                Are you sure you want to delete
+                                                this balance? This action cannot
+                                                be undone.
                                             </p>
                                         </div>
                                     </div>
@@ -421,26 +594,26 @@ export default function BalancesIndex({
 
             {/* Print-specific styles */}
             <style>{`
-                @media print {
-                    @page {
-                        size: landscape;
+                    @media print {
+                        @page {
+                            size: landscape;
+                        }
+                        body * {
+                            visibility: hidden;
+                        }
+                        .container, .container * {
+                            visibility: visible;
+                        }
+                        .container {
+                            position: absolute;
+                            left: 0;
+                            top: 0;
+                        }
+                        .no-print, .no-print * {
+                            display: none !important;
+                        }
                     }
-                    body * {
-                        visibility: hidden;
-                    }
-                    .container, .container * {
-                        visibility: visible;
-                    }
-                    .container {
-                        position: absolute;
-                        left: 0;
-                        top: 0;
-                    }
-                    .no-print, .no-print * {
-                        display: none !important;
-                    }
-                }
-            `}</style>
+                `}</style>
         </AuthenticatedLayout>
     );
 }
