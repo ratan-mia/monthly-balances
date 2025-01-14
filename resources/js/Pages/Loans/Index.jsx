@@ -36,7 +36,7 @@ const StatsCard = ({ title, value, icon: Icon, colorClass }) => (
                     {typeof value === 'number'
                         ? value.toLocaleString('en-US', {
                             style: 'currency',
-                            currency: 'USD',
+                            currency: 'BDT',
                             minimumFractionDigits: 0,
                             maximumFractionDigits: 0,
                           })
@@ -130,9 +130,9 @@ const Table = ({ columns, data }) => {
                             <td colSpan="5" className="px-6 py-4 font-semibold text-right">
                                 Totals:
                             </td>
-                            <td className="px-6 py-4 font-semibold">{data.reduce((sum, row) => sum + parseFloat(row.limit), 0).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
-                            <td className="px-6 py-4 font-semibold">{data.reduce((sum, row) => sum + parseFloat(row.occupied_balance), 0).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
-                            <td className="px-6 py-4 font-semibold">{data.reduce((sum, row) => sum + parseFloat(row.available_balance), 0).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
+                            <td className="px-6 py-4 font-semibold">{data.reduce((sum, row) => sum + parseFloat(row.limit), 0).toLocaleString('en-US', { style: 'currency', currency: 'BDT' })}</td>
+                            <td className="px-6 py-4 font-semibold">{data.reduce((sum, row) => sum + parseFloat(row.occupied_balance), 0).toLocaleString('en-US', { style: 'currency', currency: 'BDT' })}</td>
+                            <td className="px-6 py-4 font-semibold">{data.reduce((sum, row) => sum + parseFloat(row.available_balance), 0).toLocaleString('en-US', { style: 'currency', currency: 'BDT' })}</td>
                             <td></td>
                         </tr>
                     </tfoot>
@@ -194,7 +194,7 @@ export default function Index({ auth, loans, total_loans, total_limit, total_ava
                     <div className="text-right font-medium">
                         {parseFloat(value).toLocaleString('en-US', {
                             style: 'currency',
-                            currency: 'USD'
+                            currency: 'BDT'
                         })}
                     </div>
                 )
@@ -206,7 +206,7 @@ export default function Index({ auth, loans, total_loans, total_limit, total_ava
                     <div className="text-right font-medium text-red-600">
                         {parseFloat(value).toLocaleString('en-US', {
                             style: 'currency',
-                            currency: 'USD'
+                            currency: 'BDT'
                         })}
                     </div>
                 )
@@ -218,7 +218,7 @@ export default function Index({ auth, loans, total_loans, total_limit, total_ava
                     <div className="text-right font-medium text-green-600">
                         {parseFloat(value).toLocaleString('en-US', {
                             style: 'currency',
-                            currency: 'USD'
+                            currency: 'BDT'
                         })}
                     </div>
                 )
@@ -306,9 +306,9 @@ export default function Index({ auth, loans, total_loans, total_limit, total_ava
                 loan.user.name,
                 loan.bank.name,
                 loan.loan_type.name,
-                parseFloat(loan.limit).toLocaleString('en-US', { style: 'currency', currency: 'USD' }),
-                parseFloat(loan.occupied_balance).toLocaleString('en-US', { style: 'currency', currency: 'USD' }),
-                parseFloat(loan.available_balance).toLocaleString('en-US', { style: 'currency', currency: 'USD' })
+                parseFloat(loan.limit).toLocaleString('en-US', { style: 'currency', currency: 'BDT' }),
+                parseFloat(loan.occupied_balance).toLocaleString('en-US', { style: 'currency', currency: 'BDT' }),
+                parseFloat(loan.available_balance).toLocaleString('en-US', { style: 'currency', currency: 'BDT' })
             ]),
             startY: 35,
             styles: { fontSize: 8 },
