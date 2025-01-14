@@ -1,152 +1,281 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Inertia } from '@inertiajs/inertia';
 import { Head } from '@inertiajs/react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import {
+    FaChevronDown,
+    FaChevronUp,
+    FaEdit,
+    FaEnvelope,
+    FaSearch,
+    FaTrash,
+    FaUserCircle,
+    FaUserTag
+} from 'react-icons/fa';
+import { useGlobalFilter, usePagination, useSortBy, useTable } from 'react-table';
 
-const UserIndex = ({ users, roles }) => {
-    const [selectedUserId, setSelectedUserId] = useState(null);
-    const [userDetails, setUserDetails] = useState({});
-    const [newRole, setNewRole] = useState('');
-    const [showEditModal, setShowEditModal] = useState(false);
+// Import our custom components
+import ActionButton from '@/Components/Buttons/ActionButton';
+import DeleteUserModal from '@/Components/Modals/DeleteUserModal';
+import EditUserModal from '@/Components/Modals/EditUserModal';
+import TablePagination from '@/Components/Table/TablePagination';
 
-    // Open the edit profile modal
-    const handleEdit = (userId) => {
-        const user = users.find((user) => user.id === userId);
-        setUserDetails(user);
-        setNewRole(user.roles.length > 0 ? user.roles[0].name : ''); // Set the current role
-        setSelectedUserId(userId);
-        setShowEditModal(true);
-    };
+const Table = ({ columns, data }) => {
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        page,
+        prepareRow,
+        state,
+        setGlobalFilter,
+        nextPage,
+        previousPage,
+        canNextPage,
+        canPreviousPage,
+        pageOptions,
+        pageCount,
+        setPageSize,
+    } = useTable(
+        {
+            columns,
+            data,
+            initialState: { pageSize: 10 }
+        },
+        useGlobalFilter,
+        useSortBy,
+        usePagination
+    );
 
-    // Update user profile
-    const handleUpdateProfile = () => {
-        Inertia.put(`/users/${selectedUserId}`, {
-            ...userDetails,
-            role: newRole, // Pass the selected role to update
-        });
-        setShowEditModal(false);
-    };
-
-    // Remove user
-    const handleRemove = (userId) => {
-        if (window.confirm('Are you sure you want to remove this user?')) {
-            Inertia.delete(`/users/${userId}`);
-        }
-    };
+    const { globalFilter, pageIndex, pageSize } = state;
 
     return (
-        <AuthenticatedLayout
-            header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-                    Manage Users
-                </h2>
-            }
-        >
-            <Head title="Manage Users" />
-
-            <div className="container mx-auto px-4 py-6">
-                <h1 className="text-2xl font-bold mb-4">User Management</h1>
-
-                <div className="overflow-x-auto bg-white shadow-md rounded-lg">
-                    <table className="min-w-full table-auto">
-                        <thead className="bg-gray-200">
-                            <tr>
-                                <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Name</th>
-                                <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Email</th>
-                                <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Role</th>
-                                <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Actions</th>
+        <div className="bg-white rounded-lg shadow overflow-hidden">
+            <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                        {headerGroups.map(headerGroup => (
+                            <tr key={headerGroup.id}>
+                                {headerGroup.headers.map(column => (
+                                    <th
+                                        key={column.id}
+                                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                        {...column.getSortByToggleProps()}
+                                    >
+                                        <div className="flex items-center space-x-1">
+                                            <span>{column.render('Header')}</span>
+                                            {column.isSorted ? (
+                                                column.isSortedDesc ? (
+                                                    <FaChevronDown className="w-4 h-4" />
+                                                ) : (
+                                                    <FaChevronUp className="w-4 h-4" />
+                                                )
+                                            ) : null}
+                                        </div>
+                                    </th>
+                                ))}
                             </tr>
-                        </thead>
-                        <tbody className="text-sm text-gray-700">
-                            {users.map((user) => (
-                                <tr key={user.id} className="border-t hover:bg-gray-50">
-                                    <td className="px-6 py-4">{user.name}</td>
-                                    <td className="px-6 py-4">{user.email}</td>
-                                    <td className="px-6 py-4">
-                                        {user.roles.map((role) => role.name).join(', ')}
-                                    </td>
-                                    <td className="px-6 py-4 flex items-center space-x-2">
-                                        <button
-                                            onClick={() => handleEdit(user.id)}
-                                            className="p-2 bg-yellow-500 text-white rounded hover:bg-yellow-600"
+                        ))}
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                        {page.map(row => {
+                            prepareRow(row);
+                            return (
+                                <tr key={row.id} className="hover:bg-gray-50">
+                                    {row.cells.map(cell => (
+                                        <td
+                                            key={cell.column.id}
+                                            className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
                                         >
-                                            Edit Profile
-                                        </button>
-
-                                        <button
-                                            onClick={() => handleRemove(user.id)}
-                                            className="p-2 bg-red-500 text-white rounded hover:bg-red-600"
-                                        >
-                                            Remove
-                                        </button>
-                                    </td>
+                                            {cell.render('Cell')}
+                                        </td>
+                                    ))}
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                            );
+                        })}
+                    </tbody>
+                </table>
             </div>
 
-            {/* Edit Profile Modal */}
-            {showEditModal && (
-                <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
-                    <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-                        <h3 className="text-lg font-semibold mb-4">Edit Profile</h3>
-                        <div className="mb-4">
-                            <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
-                            <input
-                                id="name"
-                                type="text"
-                                value={userDetails.name}
-                                onChange={(e) => setUserDetails({ ...userDetails, name: e.target.value })}
-                                className="w-full border border-gray-300 rounded-md p-2 mt-1"
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-                            <input
-                                id="email"
-                                type="email"
-                                value={userDetails.email}
-                                onChange={(e) => setUserDetails({ ...userDetails, email: e.target.value })}
-                                className="w-full border border-gray-300 rounded-md p-2 mt-1"
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label htmlFor="role" className="block text-sm font-medium text-gray-700">Role</label>
-                            <select
-                                id="role"
-                                value={newRole}
-                                onChange={(e) => setNewRole(e.target.value)}
-                                className="w-full border border-gray-300 rounded-md p-2 mt-1"
-                            >
-                                <option value="">Select Role</option>
-                                {roles.map((role) => (
-                                    <option key={role.id} value={role.name}>
-                                        {role.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="mt-4 flex justify-end">
-                            <button
-                                onClick={() => setShowEditModal(false)}
-                                className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md mr-2"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                onClick={handleUpdateProfile}
-                                className="px-4 py-2 bg-green-500 text-white rounded-md"
-                            >
-                                Save Changes
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
-        </AuthenticatedLayout>
+            <TablePagination
+                pageSize={pageSize}
+                setPageSize={setPageSize}
+                pageIndex={pageIndex}
+                pageCount={pageCount}
+                canPreviousPage={canPreviousPage}
+                canNextPage={canNextPage}
+                previousPage={previousPage}
+                nextPage={nextPage}
+            />
+        </div>
     );
 };
 
-export default UserIndex;
+// Role Badge Component
+const RoleBadge = ({ role }) => {
+    const colors = {
+        admin: 'bg-red-100 text-red-800',
+        manager: 'bg-blue-100 text-blue-800',
+        user: 'bg-green-100 text-green-800',
+        default: 'bg-gray-100 text-gray-800'
+    };
+
+    const colorClass = colors[role.toLowerCase()] || colors.default;
+
+    return (
+        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${colorClass}`}>
+            {role}
+        </span>
+    );
+};
+
+export default function UserIndex({ auth, users, roles }) {
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const columns = useMemo(
+        () => [
+            {
+                Header: 'Name',
+                accessor: 'name',
+                Cell: ({ value }) => (
+                    <div className="flex items-center gap-2">
+                        <FaUserCircle className="text-gray-400 w-5 h-5" />
+                        <span className="font-medium text-gray-900">{value}</span>
+                    </div>
+                )
+            },
+            {
+                Header: 'Email',
+                accessor: 'email',
+                Cell: ({ value }) => (
+                    <div className="flex items-center gap-2">
+                        <FaEnvelope className="text-gray-400" />
+                        <span>{value}</span>
+                    </div>
+                )
+            },
+            {
+                Header: 'Role',
+                accessor: 'roles',
+                Cell: ({ value }) => (
+                    <div className="flex items-center gap-2">
+                        <FaUserTag className="text-gray-400" />
+                        <div className="flex gap-1">
+                            {value.map(role => (
+                                <RoleBadge key={role.id} role={role.name} />
+                            ))}
+                        </div>
+                    </div>
+                )
+            },
+            {
+                Header: 'Actions',
+                id: 'actions',
+                Cell: ({ row }) => (
+                    <div className="flex items-center gap-2">
+                        <ActionButton
+                            onClick={() => {
+                                setSelectedUser(row.original);
+                                setShowEditModal(true);
+                            }}
+                            icon={FaEdit}
+                            color="yellow"
+                            label="Edit"
+                            className="!p-2"
+                        />
+                        <ActionButton
+                            onClick={() => {
+                                setSelectedUser(row.original);
+                                setShowDeleteModal(true);
+                            }}
+                            icon={FaTrash}
+                            color="red"
+                            label="Delete"
+                            className="!p-2"
+                        />
+                    </div>
+                )
+            }
+        ],
+        []
+    );
+
+    const handleUpdateProfile = async (updatedData) => {
+        try {
+            await Inertia.put(`/users/${selectedUser.id}`, updatedData);
+            setShowEditModal(false);
+        } catch (error) {
+            console.error('Error updating user:', error);
+        }
+    };
+
+    const handleDelete = async (id) => {
+        try {
+            await Inertia.delete(`/users/${id}`);
+            setShowDeleteModal(false);
+        } catch (error) {
+            console.error('Error deleting user:', error);
+        }
+    };
+
+    const filteredData = users.filter(user =>
+        searchQuery === '' ||
+        user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.roles.some(role => role.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    );
+
+    return (
+        <AuthenticatedLayout
+            user={auth.user}
+            header={
+                <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+                    User Management
+                </h2>
+            }
+        >
+            <Head title="User Management" />
+
+            <div className="container mx-auto px-4 py-8">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                    <div className="relative w-full md:w-96">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <FaSearch className="h-5 w-5 text-gray-400" />
+                        </div>
+                        <input
+                            value={searchQuery}
+                            onChange={e => setSearchQuery(e.target.value)}
+                            placeholder="Search users..."
+                            className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm"
+                        />
+                    </div>
+                </div>
+
+                <Table
+                    columns={columns}
+                    data={filteredData}
+                />
+            </div>
+
+            {/* Edit Modal */}
+            <EditUserModal
+                isOpen={showEditModal}
+                onClose={() => setShowEditModal(false)}
+                onConfirm={handleUpdateProfile}
+                user={selectedUser}
+                roles={roles}
+            />
+
+            {/* Delete Modal */}
+            <DeleteUserModal
+                isOpen={showDeleteModal}
+                onClose={() => setShowDeleteModal(false)}
+                onConfirm={() => handleDelete(selectedUser?.id)}
+                userName={selectedUser?.name}
+            />
+        </AuthenticatedLayout>
+    );
+}
