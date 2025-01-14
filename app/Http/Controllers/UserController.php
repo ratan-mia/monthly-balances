@@ -3,95 +3,142 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Company;
 use Spatie\Permission\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
 class UserController extends Controller
 {
     public function __construct()
     {
-        // Only allow admin to access the methods
         // $this->middleware('can:admin');
     }
 
-    // Display the list of users along with their roles
     public function index()
     {
-        // Fetch users with their roles using eager loading
-        $users = User::with('roles')->get();
-
-        // Fetch all available roles for selection in the form
+        // Fetch users with their roles and companies using eager loading
+        $users = User::with(['roles', 'companies'])->get();
         $roles = Role::all();
+        $companies = Company::all();
 
-        // Return to Inertia with users and roles
-        return inertia('Admin/UserIndex', compact('users', 'roles'));
+        return inertia('Admin/UserIndex', [
+            'users' => $users,
+            'roles' => $roles,
+            'companies' => $companies
+        ]);
     }
 
-    // Show the edit form for a specific user
     public function edit(User $user)
     {
-        // Fetch all roles to display in the role selection dropdown
         $roles = Role::all();
+        $companies = Company::all();
+        $user->load(['roles', 'companies']); // Eager load relationships
 
-        // Return to Inertia with the user and roles
-        return inertia('Admin/UserEdit', compact('user', 'roles'));
+        return inertia('Admin/UserEdit', [
+            'user' => $user,
+            'roles' => $roles,
+            'companies' => $companies
+        ]);
     }
 
-    // Update user profile (name, email, and role)
     public function update(Request $request, User $user)
     {
-        // dd($request->all());
-        // Validate the user input for name, email, and role
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
-            'role' => ['nullable', 'exists:roles,name'], // Validate the role name
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique('users')->ignore($user->id)
+            ],
+            'role' => ['required', 'string', 'exists:roles,name'],
+            'company_ids' => ['required', 'array'],
+            'company_ids.*' => ['exists:companies,id']
         ]);
 
-        // Update the user's profile information (name, email)
-        $user->update([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-        ]);
+        DB::beginTransaction();
 
-        // If a role is provided, update the user's role(s)
-        if (isset($validated['role'])) {
-            // Sync the user with the new role (removes all previous roles)
-            $user->syncRoles([$validated['role']]);  // Ensure role assignment is correct
+        try {
+            // Update user details
+            $user->update([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+            ]);
+
+            // Update role using Spatie
+            $user->syncRoles([$validated['role']]);
+
+            // Sync companies
+            $user->companies()->sync($validated['company_ids']);
+
+            DB::commit();
+
+            return redirect()
+                ->route('users.index')
+                ->with('success', 'User profile updated successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return redirect()
+                ->back()
+                ->with('error', 'Error updating user: ' . $e->getMessage());
         }
-
-        // Redirect back to the users list with a success message
-        return redirect()->route('users.index')->with('success', 'User profile updated successfully.');
     }
 
-    // Assign a role to a user (via the role change dropdown)
     public function assignRole(Request $request, User $user)
     {
-        // Validate the role being assigned
         $validated = $request->validate([
-            'role' => ['required', 'exists:roles,name'],  // Validate that the role exists
+            'role' => ['required', 'exists:roles,name'],
         ]);
 
-        // Sync the user with the new role (removes any other roles)
-        $user->syncRoles([$validated['role']]);
+        try {
+            $user->syncRoles([$validated['role']]);
 
-        // Return to the previous page with a success message
-        return back()->with('success', 'Role assigned successfully.');
+            return back()->with('success', 'Role assigned successfully.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error assigning role: ' . $e->getMessage());
+        }
     }
 
-    // Delete a user from the system
     public function destroy(User $user)
     {
-        // Ensure the user isn't the currently logged-in user (or an admin)
         if ($user->id === auth()->id()) {
             return back()->with('error', 'You cannot delete your own account.');
         }
 
-        // Delete the user
-        $user->delete();
+        DB::beginTransaction();
 
-        // Redirect back to the users list with a success message
-        return redirect()->route('users.index')->with('success', 'User deleted successfully.');
+        try {
+            // Remove role associations (handled by Spatie)
+            $user->roles()->detach();
+
+            // Remove company associations
+            $user->companies()->detach();
+
+            // Delete user
+            $user->delete();
+
+            DB::commit();
+
+            return redirect()
+                ->route('users.index')
+                ->with('success', 'User deleted successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return redirect()
+                ->back()
+                ->with('error', 'Error deleting user: ' . $e->getMessage());
+        }
+    }
+
+    // Helper method to manage company assignments
+    private function syncUserCompanies($user, $companyIds)
+    {
+        return $user->companies()->sync($companyIds);
     }
 }

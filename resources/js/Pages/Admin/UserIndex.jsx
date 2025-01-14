@@ -3,6 +3,7 @@ import { Inertia } from '@inertiajs/inertia';
 import { Head } from '@inertiajs/react';
 import { useMemo, useState } from 'react';
 import {
+    FaBuilding,
     FaChevronDown,
     FaChevronUp,
     FaEdit,
@@ -12,13 +13,37 @@ import {
     FaUserCircle,
     FaUserTag
 } from 'react-icons/fa';
-import { useGlobalFilter, usePagination, useSortBy, useTable } from 'react-table';
+import { usePagination, useSortBy, useTable } from 'react-table';
 
 // Import our custom components
 import ActionButton from '@/Components/Buttons/ActionButton';
 import DeleteUserModal from '@/Components/Modals/DeleteUserModal';
 import EditUserModal from '@/Components/Modals/EditUserModal';
 import TablePagination from '@/Components/Table/TablePagination';
+
+const RoleBadge = ({ role }) => {
+    const colors = {
+        admin: 'bg-red-100 text-red-800',
+        manager: 'bg-blue-100 text-blue-800',
+        user: 'bg-green-100 text-green-800',
+        default: 'bg-gray-100 text-gray-800'
+    };
+
+    const colorClass = colors[role.toLowerCase()] || colors.default;
+
+    return (
+        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${colorClass}`}>
+            {role}
+        </span>
+    );
+};
+
+const CompanyBadge = ({ company }) => (
+    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+        <FaBuilding className="mr-1 w-3 h-3" />
+        {company.name}
+    </span>
+);
 
 const Table = ({ columns, data }) => {
     const {
@@ -28,7 +53,6 @@ const Table = ({ columns, data }) => {
         page,
         prepareRow,
         state,
-        setGlobalFilter,
         nextPage,
         previousPage,
         canNextPage,
@@ -42,54 +66,64 @@ const Table = ({ columns, data }) => {
             data,
             initialState: { pageSize: 10 }
         },
-        useGlobalFilter,
         useSortBy,
         usePagination
     );
 
-    const { globalFilter, pageIndex, pageSize } = state;
+    const { pageIndex, pageSize } = state;
 
     return (
         <div className="bg-white rounded-lg shadow overflow-hidden">
             <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
-                        {headerGroups.map(headerGroup => (
-                            <tr key={headerGroup.id}>
-                                {headerGroup.headers.map(column => (
-                                    <th
-                                        key={column.id}
-                                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                        {...column.getSortByToggleProps()}
-                                    >
-                                        <div className="flex items-center space-x-1">
-                                            <span>{column.render('Header')}</span>
-                                            {column.isSorted ? (
-                                                column.isSortedDesc ? (
-                                                    <FaChevronDown className="w-4 h-4" />
-                                                ) : (
-                                                    <FaChevronUp className="w-4 h-4" />
-                                                )
-                                            ) : null}
-                                        </div>
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
+                        {headerGroups.map(headerGroup => {
+                            const { key, ...headerGroupProps } = headerGroup.getHeaderGroupProps();
+                            return (
+                                <tr key={key} {...headerGroupProps}>
+                                    {headerGroup.headers.map(column => {
+                                        const { key, ...columnProps } = column.getHeaderProps(column.getSortByToggleProps());
+                                        return (
+                                            <th
+                                                key={key}
+                                                {...columnProps}
+                                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                            >
+                                                <div className="flex items-center space-x-1">
+                                                    <span>{column.render('Header')}</span>
+                                                    {column.isSorted ? (
+                                                        column.isSortedDesc ? (
+                                                            <FaChevronDown className="w-4 h-4" />
+                                                        ) : (
+                                                            <FaChevronUp className="w-4 h-4" />
+                                                        )
+                                                    ) : null}
+                                                </div>
+                                            </th>
+                                        );
+                                    })}
+                                </tr>
+                            );
+                        })}
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                         {page.map(row => {
                             prepareRow(row);
+                            const { key, ...rowProps } = row.getRowProps();
                             return (
-                                <tr key={row.id} className="hover:bg-gray-50">
-                                    {row.cells.map(cell => (
-                                        <td
-                                            key={cell.column.id}
-                                            className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
-                                        >
-                                            {cell.render('Cell')}
-                                        </td>
-                                    ))}
+                                <tr key={key} {...rowProps} className="hover:bg-gray-50">
+                                    {row.cells.map(cell => {
+                                        const { key, ...cellProps } = cell.getCellProps();
+                                        return (
+                                            <td
+                                                key={key}
+                                                {...cellProps}
+                                                className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+                                            >
+                                                {cell.render('Cell')}
+                                            </td>
+                                        );
+                                    })}
                                 </tr>
                             );
                         })}
@@ -110,26 +144,7 @@ const Table = ({ columns, data }) => {
         </div>
     );
 };
-
-// Role Badge Component
-const RoleBadge = ({ role }) => {
-    const colors = {
-        admin: 'bg-red-100 text-red-800',
-        manager: 'bg-blue-100 text-blue-800',
-        user: 'bg-green-100 text-green-800',
-        default: 'bg-gray-100 text-gray-800'
-    };
-
-    const colorClass = colors[role.toLowerCase()] || colors.default;
-
-    return (
-        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${colorClass}`}>
-            {role}
-        </span>
-    );
-};
-
-export default function UserIndex({ auth, users, roles }) {
+export default function UserIndex({ auth, users, roles, companies }) {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
@@ -164,10 +179,21 @@ export default function UserIndex({ auth, users, roles }) {
                     <div className="flex items-center gap-2">
                         <FaUserTag className="text-gray-400" />
                         <div className="flex gap-1">
-                            {value.map(role => (
-                                <RoleBadge key={role.id} role={role.name} />
+                            {value && value.map(role => (
+                                <RoleBadge key={`role-${role.id}`} role={role.name} />
                             ))}
                         </div>
+                    </div>
+                )
+            },
+            {
+                Header: 'Companies',
+                accessor: 'companies',
+                Cell: ({ value }) => (
+                    <div className="flex flex-wrap gap-1">
+                        {value && value.map(company => (
+                            <CompanyBadge key={`company-${company.id}`} company={company} />
+                        ))}
                     </div>
                 )
             },
@@ -225,7 +251,10 @@ export default function UserIndex({ auth, users, roles }) {
         searchQuery === '' ||
         user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.roles.some(role => role.name.toLowerCase().includes(searchQuery.toLowerCase()))
+        user.roles.some(role => role.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (user.companies && user.companies.some(company =>
+            company.name.toLowerCase().includes(searchQuery.toLowerCase())
+        ))
     );
 
     return (
@@ -260,16 +289,15 @@ export default function UserIndex({ auth, users, roles }) {
                 />
             </div>
 
-            {/* Edit Modal */}
             <EditUserModal
                 isOpen={showEditModal}
                 onClose={() => setShowEditModal(false)}
                 onConfirm={handleUpdateProfile}
                 user={selectedUser}
                 roles={roles}
+                companies={companies}
             />
 
-            {/* Delete Modal */}
             <DeleteUserModal
                 isOpen={showDeleteModal}
                 onClose={() => setShowDeleteModal(false)}
