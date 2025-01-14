@@ -34,10 +34,12 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
 
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
-            'company_id' => 'required|exists:companies,id',
+            'company_ids' => 'required|array|min:1',
+            'company_ids.*' => 'exists:companies,id',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
@@ -47,6 +49,9 @@ class RegisteredUserController extends Controller
             'company_id' => $request->company_id,
             'password' => Hash::make($request->password),
         ]);
+
+        // Attach multiple companies to the user
+        $user->companies()->attach($request->company_ids);
 
         event(new Registered($user));
 

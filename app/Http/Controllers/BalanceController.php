@@ -31,9 +31,15 @@ class BalanceController extends Controller
         //     ->where('user_id', $userId)
         //     ->get();
 
+
+
         $balances = Balance::with(['company', 'bank', 'user', 'accountType'])
-            ->where('user_id', $userId)
+            ->whereIn('company_id', auth()->user()->companies->pluck('id'))
             ->get();
+
+        return Inertia::render('Balances/Index', [
+            'balances' => $balances
+        ]);
 
         // Calculate totals
         $total_inflows = $balances->sum('inflows');

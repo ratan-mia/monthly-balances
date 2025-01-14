@@ -6,7 +6,7 @@ export default function Register({ companies }) {
         email: '',
         password: '',
         password_confirmation: '',
-        company_id: '', // Add company_id to form data
+        company_ids: [], // Changed from company_id to company_ids array
     });
 
     const submit = (e) => {
@@ -15,6 +15,12 @@ export default function Register({ companies }) {
         post(route('register'), {
             onFinish: () => reset('password', 'password_confirmation'),
         });
+    };
+
+    // Handle multiple select
+    const handleCompanyChange = (e) => {
+        const selectedOptions = Array.from(e.target.selectedOptions).map(option => option.value);
+        setData('company_ids', selectedOptions);
     };
 
     return (
@@ -30,7 +36,6 @@ export default function Register({ companies }) {
                     <h2 className="text-3xl font-semibold text-center text-gray-800 mb-8">Create an Account</h2>
 
                     <form onSubmit={submit}>
-
                         {/* Name Input */}
                         <div className="mb-6">
                             <label htmlFor="name" className="block text-gray-700 font-medium mb-2">Full Name</label>
@@ -91,25 +96,27 @@ export default function Register({ companies }) {
                             {errors.password_confirmation && <span className="text-red-500 text-sm">{errors.password_confirmation}</span>}
                         </div>
 
-                        {/* Company Selection */}
+                        {/* Multiple Company Selection */}
                         <div className="mb-6">
-                            <label htmlFor="company_id" className="block text-gray-700 font-medium mb-2">Select Company</label>
+                            <label htmlFor="company_ids" className="block text-gray-700 font-medium mb-2">Select Companies</label>
                             <select
-                                id="company_id"
-                                name="company_id"
-                                value={data.company_id}
-                                onChange={(e) => setData('company_id', e.target.value)}
+                                id="company_ids"
+                                name="company_ids"
+                                multiple
+                                value={data.company_ids}
+                                onChange={handleCompanyChange}
                                 className="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 required
+                                size="4" // Shows 4 options at once
                             >
-                                <option value="">Choose a company</option>
                                 {companies.map(company => (
                                     <option key={company.id} value={company.id}>
                                         {company.name}
                                     </option>
                                 ))}
                             </select>
-                            {errors.company_id && <span className="text-red-500 text-sm">{errors.company_id}</span>}
+                            <p className="text-sm text-gray-500 mt-1">Hold Ctrl (Cmd on Mac) to select multiple companies</p>
+                            {errors.company_ids && <span className="text-red-500 text-sm">{errors.company_ids}</span>}
                         </div>
 
                         {/* Submit Button */}
@@ -122,7 +129,6 @@ export default function Register({ companies }) {
                                 {processing ? 'Registering...' : 'Register'}
                             </button>
                         </div>
-
                     </form>
                 </div>
             </div>
