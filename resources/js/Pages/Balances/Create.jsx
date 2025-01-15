@@ -193,7 +193,7 @@ export default function Create({ companies, banks, users, accountTypes }) {
                                 <span className={`text-lg font-semibold ${calculatedBalance >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                                     {calculatedBalance.toLocaleString('en-US', {
                                         style: 'currency',
-                                        currency: 'USD'
+                                        currency: 'BDT'
                                     })}
                                 </span>
                             </div>

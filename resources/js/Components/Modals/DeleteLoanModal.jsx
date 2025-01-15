@@ -54,7 +54,7 @@ const DeleteLoanModal = ({ isOpen, onClose, onConfirm, loanId, loanDetails }) =>
                                             <div className="font-medium text-gray-900">
                                                 {parseFloat(loanDetails.limit).toLocaleString('en-US', {
                                                     style: 'currency',
-                                                    currency: 'USD'
+                                                    currency: 'BDT'
                                                 })}
                                             </div>
 
@@ -62,7 +62,7 @@ const DeleteLoanModal = ({ isOpen, onClose, onConfirm, loanId, loanDetails }) =>
                                             <div className="font-medium text-gray-900">
                                                 {parseFloat(loanDetails.available_balance).toLocaleString('en-US', {
                                                     style: 'currency',
-                                                    currency: 'USD'
+                                                    currency: 'BDT'
                                                 })}
                                             </div>
                                         </div>
