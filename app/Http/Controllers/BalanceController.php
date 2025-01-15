@@ -60,14 +60,14 @@ class BalanceController extends Controller
 
     public function show($id)
     {
-        $balance = Balance::with(['company', 'bank', 'accountType'])->find($id);
+        $balance = Balance::with(['user', 'company', 'bank', 'accountType'])->find($id);
 
         if (!$balance) {
             return redirect()->route('balances.index')->with('error', 'Balance not found');
         }
 
         return Inertia::render('Balances/Show', [
-            'invoiceData' => $balance
+            'balance' => $balance
         ]);
     }
 
