@@ -87,7 +87,6 @@ export default function BalancesIndex({
     auth,
 }) {
 
-    console.log(total_closing_balance);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
 
