@@ -196,13 +196,13 @@ export default function Dashboard({
                                 </div>
 
                                 {/* Loan Allocations */}
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+                                {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
                                     <Suspense fallback={<div>Loading loan allocations...</div>}>
                                         <div className="bg-white shadow p-4 rounded-lg">
                                             <LoanAllocationTable loans={loanAllocations} />
                                         </div>
                                     </Suspense>
-                                </div>
+                                </div> */}
 
                                 {/* Chart Section */}
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
