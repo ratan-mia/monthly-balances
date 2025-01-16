@@ -1,15 +1,15 @@
 // resources/js/Pages/Welcome.jsx
-import { useForm, Head } from "@inertiajs/react";
 import InputError from "@/Components/InputError";
+import { Head, useForm } from "@inertiajs/react";
 import { useState } from 'react';
 import {
-    FaEnvelope,
-    FaLock,
-    FaSignInAlt,
+    FaChartBar,
     FaChartLine,
     FaClipboardCheck,
-    FaChartBar,
-    FaQuestionCircle
+    FaEnvelope,
+    FaLock,
+    FaQuestionCircle,
+    FaSignInAlt
 } from 'react-icons/fa';
 
 export default function Login() {
@@ -153,7 +153,7 @@ export default function Login() {
                                     </label>
                                 </div>
 
-                                    href={route('password.request')}
+                                  <a  href={route('password.request')}
                                     className="text-sm font-medium text-blue-600 hover:text-blue-500 flex items-center"
                                 >
                                     <FaQuestionCircle className="mr-1" />
