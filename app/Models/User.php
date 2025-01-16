@@ -23,7 +23,6 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'company_id',
         'password',
     ];
 
@@ -63,10 +62,6 @@ class User extends Authenticatable
     }
 
     // Define the relationship to the Company model
-    public function company()
-    {
-        return $this->belongsTo(Company::class);
-    }
 
     public function companies()
     {
