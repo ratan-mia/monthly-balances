@@ -117,7 +117,7 @@ export default function Dashboard({
         <Suspense fallback={<div>Loading...</div>}>
             <AuthenticatedLayout
                 header={
-                    <h2 className="text-xl font-semibold leading-tight text-gray-100 dark:text-gray-100">
+                    <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-100">
                         Dashboard
                     </h2>
                 }
