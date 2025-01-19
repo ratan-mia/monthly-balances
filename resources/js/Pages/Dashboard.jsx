@@ -12,7 +12,7 @@ import {
     Tooltip,
 } from 'chart.js';
 import React, { Suspense, useMemo } from 'react';
-import { Bar, Line, Pie } from 'react-chartjs-2';
+import { Bar, Line } from 'react-chartjs-2';
 
 // Lazy-loaded components
 const LoanAllocationTable = React.lazy(() => import('@/Components/LoanAllocationTable'));
@@ -156,18 +156,18 @@ export default function Dashboard({
                                             icon="💰"
                                             bgColor="bg-emerald-500"
                                         />
-                                        <StatBox
+                                        {/* <StatBox
                                             title="Top Company by Loan Utilization"
                                             value={topCompanyName}
                                             icon="🏢"
                                             bgColor="bg-indigo-500"
-                                        />
-                                        <StatBox
+                                        /> */}
+                                        {/* <StatBox
                                             title="Loans by Bank"
                                             value={`${bankLoanAllocation.length} Banks`}
                                             icon="🏦"
                                             bgColor="bg-green-500"
-                                        />
+                                        /> */}
                                         <StatBox
                                             title="Available Balance (Loanable)"
                                             value={`৳${totalAvailableBalance.toLocaleString()}`}
@@ -186,12 +186,12 @@ export default function Dashboard({
                                             icon="💰"
                                             bgColor="bg-blue-600"
                                         />
-                                        <StatBox
+                                        {/* <StatBox
                                             title="Latest Loan Request"
                                             value={latestLoanRequestInfo}
                                             icon="🆕"
                                             bgColor="bg-indigo-500"
-                                        />
+                                        /> */}
                                     </Suspense>
                                 </div>
 
@@ -216,20 +216,20 @@ export default function Dashboard({
                                         </div>
 
                                         {/* Account Type Distribution */}
-                                        <div className="bg-white p-4 rounded-lg shadow dark:bg-gray-50">
+                                        {/* <div className="bg-white p-4 rounded-lg shadow dark:bg-gray-50">
                                             <h4 className="text-lg font-semibold text-gray-800 mb-4">
                                                 Account Type Distribution
                                             </h4>
                                             <Pie data={pieChartData} />
-                                        </div>
+                                        </div> */}
 
                                         {/* Loan Performance */}
-                                        <div className="bg-white p-4 rounded-lg shadow dark:bg-gray-50">
+                                        {/* <div className="bg-white p-4 rounded-lg shadow dark:bg-gray-50">
                                             <h4 className="text-lg font-semibold text-gray-800 mb-4">
                                                 Loan Performance over Month
                                             </h4>
                                             <LoanPerformanceChart loanPerformance={loanPerformance} />
-                                        </div>
+                                        </div> */}
 
                                         {/* Monthly Inflows vs Outflows */}
                                         <div className="bg-white p-4 rounded-lg shadow dark:bg-gray-50">
