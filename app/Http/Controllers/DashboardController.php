@@ -19,9 +19,14 @@ class DashboardController extends Controller
     public function index()
     {
         // Fetch the data needed for the dashboard charts
-        $balances = Balance::selectRaw('MONTH(created_at) as month, SUM(inflows) as total_inflows, SUM(outflows) as total_outflows')
+        $balances_by_month = Balance::selectRaw('MONTH(created_at) as month, SUM(inflows) as total_inflows, SUM(outflows) as total_outflows')
             ->groupBy('month')
             ->orderBy('month')
+            ->get();
+
+        $balances = Balance::selectRaw('DATE(created_at) as date, SUM(inflows) as total_inflows, SUM(outflows) as total_outflows')
+            ->groupBy('date')
+            ->orderBy('date')
             ->get();
 
         // Fetching bank-wise balance data

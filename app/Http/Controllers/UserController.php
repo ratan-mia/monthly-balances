@@ -31,6 +31,32 @@ class UserController extends Controller
         ]);
     }
 
+
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+            'roles' => 'required|array',
+            'roles.*' => 'exists:roles,id',
+            'companies' => 'required|array',
+            'companies.*' => 'exists:companies,id',
+        ]);
+
+        $user = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+        ]);
+
+        $user->roles()->sync($validated['roles']);
+        $user->companies()->sync($validated['companies']);
+
+        return redirect()->back()->with('success', 'User created successfully.');
+    }
+
     public function edit(User $user)
     {
         $roles = Role::all();

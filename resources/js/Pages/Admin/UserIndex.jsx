@@ -1,5 +1,5 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Inertia } from '@inertiajs/inertia';
+// UserIndex.jsx
+import { router } from '@inertiajs/core';
 import { Head } from '@inertiajs/react';
 import { useMemo, useState } from 'react';
 import {
@@ -11,15 +11,16 @@ import {
     FaSearch,
     FaTrash,
     FaUserCircle,
+    FaUserPlus,
     FaUserTag
 } from 'react-icons/fa';
-import { usePagination, useSortBy, useTable } from 'react-table';
 
-// Import our custom components
 import ActionButton from '@/Components/Buttons/ActionButton';
+import CreateUserModal from '@/Components/Modals/CreateUserModal';
 import DeleteUserModal from '@/Components/Modals/DeleteUserModal';
 import EditUserModal from '@/Components/Modals/EditUserModal';
-import TablePagination from '@/Components/Table/TablePagination';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { usePagination, useSortBy, useTable } from 'react-table';
 
 const RoleBadge = ({ role }) => {
     const colors = {
@@ -58,8 +59,8 @@ const Table = ({ columns, data }) => {
         canNextPage,
         canPreviousPage,
         pageOptions,
-        pageCount,
         setPageSize,
+        state: { pageIndex, pageSize },
     } = useTable(
         {
             columns,
@@ -70,85 +71,154 @@ const Table = ({ columns, data }) => {
         usePagination
     );
 
-    const { pageIndex, pageSize } = state;
-
     return (
         <div className="bg-white rounded-lg shadow overflow-hidden">
             <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
+                <table {...getTableProps()} className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
-                        {headerGroups.map(headerGroup => {
-                            const { key, ...headerGroupProps } = headerGroup.getHeaderGroupProps();
-                            return (
-                                <tr key={key} {...headerGroupProps}>
-                                    {headerGroup.headers.map(column => {
-                                        const { key, ...columnProps } = column.getHeaderProps(column.getSortByToggleProps());
-                                        return (
-                                            <th
-                                                key={key}
-                                                {...columnProps}
-                                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                            >
-                                                <div className="flex items-center space-x-1">
-                                                    <span>{column.render('Header')}</span>
-                                                    {column.isSorted ? (
-                                                        column.isSortedDesc ? (
-                                                            <FaChevronDown className="w-4 h-4" />
-                                                        ) : (
-                                                            <FaChevronUp className="w-4 h-4" />
-                                                        )
-                                                    ) : null}
-                                                </div>
-                                            </th>
-                                        );
-                                    })}
-                                </tr>
-                            );
-                        })}
+                        {headerGroups.map(headerGroup => (
+                            <tr {...headerGroup.getHeaderGroupProps()}>
+                                {headerGroup.headers.map(column => (
+                                    <th
+                                        {...column.getHeaderProps(column.getSortByToggleProps())}
+                                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                    >
+                                        <div className="flex items-center space-x-1">
+                                            <span>{column.render('Header')}</span>
+                                            {column.isSorted ? (
+                                                column.isSortedDesc ? (
+                                                    <FaChevronDown className="w-4 h-4" />
+                                                ) : (
+                                                    <FaChevronUp className="w-4 h-4" />
+                                                )
+                                            ) : null}
+                                        </div>
+                                    </th>
+                                ))}
+                            </tr>
+                        ))}
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody {...getTableBodyProps()} className="bg-white divide-y divide-gray-200">
                         {page.map(row => {
                             prepareRow(row);
-                            const { key, ...rowProps } = row.getRowProps();
                             return (
-                                <tr key={key} {...rowProps} className="hover:bg-gray-50">
-                                    {row.cells.map(cell => {
-                                        const { key, ...cellProps } = cell.getCellProps();
-                                        return (
-                                            <td
-                                                key={key}
-                                                {...cellProps}
-                                                className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
-                                            >
-                                                {cell.render('Cell')}
-                                            </td>
-                                        );
-                                    })}
+                                <tr {...row.getRowProps()} className="hover:bg-gray-50">
+                                    {row.cells.map(cell => (
+                                        <td
+                                            {...cell.getCellProps()}
+                                            className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+                                        >
+                                            {cell.render('Cell')}
+                                        </td>
+                                    ))}
                                 </tr>
                             );
                         })}
                     </tbody>
                 </table>
             </div>
-
-            <TablePagination
-                pageSize={pageSize}
-                setPageSize={setPageSize}
-                pageIndex={pageIndex}
-                pageCount={pageCount}
-                canPreviousPage={canPreviousPage}
-                canNextPage={canNextPage}
-                previousPage={previousPage}
-                nextPage={nextPage}
-            />
+            <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+                <div className="flex-1 flex justify-between sm:hidden">
+                    <button
+                        onClick={() => previousPage()}
+                        disabled={!canPreviousPage}
+                        className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                    >
+                        Previous
+                    </button>
+                    <button
+                        onClick={() => nextPage()}
+                        disabled={!canNextPage}
+                        className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                    >
+                        Next
+                    </button>
+                </div>
+                <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                    <div className="flex gap-x-2 items-center">
+                        <span className="text-sm text-gray-700">
+                            Page <span className="font-medium">{pageIndex + 1}</span> of{' '}
+                            <span className="font-medium">{pageOptions.length}</span>
+                        </span>
+                        <select
+                            value={pageSize}
+                            onChange={e => setPageSize(Number(e.target.value))}
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                        >
+                            {[5, 10, 20, 30, 40, 50].map(size => (
+                                <option key={size} value={size}>
+                                    Show {size}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div>
+                        <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                            <button
+                                onClick={() => previousPage()}
+                                disabled={!canPreviousPage}
+                                className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                            >
+                                Previous
+                            </button>
+                            <button
+                                onClick={() => nextPage()}
+                                disabled={!canNextPage}
+                                className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                            >
+                                Next
+                            </button>
+                        </nav>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };
+
 export default function UserIndex({ auth, users, roles, companies }) {
+    const [showCreateModal, setShowCreateModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
+
+    const handleCreateUser = async (userData) => {
+        router.post('/users', userData, {
+            onSuccess: () => {
+                setShowCreateModal(false);
+            },
+            preserveScroll: true,
+        });
+    };
+
+    const handleUpdateProfile = (updatedData) => {
+        router.put(`/users/${selectedUser.id}`, updatedData, {
+            onSuccess: () => {
+                setShowEditModal(false);
+            },
+            preserveScroll: true,
+        });
+    };
+
+    const handleDelete = (id) => {
+        router.delete(`/users/${id}`, {
+            onSuccess: () => {
+                setShowDeleteModal(false);
+            },
+            preserveScroll: true,
+        });
+    };
+
+    const filteredData = users.filter(user =>
+        searchQuery === '' ||
+        user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.roles.some(role => role.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (user.companies && user.companies.some(company =>
+            company.name.toLowerCase().includes(searchQuery.toLowerCase())
+        ))
+    );
 
     const columns = useMemo(
         () => [
@@ -229,34 +299,6 @@ export default function UserIndex({ auth, users, roles, companies }) {
         []
     );
 
-    const handleUpdateProfile = async (updatedData) => {
-        try {
-            await Inertia.put(`/users/${selectedUser.id}`, updatedData);
-            setShowEditModal(false);
-        } catch (error) {
-            console.error('Error updating user:', error);
-        }
-    };
-
-    const handleDelete = async (id) => {
-        try {
-            await Inertia.delete(`/users/${id}`);
-            setShowDeleteModal(false);
-        } catch (error) {
-            console.error('Error deleting user:', error);
-        }
-    };
-
-    const filteredData = users.filter(user =>
-        searchQuery === '' ||
-        user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.roles.some(role => role.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        (user.companies && user.companies.some(company =>
-            company.name.toLowerCase().includes(searchQuery.toLowerCase())
-        ))
-    );
-
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -275,12 +317,22 @@ export default function UserIndex({ auth, users, roles, companies }) {
                             <FaSearch className="h-5 w-5 text-gray-400" />
                         </div>
                         <input
+                            type="text"
                             value={searchQuery}
                             onChange={e => setSearchQuery(e.target.value)}
                             placeholder="Search users..."
                             className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm"
                         />
                     </div>
+
+                    <ActionButton
+                        onClick={() => setShowCreateModal(true)}
+                        icon={FaUserPlus}
+                        color="blue"
+                        label="Create User"
+                    >
+                        Create User
+                    </ActionButton>
                 </div>
 
                 <Table
@@ -288,6 +340,14 @@ export default function UserIndex({ auth, users, roles, companies }) {
                     data={filteredData}
                 />
             </div>
+
+            <CreateUserModal
+                isOpen={showCreateModal}
+                onClose={() => setShowCreateModal(false)}
+                onConfirm={handleCreateUser}
+                roles={roles}
+                companies={companies}
+            />
 
             <EditUserModal
                 isOpen={showEditModal}

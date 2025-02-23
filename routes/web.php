@@ -41,6 +41,10 @@ Route::middleware('auth')->group(function () {
 });
 
 
+Route::post('/users', [UserController::class, 'store'])
+    ->name('users.store')
+    ->middleware(['auth', 'verified']);
+
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('account-types', AccountTypeController::class);
