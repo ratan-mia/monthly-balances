@@ -57,6 +57,6 @@ class RegisteredUserController extends Controller
         Auth::login($user);
 
         // return redirect(route('dashboard', absolute: false));
-        return redirect(route('balances', absolute: false));
+        return redirect(route('balances.create', absolute: false));
     }
 }
