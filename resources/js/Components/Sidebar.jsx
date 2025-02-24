@@ -1,5 +1,5 @@
 import NavLink from '@/Components/NavLink';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import {
     FaBars,
@@ -17,6 +17,7 @@ import {
 const Sidebar = ({ isSidebarCollapsed, setIsSidebarCollapsed }) => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [activeGroup, setActiveGroup] = useState(null);
+    const { auth } = usePage().props;
 
     // Close sidebar on route change for mobile
     useEffect(() => {
@@ -155,8 +156,8 @@ const Sidebar = ({ isSidebarCollapsed, setIsSidebarCollapsed }) => {
                                 <FaUser className="w-4 h-4" />
                             </div>
                             <div className="flex-1">
-                                <p className="text-sm font-medium">Admin User</p>
-                                <p className="text-xs text-gray-400">admin@example.com</p>
+                            <p className="text-sm font-medium">{auth.user.name}</p>
+                            <p className="text-xs text-gray-400">{auth.user.email}</p>
                             </div>
                         </div>
                     </div>
