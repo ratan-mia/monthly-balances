@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Models\Bank;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LoanController extends Controller
 {
@@ -53,6 +54,9 @@ class LoanController extends Controller
         return Inertia::render('Loans/Create', [
             'companies' => $companies,
             'users' => $users,
+            'auth' => [
+                'user' => Auth::user()
+            ],
             'banks' => $banks,
             'loanTypes' => $loanTypes,  // Passing the loan types to the view
         ]);

@@ -1,5 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import {
     FaArrowLeft,
@@ -34,9 +34,10 @@ const FormInput = ({ label, error, required = false, children }) => (
 );
 
 export default function Create({ companies, users, banks, loanTypes }) {
+    const { auth } = usePage().props;
     const { data, setData, post, processing, errors } = useForm({
         company_id: '',
-        user_id: '',
+        user_id: auth.user.id,
         bank_id: '',
         loan_type_id: '',
         limit: '',

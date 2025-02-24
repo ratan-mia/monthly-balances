@@ -87,6 +87,9 @@ class BalanceController extends Controller
                 'banks' => $banks,
                 'users' => $users,
                 'accountTypes' => $accountTypes,
+                'auth' => [
+                    'user' => Auth::user()
+                ]
             ]
         );
     }

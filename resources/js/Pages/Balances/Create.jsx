@@ -1,21 +1,19 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
-import { useEffect, useState } from 'react';
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { Head, Link, useForm, usePage } from "@inertiajs/react";
+import { useEffect, useState } from "react";
 import {
     FaArrowLeft,
     FaBuilding,
     FaCreditCard,
     FaMoneyBillWave,
     FaUniversity,
-    FaUser
-} from 'react-icons/fa';
+    FaUser,
+} from "react-icons/fa";
 
 const FormSection = ({ title, children }) => (
     <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
         <h3 className="text-lg font-medium text-gray-900 mb-4">{title}</h3>
-        <div className="space-y-4">
-            {children}
-        </div>
+        <div className="space-y-4">{children}</div>
     </div>
 );
 
@@ -34,15 +32,16 @@ const FormInput = ({ label, error, children }) => (
 );
 
 export default function Create({ companies, banks, users, accountTypes }) {
+    const { auth } = usePage().props;
     const { data, setData, post, errors, processing } = useForm({
-        opening_balance: '',
-        inflows: '',
-        outflows: '',
-        account_type_id: '',
-        account_number: '',
-        user_id: '',
-        bank_id: '',
-        company_id: '',
+        opening_balance: "",
+        inflows: "",
+        outflows: "",
+        account_type_id: "",
+        account_number: "",
+        user_id: auth.user.id, // Set default value to logged-in user's ID
+        bank_id: "",
+        company_id: "",
     });
 
     const [calculatedBalance, setCalculatedBalance] = useState(0);
@@ -56,22 +55,29 @@ export default function Create({ companies, banks, users, accountTypes }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        post('/balances');
+        post("/balances");
     };
 
     const handleBankChange = (e) => {
         const selectedBankId = e.target.value;
-        const selectedBank = banks.find(bank => bank.id == selectedBankId);
-        setData({ ...data, bank_id: selectedBankId, account_number: selectedBank?.account_number || '' });
+        const selectedBank = banks.find((bank) => bank.id == selectedBankId);
+        setData({
+            ...data,
+            bank_id: selectedBankId,
+            account_number: selectedBank?.account_number || "",
+        });
     };
 
     const handleNumberInput = (field, value) => {
         // Remove any non-numeric characters except decimal point
-        const sanitizedValue = value.replace(/[^0-9.]/g, '');
+        const sanitizedValue = value.replace(/[^0-9.]/g, "");
 
         // Ensure only one decimal point
-        const parts = sanitizedValue.split('.');
-        const finalValue = parts.length > 2 ? parts[0] + '.' + parts.slice(1).join('') : sanitizedValue;
+        const parts = sanitizedValue.split(".");
+        const finalValue =
+            parts.length > 2
+                ? parts[0] + "." + parts.slice(1).join("")
+                : sanitizedValue;
 
         setData(field, finalValue);
     };
@@ -100,37 +106,62 @@ export default function Create({ companies, banks, users, accountTypes }) {
                     {/* Company and User Section */}
                     <FormSection title="Account Details">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <FormInput label="Company" error={errors.company_id}>
+                            <FormInput
+                                label="Company"
+                                error={errors.company_id}
+                            >
                                 <div className="relative">
                                     <FaBuilding className="absolute left-3 top-3 text-gray-400" />
                                     <select
                                         value={data.company_id}
-                                        onChange={(e) => setData('company_id', e.target.value)}
+                                        onChange={(e) =>
+                                            setData(
+                                                "company_id",
+                                                e.target.value
+                                            )
+                                        }
                                         className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                         disabled={processing}
                                     >
-                                        <option value="">Select a company</option>
+                                        <option value="">
+                                            Select a company
+                                        </option>
                                         {companies.map((company) => (
-                                            <option key={company.id} value={company.id}>
+                                            <option
+                                                key={company.id}
+                                                value={company.id}
+                                            >
                                                 {company.name}
                                             </option>
                                         ))}
                                     </select>
                                 </div>
                             </FormInput>
-
-                            <FormInput label="Responsible Person" error={errors.user_id}>
+                            <FormInput
+                                label="Responsible Person"
+                                error={errors.user_id}
+                            >
                                 <div className="relative">
                                     <FaUser className="absolute left-3 top-3 text-gray-400" />
                                     <select
                                         value={data.user_id}
-                                        onChange={(e) => setData('user_id', e.target.value)}
+                                        onChange={(e) =>
+                                            setData("user_id", e.target.value)
+                                        }
                                         className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                         disabled={processing}
                                     >
-                                        <option value="">Select a responsible person</option>
+                                        <option value="">
+                                            Select a responsible person
+                                        </option>
                                         {users.map((user) => (
-                                            <option key={user.id} value={user.id}>
+                                            <option
+                                                key={user.id}
+                                                value={user.id}
+                                                selected={
+                                                    user.id === auth.user.id
+                                                } // Optional: Additional way to set default
+                                            >
                                                 {user.name}
                                             </option>
                                         ))}
@@ -143,13 +174,21 @@ export default function Create({ companies, banks, users, accountTypes }) {
                     {/* Balance Section */}
                     <FormSection title="Balance Information">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <FormInput label="Opening Balance" error={errors.opening_balance}>
+                            <FormInput
+                                label="Opening Balance"
+                                error={errors.opening_balance}
+                            >
                                 <div className="relative">
                                     <FaMoneyBillWave className="absolute left-3 top-3 text-gray-400" />
                                     <input
                                         type="text"
                                         value={data.opening_balance}
-                                        onChange={(e) => handleNumberInput('opening_balance', e.target.value)}
+                                        onChange={(e) =>
+                                            handleNumberInput(
+                                                "opening_balance",
+                                                e.target.value
+                                            )
+                                        }
                                         className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                         placeholder="0.00"
                                         disabled={processing}
@@ -163,7 +202,12 @@ export default function Create({ companies, banks, users, accountTypes }) {
                                     <input
                                         type="text"
                                         value={data.inflows}
-                                        onChange={(e) => handleNumberInput('inflows', e.target.value)}
+                                        onChange={(e) =>
+                                            handleNumberInput(
+                                                "inflows",
+                                                e.target.value
+                                            )
+                                        }
                                         className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                         placeholder="0.00"
                                         disabled={processing}
@@ -177,7 +221,12 @@ export default function Create({ companies, banks, users, accountTypes }) {
                                     <input
                                         type="text"
                                         value={data.outflows}
-                                        onChange={(e) => handleNumberInput('outflows', e.target.value)}
+                                        onChange={(e) =>
+                                            handleNumberInput(
+                                                "outflows",
+                                                e.target.value
+                                            )
+                                        }
                                         className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                         placeholder="0.00"
                                         disabled={processing}
@@ -189,11 +238,18 @@ export default function Create({ companies, banks, users, accountTypes }) {
                         {/* Calculated Balance Display */}
                         <div className="mt-4 p-4 bg-gray-50 rounded-lg">
                             <div className="flex justify-between items-center">
-                                <span className="text-gray-600">Calculated Balance:</span>
-                                <span className={`text-lg font-semibold ${calculatedBalance >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                                    {calculatedBalance.toLocaleString('en-US', {
-                                        style: 'currency',
-                                        currency: 'BDT'
+                                <span className="text-gray-600">
+                                    Calculated Balance:
+                                </span>
+                                <span
+                                    className={`text-lg font-semibold ${calculatedBalance >= 0
+                                            ? "text-green-600"
+                                            : "text-red-600"
+                                        }`}
+                                >
+                                    {calculatedBalance.toLocaleString("en-US", {
+                                        style: "currency",
+                                        currency: "BDT",
                                     })}
                                 </span>
                             </div>
@@ -203,18 +259,31 @@ export default function Create({ companies, banks, users, accountTypes }) {
                     {/* Bank Details Section */}
                     <FormSection title="Bank Information">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <FormInput label="Account Type" error={errors.account_type_id}>
+                            <FormInput
+                                label="Account Type"
+                                error={errors.account_type_id}
+                            >
                                 <div className="relative">
                                     <FaCreditCard className="absolute left-3 top-3 text-gray-400" />
                                     <select
                                         value={data.account_type_id}
-                                        onChange={(e) => setData('account_type_id', e.target.value)}
+                                        onChange={(e) =>
+                                            setData(
+                                                "account_type_id",
+                                                e.target.value
+                                            )
+                                        }
                                         className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                         disabled={processing}
                                     >
-                                        <option value="">Select account type</option>
+                                        <option value="">
+                                            Select account type
+                                        </option>
                                         {accountTypes.map((accountType) => (
-                                            <option key={accountType.id} value={accountType.id}>
+                                            <option
+                                                key={accountType.id}
+                                                value={accountType.id}
+                                            >
                                                 {accountType.name}
                                             </option>
                                         ))}
@@ -233,7 +302,10 @@ export default function Create({ companies, banks, users, accountTypes }) {
                                     >
                                         <option value="">Select a bank</option>
                                         {banks.map((bank) => (
-                                            <option key={bank.id} value={bank.id}>
+                                            <option
+                                                key={bank.id}
+                                                value={bank.id}
+                                            >
                                                 {bank.name}
                                             </option>
                                         ))}
@@ -241,7 +313,10 @@ export default function Create({ companies, banks, users, accountTypes }) {
                                 </div>
                             </FormInput>
 
-                            <FormInput label="Account Number" error={errors.account_number}>
+                            <FormInput
+                                label="Account Number"
+                                error={errors.account_number}
+                            >
                                 <div className="relative">
                                     <FaCreditCard className="absolute left-3 top-3 text-gray-400" />
                                     <input
@@ -269,7 +344,7 @@ export default function Create({ companies, banks, users, accountTypes }) {
                             disabled={processing}
                             className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            {processing ? 'Saving...' : 'Save Balance'}
+                            {processing ? "Saving..." : "Save Balance"}
                         </button>
                     </div>
                 </form>
